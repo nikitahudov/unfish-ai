@@ -1,203 +1,163 @@
 // ============================================
 // PROGRESS STORE
-// Global state management with Zustand
+// Zustand store for managing user progress with localStorage persistence
 // ============================================
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { ProgressState, QuizAttempt, SkillProgress, UserStats } from '@/types/progress';
 
-// Types
-export interface SkillProgress {
-  status: 'not_started' | 'in_progress' | 'completed' | 'mastered';
-  quizScores: number[];
-  bestScore: number;
-  lastAccessed: string;
-  timeSpent: number; // minutes
-  notes: string[];
-}
-
-export interface UserStats {
-  totalHandsPlayed: number;
-  studyHours: number;
-  quizzesCompleted: number;
-  averageScore: number;
-  currentStreak: number;
-  longestStreak: number;
-  lastStudyDate: string | null;
-}
-
-export interface CoachContext {
-  recentTopics: string[];
-  weakAreas: string[];
-  conversationHistory: Array<{
-    role: 'user' | 'assistant';
-    content: string;
-    timestamp: string;
-  }>;
-}
-
-export interface UserSettings {
-  learningStyle: 'visual' | 'conceptual' | 'practical' | 'balanced';
-  sessionLength: 'short' | 'medium' | 'long';
-  notifications: boolean;
-  theme: 'dark' | 'light';
-}
-
-export interface ProgressState {
-  skills: Record<string, SkillProgress>;
-  stats: UserStats;
-  coachContext: CoachContext;
-  settings: UserSettings;
-  
-  // Actions
-  updateSkillProgress: (skillId: string, data: Partial<SkillProgress>) => void;
-  addQuizScore: (skillId: string, score: number) => void;
-  updateStats: (updates: Partial<UserStats>) => void;
-  addCoachMessage: (role: 'user' | 'assistant', content: string) => void;
-  updateSettings: (updates: Partial<UserSettings>) => void;
-  resetProgress: () => void;
-}
-
-// Initial state
-const initialStats: UserStats = {
-  totalHandsPlayed: 0,
-  studyHours: 0,
-  quizzesCompleted: 0,
+// Default initial stats
+const defaultStats: UserStats = {
+  totalQuizzesTaken: 0,
+  totalQuizzesPassed: 0,
   averageScore: 0,
+  totalStudyTime: 0,
   currentStreak: 0,
   longestStreak: 0,
   lastStudyDate: null,
 };
 
-const initialCoachContext: CoachContext = {
-  recentTopics: [],
-  weakAreas: [],
-  conversationHistory: [],
+// Default skill progress
+const defaultSkillProgress: SkillProgress = {
+  status: 'not_started',
+  bestScore: 0,
+  attempts: 0,
+  lastAttempt: null,
+  totalTimeSpent: 0,
 };
 
-const initialSettings: UserSettings = {
-  learningStyle: 'balanced',
-  sessionLength: 'medium',
-  notifications: true,
-  theme: 'dark',
+// Helper function to calculate streak
+const calculateStreak = (lastStudyDate: string | null, currentStreak: number, longestStreak: number) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (!lastStudyDate) {
+    // First study session
+    return { currentStreak: 1, longestStreak: Math.max(1, longestStreak) };
+  }
+
+  const lastDate = new Date(lastStudyDate);
+  lastDate.setHours(0, 0, 0, 0);
+
+  const daysDiff = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (daysDiff === 0) {
+    // Same day - keep current streak
+    return { currentStreak, longestStreak };
+  } else if (daysDiff === 1) {
+    // Consecutive day - increment streak
+    const newStreak = currentStreak + 1;
+    return { currentStreak: newStreak, longestStreak: Math.max(newStreak, longestStreak) };
+  } else {
+    // Streak broken - reset to 1
+    return { currentStreak: 1, longestStreak };
+  }
 };
 
-// Create the store
 export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
+      quizAttempts: {},
       skills: {},
-      stats: initialStats,
-      coachContext: initialCoachContext,
-      settings: initialSettings,
+      stats: defaultStats,
 
-      updateSkillProgress: (skillId, data) => {
-        set((state) => ({
+      addQuizAttempt: (moduleId, results) => {
+        const state = get();
+        const now = new Date().toISOString();
+
+        // Create new attempt
+        const newAttempt: QuizAttempt = {
+          attemptId: `${moduleId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          date: now,
+          score: results.score,
+          weightedScore: results.weightedScore,
+          passed: results.passed,
+          timeSpent: results.timeSpent,
+          mode: results.mode,
+          sectionScores: results.sectionScores,
+        };
+
+        // Add attempt to history
+        const moduleAttempts = state.quizAttempts[moduleId] || [];
+        const updatedAttempts = [...moduleAttempts, newAttempt];
+
+        // Calculate skill progress
+        const allScores = updatedAttempts.map(a => a.score);
+        const bestScore = Math.max(...allScores);
+        const hasPassed = updatedAttempts.some(a => a.passed);
+        const totalTimeSpent = updatedAttempts.reduce((sum, a) => sum + a.timeSpent, 0);
+
+        const status: SkillProgress['status'] =
+          updatedAttempts.length === 0 ? 'not_started' :
+          hasPassed ? 'completed' : 'in_progress';
+
+        const updatedSkillProgress: SkillProgress = {
+          status,
+          bestScore,
+          attempts: updatedAttempts.length,
+          lastAttempt: now,
+          totalTimeSpent,
+        };
+
+        // Update user stats
+        const allAttempts = Object.values({
+          ...state.quizAttempts,
+          [moduleId]: updatedAttempts,
+        }).flat();
+
+        const totalQuizzesTaken = allAttempts.length;
+        const totalQuizzesPassed = allAttempts.filter(a => a.passed).length;
+        const averageScore = totalQuizzesTaken > 0
+          ? Math.round(allAttempts.reduce((sum, a) => sum + a.score, 0) / totalQuizzesTaken)
+          : 0;
+        const totalStudyTime = allAttempts.reduce((sum, a) => sum + a.timeSpent, 0);
+
+        // Calculate streak
+        const { currentStreak, longestStreak } = calculateStreak(
+          state.stats.lastStudyDate,
+          state.stats.currentStreak,
+          state.stats.longestStreak
+        );
+
+        const updatedStats: UserStats = {
+          totalQuizzesTaken,
+          totalQuizzesPassed,
+          averageScore,
+          totalStudyTime,
+          currentStreak,
+          longestStreak,
+          lastStudyDate: now,
+        };
+
+        set({
+          quizAttempts: {
+            ...state.quizAttempts,
+            [moduleId]: updatedAttempts,
+          },
           skills: {
             ...state.skills,
-            [skillId]: {
-              ...state.skills[skillId],
-              ...data,
-              lastAccessed: new Date().toISOString(),
-            },
+            [moduleId]: updatedSkillProgress,
           },
-        }));
-      },
-
-      addQuizScore: (skillId, score) => {
-        set((state) => {
-          const existingScores = state.skills[skillId]?.quizScores || [];
-          const newScores = [...existingScores, score];
-          const avgScore = newScores.reduce((a, b) => a + b, 0) / newScores.length;
-          
-          // Update streak
-          const today = new Date().toDateString();
-          const lastStudy = state.stats.lastStudyDate;
-          const yesterday = new Date(Date.now() - 86400000).toDateString();
-          
-          let newStreak = state.stats.currentStreak;
-          if (lastStudy === yesterday || lastStudy === today) {
-            if (lastStudy !== today) {
-              newStreak += 1;
-            }
-          } else {
-            newStreak = 1;
-          }
-
-          return {
-            skills: {
-              ...state.skills,
-              [skillId]: {
-                ...state.skills[skillId],
-                quizScores: newScores,
-                bestScore: Math.max(...newScores),
-                status: score >= 80 ? 'completed' : 'in_progress',
-                lastAccessed: new Date().toISOString(),
-              },
-            },
-            stats: {
-              ...state.stats,
-              quizzesCompleted: state.stats.quizzesCompleted + 1,
-              averageScore: avgScore,
-              currentStreak: newStreak,
-              longestStreak: Math.max(newStreak, state.stats.longestStreak),
-              lastStudyDate: today,
-            },
-          };
+          stats: updatedStats,
         });
       },
 
-      updateStats: (updates) => {
-        set((state) => ({
-          stats: { ...state.stats, ...updates },
-        }));
-      },
-
-      addCoachMessage: (role, content) => {
-        set((state) => ({
-          coachContext: {
-            ...state.coachContext,
-            conversationHistory: [
-              ...state.coachContext.conversationHistory,
-              {
-                role,
-                content,
-                timestamp: new Date().toISOString(),
-              },
-            ].slice(-50), // Keep last 50 messages
-          },
-        }));
-      },
-
-      updateSettings: (updates) => {
-        set((state) => ({
-          settings: { ...state.settings, ...updates },
-        }));
+      getSkillStatus: (moduleId) => {
+        const state = get();
+        return state.skills[moduleId] || defaultSkillProgress;
       },
 
       resetProgress: () => {
         set({
+          quizAttempts: {},
           skills: {},
-          stats: initialStats,
-          coachContext: initialCoachContext,
+          stats: defaultStats,
         });
       },
     }),
     {
-      name: 'poker-mastery-progress',
+      name: '24p-academy-progress',
     }
   )
 );
-
-// Selector hooks for convenience
-export const useSkillProgress = (skillId: string) => {
-  return useProgressStore((state) => state.skills[skillId]);
-};
-
-export const useStats = () => {
-  return useProgressStore((state) => state.stats);
-};
-
-export const useSettings = () => {
-  return useProgressStore((state) => state.settings);
-};

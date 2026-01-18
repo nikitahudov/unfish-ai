@@ -1,12 +1,23 @@
 'use client';
 
 import React from 'react';
-import { skillsData } from '@/data/skills';
+import { skillsData, getAllSkills } from '@/data/skills';
+import { useProgressStore } from '@/lib/progressStore';
 
 export default function ProgressPage() {
-  // Calculate category progress (mock data for now)
+  const storeStats = useProgressStore((state) => state.stats);
+  const skills = useProgressStore((state) => state.skills);
+  const quizAttempts = useProgressStore((state) => state.quizAttempts);
+
+  const allSkills = getAllSkills();
+
+  // Calculate completed skills
+  const skillsCompleted = Object.values(skills).filter((s) => s.status === 'completed').length;
+
+  // Calculate category progress
   const categories = Object.entries(skillsData).map(([name, data]) => {
-    const completed = 0; // Will come from store
+    const categorySkillIds = data.skills.map((s) => s.id);
+    const completed = categorySkillIds.filter((id) => skills[id]?.status === 'completed').length;
     return {
       name,
       icon: data.icon,
@@ -17,24 +28,54 @@ export default function ProgressPage() {
     };
   });
 
-  // Mock stats (will come from store)
+  // Calculate stats
   const stats = {
-    skillsCompleted: 0,
-    totalSkills: 96,
-    quizzesCompleted: 0,
-    averageScore: 0,
-    studyHours: 0,
-    currentStreak: 0,
-    longestStreak: 0,
-    handsPlayed: 0,
+    skillsCompleted,
+    totalSkills: allSkills.length,
+    quizzesCompleted: storeStats.totalQuizzesPassed,
+    averageScore: storeStats.averageScore,
+    studyHours: Math.round(storeStats.totalStudyTime / 3600), // Convert seconds to hours
+    currentStreak: storeStats.currentStreak,
+    longestStreak: storeStats.longestStreak,
+    handsPlayed: 0, // Not implemented yet
   };
 
   // Phase breakdown
+  const fundamentalSkills = allSkills.filter((s) => s.level === 'Fundamental');
+  const intermediateSkills = allSkills.filter((s) => s.level === 'Intermediate');
+  const advancedSkills = allSkills.filter((s) => s.level === 'Advanced');
+
   const phases = [
-    { name: 'Fundamentals', completed: 0, total: 26, color: '#10B981' },
-    { name: 'Intermediate', completed: 0, total: 43, color: '#EAB308' },
-    { name: 'Advanced', completed: 0, total: 27, color: '#F43F5E' },
+    {
+      name: 'Fundamentals',
+      completed: fundamentalSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      total: fundamentalSkills.length,
+      color: '#10B981',
+    },
+    {
+      name: 'Intermediate',
+      completed: intermediateSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      total: intermediateSkills.length,
+      color: '#EAB308',
+    },
+    {
+      name: 'Advanced',
+      completed: advancedSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      total: advancedSkills.length,
+      color: '#F43F5E',
+    },
   ];
+
+  // Get recent attempts for activity feed
+  const recentAttempts = Object.entries(quizAttempts)
+    .flatMap(([moduleId, attempts]) =>
+      attempts.map((attempt) => ({
+        moduleId,
+        ...attempt,
+      }))
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10);
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
@@ -187,6 +228,57 @@ export default function ProgressPage() {
           ))}
         </div>
       </div>
+
+      {/* Recent Activity */}
+      {recentAttempts.length > 0 && (
+        <div className="mt-8 bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
+          <h2 className="text-xl font-bold text-white mb-4">📚 Recent Activity</h2>
+          <div className="space-y-3">
+            {recentAttempts.map((attempt) => {
+              const attemptDate = new Date(attempt.date);
+              const skill = allSkills.find((s) => s.id === attempt.moduleId);
+              return (
+                <div
+                  key={attempt.attemptId}
+                  className="flex items-center gap-4 p-3 bg-slate-700/30 rounded-xl"
+                >
+                  <div
+                    className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                      attempt.passed ? 'bg-emerald-500/20' : 'bg-slate-600/50'
+                    }`}
+                  >
+                    <span className="text-2xl">{attempt.passed ? '✓' : '📝'}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-white">
+                        {skill?.name || attempt.moduleId}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs ${
+                          attempt.passed
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'bg-slate-600/50 text-slate-400'
+                        }`}
+                      >
+                        {attempt.score}%
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      {attemptDate.toLocaleDateString()} at {attemptDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {' • '}
+                      {Math.round(attempt.timeSpent / 60)} min
+                    </div>
+                  </div>
+                  {attempt.passed && (
+                    <span className="text-emerald-400 font-medium">Passed</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Hands Played Tracker */}
       <div className="mt-8 bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">

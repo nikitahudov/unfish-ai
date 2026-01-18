@@ -4,11 +4,18 @@ import React from 'react';
 import Link from 'next/link';
 import { skillsData, getAllSkills } from '@/data/skills';
 import { hasQuiz, getQuizList } from '@/data/quizRegistry';
+import { useProgressStore } from '@/lib/progressStore';
 
 export default function AssessPage() {
   const allSkills = getAllSkills();
   const availableQuizzes = getQuizList();
   const skillsWithQuiz = allSkills.filter((s) => hasQuiz(s.id));
+  const getSkillStatus = useProgressStore((state) => state.getSkillStatus);
+  const stats = useProgressStore((state) => state.stats);
+  const skills = useProgressStore((state) => state.skills);
+
+  // Calculate completed count
+  const completedCount = Object.values(skills).filter((s) => s.status === 'completed').length;
 
   // Group by phase
   const phases = [
@@ -55,11 +62,11 @@ export default function AssessPage() {
           <div className="text-slate-400 text-sm">Available Now</div>
         </div>
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <div className="text-3xl font-bold text-blue-400">0</div>
+          <div className="text-3xl font-bold text-blue-400">{completedCount}</div>
           <div className="text-slate-400 text-sm">Completed</div>
         </div>
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <div className="text-3xl font-bold text-purple-400">0%</div>
+          <div className="text-3xl font-bold text-purple-400">{stats.averageScore}%</div>
           <div className="text-slate-400 text-sm">Avg. Score</div>
         </div>
       </div>
@@ -114,6 +121,7 @@ export default function AssessPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {phase.skills.map((skill) => {
                 const quizAvailable = hasQuiz(skill.id);
+                const progress = getSkillStatus(skill.id);
                 return (
                   <div
                     key={skill.id}
@@ -128,15 +136,36 @@ export default function AssessPage() {
                         <div className="font-mono text-xs text-slate-500">{skill.id}</div>
                         <h3 className="font-medium text-white">{skill.name}</h3>
                       </div>
-                      {quizAvailable ? (
-                        <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">
-                          Available
-                        </span>
-                      ) : (
-                        <span className="px-2 py-1 bg-slate-700/50 text-slate-500 text-xs rounded-full">
-                          Coming Soon
-                        </span>
-                      )}
+                      <div className="flex flex-col gap-1 items-end">
+                        {quizAvailable ? (
+                          <>
+                            {progress.status === 'completed' && (
+                              <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full flex items-center gap-1">
+                                ✓ Completed
+                              </span>
+                            )}
+                            {progress.status === 'in_progress' && (
+                              <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full">
+                                In Progress
+                              </span>
+                            )}
+                            {progress.status === 'not_started' && (
+                              <span className="px-2 py-1 bg-slate-700/50 text-slate-400 text-xs rounded-full">
+                                Not Started
+                              </span>
+                            )}
+                            {progress.attempts > 0 && (
+                              <span className="text-xs text-slate-400">
+                                Best: {progress.bestScore}% ({progress.attempts} {progress.attempts === 1 ? 'attempt' : 'attempts'})
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="px-2 py-1 bg-slate-700/50 text-slate-500 text-xs rounded-full">
+                            Coming Soon
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                       {skill.description}
@@ -146,7 +175,7 @@ export default function AssessPage() {
                         href={`/assess/quiz/${skill.id}`}
                         className="block w-full text-center py-2 bg-slate-700/50 text-amber-400 rounded-lg hover:bg-slate-700 transition-colors text-sm font-medium"
                       >
-                        Start Quiz →
+                        {progress.attempts > 0 ? 'Retake Quiz' : 'Start Quiz'} →
                       </Link>
                     ) : (
                       <button

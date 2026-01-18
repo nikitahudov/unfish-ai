@@ -5,12 +5,14 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { QuizEngine } from '@/components/quiz/QuizEngine';
 import { getQuizById, hasQuiz } from '@/data/quizRegistry';
+import { useProgressStore } from '@/lib/progressStore';
 import type { QuizResults } from '@/types/quiz';
 
 export default function QuizPage() {
   const params = useParams();
   const router = useRouter();
   const moduleId = params.moduleId as string;
+  const addQuizAttempt = useProgressStore((state) => state.addQuizAttempt);
 
   // Check if quiz exists
   if (!hasQuiz(moduleId)) {
@@ -40,16 +42,27 @@ export default function QuizPage() {
   }
 
   const handleComplete = (results: QuizResults) => {
-    // In the future, save results to progress store
     console.log('Quiz completed:', results);
-    
-    // Could save to localStorage or send to API
-    const savedResults = JSON.parse(localStorage.getItem('quizResults') || '{}');
-    savedResults[moduleId] = {
-      ...results,
-      completedAt: new Date().toISOString(),
-    };
-    localStorage.setItem('quizResults', JSON.stringify(savedResults));
+
+    // Convert sectionResults to the format expected by the store
+    const sectionScores: Record<string, { correct: number; total: number; percentage: number }> = {};
+    Object.entries(results.sectionResults).forEach(([sectionId, result]) => {
+      sectionScores[sectionId] = {
+        correct: result.correct,
+        total: result.total,
+        percentage: result.percentage,
+      };
+    });
+
+    // Save to progress store
+    addQuizAttempt(moduleId, {
+      score: results.percentage,
+      weightedScore: results.weightedScore,
+      passed: results.passed,
+      timeSpent: results.timeSpent || 0,
+      mode: 'standard', // Default to standard mode
+      sectionScores,
+    });
   };
 
   const handleExit = () => {

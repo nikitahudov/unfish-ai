@@ -3,10 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { skillsData, getAllSkills } from '@/data/skills';
+import { hasQuiz, getQuizList } from '@/data/quizRegistry';
 
 export default function AssessPage() {
   const allSkills = getAllSkills();
-  const skillsWithQuiz = allSkills.filter((s) => s.hasQuiz);
+  const availableQuizzes = getQuizList();
+  const skillsWithQuiz = allSkills.filter((s) => hasQuiz(s.id));
 
   // Group by phase
   const phases = [
@@ -111,12 +113,12 @@ export default function AssessPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {phase.skills.map((skill) => {
-                const hasQuiz = skill.hasQuiz;
+                const quizAvailable = hasQuiz(skill.id);
                 return (
                   <div
                     key={skill.id}
                     className={`bg-slate-800/50 rounded-xl p-4 border transition-all ${
-                      hasQuiz
+                      quizAvailable
                         ? 'border-slate-700/50 hover:border-slate-600'
                         : 'border-slate-800/50 opacity-50'
                     }`}
@@ -126,7 +128,7 @@ export default function AssessPage() {
                         <div className="font-mono text-xs text-slate-500">{skill.id}</div>
                         <h3 className="font-medium text-white">{skill.name}</h3>
                       </div>
-                      {hasQuiz ? (
+                      {quizAvailable ? (
                         <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">
                           Available
                         </span>
@@ -139,7 +141,7 @@ export default function AssessPage() {
                     <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                       {skill.description}
                     </p>
-                    {hasQuiz ? (
+                    {quizAvailable ? (
                       <Link
                         href={`/assess/quiz/${skill.id}`}
                         className="block w-full text-center py-2 bg-slate-700/50 text-amber-400 rounded-lg hover:bg-slate-700 transition-colors text-sm font-medium"

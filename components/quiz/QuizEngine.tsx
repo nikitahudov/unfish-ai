@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import type { QuizData, Question, QuizResults, QuizMode, SectionResult } from '@/types/quiz';
 
@@ -10,10 +10,10 @@ interface QuizEngineProps {
   onExit?: () => void;
 }
 
-export const QuizEngine: React.FC<QuizEngineProps> = ({ 
-  quizData, 
+export const QuizEngine: React.FC<QuizEngineProps> = ({
+  quizData,
   onComplete,
-  onExit 
+  onExit
 }) => {
   const [currentSection, setCurrentSection] = useState<string>('intro');
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -23,6 +23,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [quizMode, setQuizMode] = useState<QuizMode>('standard');
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const hasCalledOnComplete = useRef(false);
 
   // Timer effect for timed mode
   useEffect(() => {
@@ -33,6 +34,15 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       setShowResults(true);
     }
   }, [timeLeft, quizMode, currentSection]);
+
+  // Call onComplete only once when results are shown
+  useEffect(() => {
+    if (showResults && onComplete && !hasCalledOnComplete.current) {
+      hasCalledOnComplete.current = true;
+      const results = calculateResults();
+      onComplete(results);
+    }
+  }, [showResults, onComplete, calculateResults]);
 
   const handleAnswer = (questionId: string, answer: unknown) => {
     setAnswers(prev => ({
@@ -387,11 +397,6 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   // ============================================
   const renderResults = () => {
     const results = calculateResults();
-    
-    // Call onComplete callback
-    if (onComplete) {
-      onComplete(results);
-    }
 
     return (
       <div className="space-y-6">
@@ -483,6 +488,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
               setCurrentQuestion(0);
               setShowResults(false);
               setTimeLeft(null);
+              hasCalledOnComplete.current = false;
             }}
             className="px-6 py-3 bg-slate-700 text-white font-medium rounded-xl hover:bg-slate-600 transition-all"
           >

@@ -25,25 +25,6 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const hasCalledOnComplete = useRef(false);
 
-  // Timer effect for timed mode
-  useEffect(() => {
-    if (quizMode === 'timed' && timeLeft !== null && timeLeft > 0 && currentSection !== 'intro') {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      setShowResults(true);
-    }
-  }, [timeLeft, quizMode, currentSection]);
-
-  // Call onComplete only once when results are shown
-  useEffect(() => {
-    if (showResults && onComplete && !hasCalledOnComplete.current) {
-      hasCalledOnComplete.current = true;
-      const results = calculateResults();
-      onComplete(results);
-    }
-  }, [showResults, onComplete, calculateResults]);
-
   const handleAnswer = (questionId: string, answer: unknown) => {
     setAnswers(prev => ({
       ...prev,
@@ -109,6 +90,25 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       timeSpent
     };
   }, [answers, quizData, startTime]);
+
+  // Timer effect for timed mode
+  useEffect(() => {
+    if (quizMode === 'timed' && timeLeft !== null && timeLeft > 0 && currentSection !== 'intro') {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      setShowResults(true);
+    }
+  }, [timeLeft, quizMode, currentSection]);
+
+  // Call onComplete only once when results are shown
+  useEffect(() => {
+    if (showResults && onComplete && !hasCalledOnComplete.current) {
+      hasCalledOnComplete.current = true;
+      const results = calculateResults();
+      onComplete(results);
+    }
+  }, [showResults, onComplete, calculateResults]);
 
   const startQuiz = (mode: QuizMode) => {
     setQuizMode(mode);

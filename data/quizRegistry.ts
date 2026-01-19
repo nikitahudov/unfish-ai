@@ -5,14 +5,22 @@
 
 import type { QuizData } from '@/types/quiz';
 import { potOddsQuiz } from './quizzes/module_1_1_pot_odds';
+import { equityCalculationQuiz } from './quizzes/module_1_2_equity_calculation';
+import { startingHandsQuiz } from './quizzes/module_2_1_starting_hands';
+import { positionQuiz } from './quizzes/module_2_2_position';
+import { openRaisingQuiz } from './quizzes/module_2_3_open_raising';
+import { cbetQuiz } from './quizzes/module_3_1_cbet';
+import { valueBettingQuiz } from './quizzes/module_3_2_value_betting';
 
 // Registry of all available quizzes
 export const quizRegistry: Record<string, QuizData> = {
   '1.1': potOddsQuiz,
-  // Add more quizzes here as they are created:
-  // '1.2': equityCalculationQuiz,
-  // '2.1': startingHandsQuiz,
-  // etc.
+  '1.2': equityCalculationQuiz,
+  '2.1': startingHandsQuiz,
+  '2.2': positionQuiz,
+  '2.3': openRaisingQuiz,
+  '3.1': cbetQuiz,
+  '3.2': valueBettingQuiz,
 };
 
 // Get quiz by module ID

@@ -20,7 +20,7 @@ export const valueBettingQuiz: QuizData = {
     ],
     nextModule: {
       id: "4.1",
-      title: "Bluffing Fundamentals"
+      title: "Semi-Bluffing"
     }
   },
   sections: [

@@ -19,6 +19,14 @@ import { focusQuiz } from './quizzes/module_6_2_focus';
 import { motivationQuiz } from './quizzes/module_6_3_motivation';
 import { growthMindsetQuiz } from './quizzes/module_6_4_growth_mindset';
 import { playerProfilingQuiz } from './quizzes/module_7_1_player_profiling';
+import { tableSelectionQuiz } from './quizzes/module_7_2_table_selection';
+import { bankrollQuiz } from './quizzes/module_8_1_bankroll';
+import { gameSelectionQuiz } from './quizzes/module_8_2_game_selection';
+import { recordKeepingQuiz } from './quizzes/module_8_3_record_keeping';
+import { handReviewQuiz } from './quizzes/module_9_1_hand_review';
+import { videoStudyQuiz } from './quizzes/module_9_2_video_study';
+import { bookStudyQuiz } from './quizzes/module_9_3_book_study';
+import { cashGameQuiz } from './quizzes/module_10_1_cash_game';
 
 // Registry of all available quizzes
 export const quizRegistry: Record<string, QuizData> = {
@@ -37,6 +45,14 @@ export const quizRegistry: Record<string, QuizData> = {
   '6.3': motivationQuiz,
   '6.4': growthMindsetQuiz,
   '7.1': playerProfilingQuiz,
+  '7.2': tableSelectionQuiz,
+  '8.1': bankrollQuiz,
+  '8.2': gameSelectionQuiz,
+  '8.3': recordKeepingQuiz,
+  '9.1': handReviewQuiz,
+  '9.2': videoStudyQuiz,
+  '9.3': bookStudyQuiz,
+  '10.1': cashGameQuiz,
 };
 
 // Get quiz by module ID

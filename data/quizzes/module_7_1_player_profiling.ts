@@ -20,7 +20,7 @@ export const playerProfilingQuiz: QuizData = {
     ],
     nextModule: {
       id: "7.2",
-      title: "Advanced Hand Reading"
+      title: "Table Selection"
     }
   },
   sections: [

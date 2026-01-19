@@ -1,13 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { skillsData, getAllSkills } from '@/data/skills';
 import { useProgressStore } from '@/lib/progressStore';
 
 export default function ProgressPage() {
+  const [mounted, setMounted] = useState(false);
   const storeStats = useProgressStore((state) => state.stats);
   const skills = useProgressStore((state) => state.skills);
   const quizAttempts = useProgressStore((state) => state.quizAttempts);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const allSkills = getAllSkills();
 
@@ -230,7 +235,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Recent Activity */}
-      {recentAttempts.length > 0 && (
+      {mounted && recentAttempts.length > 0 && (
         <div className="mt-8 bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
           <h2 className="text-xl font-bold text-white mb-4">📚 Recent Activity</h2>
           <div className="space-y-3">

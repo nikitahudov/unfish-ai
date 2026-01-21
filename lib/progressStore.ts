@@ -61,6 +61,7 @@ export const useProgressStore = create<ProgressState>()(
       quizAttempts: {},
       skills: {},
       stats: defaultStats,
+      contentProgress: {},
 
       addQuizAttempt: (moduleId, results) => {
         const state = get();
@@ -153,7 +154,123 @@ export const useProgressStore = create<ProgressState>()(
           quizAttempts: {},
           skills: {},
           stats: defaultStats,
+          contentProgress: {},
         });
+      },
+
+      // Content progress actions
+      initContentProgress: (skillId, exercisesTotal, scenariosTotal) => {
+        set((state) => {
+          const existing = state.contentProgress[skillId];
+          if (existing) {
+            // Already exists, just update lastViewedAt
+            return {
+              contentProgress: {
+                ...state.contentProgress,
+                [skillId]: {
+                  ...existing,
+                  lastViewedAt: new Date().toISOString(),
+                }
+              }
+            };
+          }
+          // Create new entry
+          return {
+            contentProgress: {
+              ...state.contentProgress,
+              [skillId]: {
+                viewed: true,
+                firstViewedAt: new Date().toISOString(),
+                lastViewedAt: new Date().toISOString(),
+                timeSpentSeconds: 0,
+                exercisesCompleted: 0,
+                exercisesTotal,
+                flashcardsReviewed: false,
+                scenariosCompleted: 0,
+                scenariosTotal,
+              }
+            }
+          };
+        });
+      },
+
+      updateTimeSpent: (skillId, additionalSeconds) => {
+        set((state) => {
+          const existing = state.contentProgress[skillId];
+          if (!existing) return state;
+          return {
+            contentProgress: {
+              ...state.contentProgress,
+              [skillId]: {
+                ...existing,
+                timeSpentSeconds: existing.timeSpentSeconds + additionalSeconds,
+                lastViewedAt: new Date().toISOString(),
+              }
+            }
+          };
+        });
+      },
+
+      recordExerciseComplete: (skillId) => {
+        set((state) => {
+          const existing = state.contentProgress[skillId];
+          if (!existing) return state;
+          return {
+            contentProgress: {
+              ...state.contentProgress,
+              [skillId]: {
+                ...existing,
+                exercisesCompleted: Math.min(existing.exercisesCompleted + 1, existing.exercisesTotal),
+              }
+            }
+          };
+        });
+      },
+
+      recordScenarioComplete: (skillId) => {
+        set((state) => {
+          const existing = state.contentProgress[skillId];
+          if (!existing) return state;
+          return {
+            contentProgress: {
+              ...state.contentProgress,
+              [skillId]: {
+                ...existing,
+                scenariosCompleted: Math.min(existing.scenariosCompleted + 1, existing.scenariosTotal),
+              }
+            }
+          };
+        });
+      },
+
+      markFlashcardsReviewed: (skillId) => {
+        set((state) => {
+          const existing = state.contentProgress[skillId];
+          if (!existing) return state;
+          return {
+            contentProgress: {
+              ...state.contentProgress,
+              [skillId]: {
+                ...existing,
+                flashcardsReviewed: true,
+              }
+            }
+          };
+        });
+      },
+
+      getContentProgress: (skillId) => {
+        return get().contentProgress[skillId] || null;
+      },
+
+      getContentStatus: (skillId) => {
+        const progress = get().contentProgress[skillId];
+        if (!progress) return 'not_started';
+        if (progress.exercisesCompleted >= progress.exercisesTotal &&
+            progress.scenariosCompleted >= progress.scenariosTotal) {
+          return 'completed';
+        }
+        return 'in_progress';
       },
     }),
     {

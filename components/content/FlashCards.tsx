@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useContent } from './ContentContext';
 
 interface FlashCardsProps {
   title?: string;
@@ -11,10 +12,13 @@ interface FlashCardsProps {
 }
 
 export function FlashCards({ title, cards }: FlashCardsProps) {
+  const { onFlashcardsReviewed } = useContent();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [cardOrder, setCardOrder] = useState<number[]>([]);
   const [markedAsKnown, setMarkedAsKnown] = useState<boolean[]>([]);
+  const [viewedCards, setViewedCards] = useState<Set<number>>(new Set());
+  const [hasTracked, setHasTracked] = useState(false);
 
   // Initialize card order and tracking
   useEffect(() => {
@@ -25,8 +29,20 @@ export function FlashCards({ title, cards }: FlashCardsProps) {
   const currentCardIndex = cardOrder[currentIndex] ?? 0;
   const currentCard = cards[currentCardIndex];
 
+  // Track when all cards have been viewed
+  useEffect(() => {
+    if (viewedCards.size >= cards.length && !hasTracked) {
+      onFlashcardsReviewed();
+      setHasTracked(true);
+    }
+  }, [viewedCards.size, cards.length, hasTracked, onFlashcardsReviewed]);
+
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
+    // Track when a card is viewed (flipped)
+    if (!isFlipped) {
+      setViewedCards(prev => new Set([...prev, currentCardIndex]));
+    }
   };
 
   const handleNext = () => {

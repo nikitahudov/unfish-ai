@@ -9,12 +9,40 @@ export default function ProgressPage() {
   const storeStats = useProgressStore((state) => state.stats);
   const skills = useProgressStore((state) => state.skills);
   const quizAttempts = useProgressStore((state) => state.quizAttempts);
+  const contentProgress = useProgressStore((state) => state.contentProgress);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const allSkills = getAllSkills();
+
+  // Calculate content stats
+  const contentStats = Object.entries(contentProgress).reduce((acc, [skillId, progress]) => {
+    acc.totalViewed++;
+    acc.totalTimeSeconds += progress.timeSpentSeconds;
+    acc.totalExercisesCompleted += progress.exercisesCompleted;
+    acc.totalExercises += progress.exercisesTotal;
+    if (progress.exercisesCompleted >= progress.exercisesTotal &&
+        progress.scenariosCompleted >= progress.scenariosTotal) {
+      acc.fullyCompleted++;
+    }
+    return acc;
+  }, {
+    totalViewed: 0,
+    fullyCompleted: 0,
+    totalTimeSeconds: 0,
+    totalExercisesCompleted: 0,
+    totalExercises: 0
+  });
+
+  // Format time helper
+  const formatStudyTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
 
   // Calculate completed skills
   const skillsCompleted = Object.values(skills).filter((s) => s.status === 'completed').length;
@@ -129,6 +157,31 @@ export default function ProgressPage() {
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
           <div className="text-3xl font-bold text-amber-400">{stats.currentStreak}</div>
           <div className="text-slate-400 text-sm">Day Streak 🔥</div>
+        </div>
+      </div>
+
+      {/* Learning Progress */}
+      <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 mb-8">
+        <h2 className="text-xl font-semibold text-white mb-4">📚 Learning Progress</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-white">{contentStats.totalViewed}</div>
+            <div className="text-slate-400 text-sm">Lessons Started</div>
+          </div>
+          <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-emerald-400">{contentStats.fullyCompleted}</div>
+            <div className="text-slate-400 text-sm">Lessons Completed</div>
+          </div>
+          <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-amber-400">{formatStudyTime(contentStats.totalTimeSeconds)}</div>
+            <div className="text-slate-400 text-sm">Study Time</div>
+          </div>
+          <div className="bg-slate-700/50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-white">
+              {contentStats.totalExercisesCompleted}/{contentStats.totalExercises}
+            </div>
+            <div className="text-slate-400 text-sm">Exercises Done</div>
+          </div>
         </div>
       </div>
 

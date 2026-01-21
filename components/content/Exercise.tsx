@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useContent } from './ContentContext';
 
 interface ExerciseProps {
   question: string;
@@ -25,11 +26,13 @@ export function Exercise({
   explanation,
   unit = '',
 }: ExerciseProps) {
+  const { onExerciseComplete } = useContent();
   const [userAnswer, setUserAnswer] = useState('');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [checked, setChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [hasTracked, setHasTracked] = useState(false);
 
   const checkAnswer = () => {
     let correct = false;
@@ -55,6 +58,12 @@ export function Exercise({
 
     setIsCorrect(correct);
     setChecked(true);
+
+    // Track exercise completion if correct
+    if (correct && !hasTracked) {
+      onExerciseComplete();
+      setHasTracked(true);
+    }
   };
 
   const getBorderColor = () => {

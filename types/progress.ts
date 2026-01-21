@@ -36,6 +36,18 @@ export interface UserStats {
   lastStudyDate: string | null; // ISO string
 }
 
+export interface ContentProgress {
+  viewed: boolean;
+  firstViewedAt: string | null;
+  lastViewedAt: string | null;
+  timeSpentSeconds: number;
+  exercisesCompleted: number;
+  exercisesTotal: number;
+  flashcardsReviewed: boolean;
+  scenariosCompleted: number;
+  scenariosTotal: number;
+}
+
 export interface ProgressState {
   // Quiz attempts keyed by moduleId
   quizAttempts: Record<string, QuizAttempt[]>;
@@ -45,6 +57,9 @@ export interface ProgressState {
 
   // Overall user statistics
   stats: UserStats;
+
+  // Content progress keyed by skillId like "1.1"
+  contentProgress: Record<string, ContentProgress>;
 
   // Actions
   addQuizAttempt: (moduleId: string, results: {
@@ -63,4 +78,13 @@ export interface ProgressState {
   getSkillStatus: (moduleId: string) => SkillProgress;
 
   resetProgress: () => void;
+
+  // Content progress actions
+  initContentProgress: (skillId: string, exercisesTotal: number, scenariosTotal: number) => void;
+  updateTimeSpent: (skillId: string, additionalSeconds: number) => void;
+  recordExerciseComplete: (skillId: string) => void;
+  recordScenarioComplete: (skillId: string) => void;
+  markFlashcardsReviewed: (skillId: string) => void;
+  getContentProgress: (skillId: string) => ContentProgress | null;
+  getContentStatus: (skillId: string) => 'not_started' | 'in_progress' | 'completed';
 }

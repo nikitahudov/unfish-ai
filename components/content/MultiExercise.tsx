@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useContent } from './ContentContext';
 
 interface MultiExerciseProps {
   title?: string;
@@ -13,10 +14,12 @@ interface MultiExerciseProps {
 }
 
 export function MultiExercise({ title, exercises }: MultiExerciseProps) {
+  const { onExerciseComplete } = useContent();
   const [answers, setAnswers] = useState<string[]>(new Array(exercises.length).fill(''));
   const [checked, setChecked] = useState<boolean[]>(new Array(exercises.length).fill(false));
   const [correct, setCorrect] = useState<boolean[]>(new Array(exercises.length).fill(false));
   const [showHints, setShowHints] = useState<boolean[]>(new Array(exercises.length).fill(false));
+  const [trackedIndices, setTrackedIndices] = useState<Set<number>>(new Set());
 
   const handleCheck = (index: number) => {
     const isCorrect = answers[index].trim().toLowerCase() === exercises[index].answer.trim().toLowerCase();
@@ -28,6 +31,12 @@ export function MultiExercise({ title, exercises }: MultiExerciseProps) {
     const newCorrect = [...correct];
     newCorrect[index] = isCorrect;
     setCorrect(newCorrect);
+
+    // Track exercise completion if correct and not already tracked
+    if (isCorrect && !trackedIndices.has(index)) {
+      onExerciseComplete();
+      setTrackedIndices(prev => new Set([...prev, index]));
+    }
   };
 
   const toggleHint = (index: number) => {

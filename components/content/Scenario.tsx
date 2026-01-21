@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useContent } from './ContentContext';
 
 interface ScenarioProps {
   title: string;
@@ -14,6 +15,7 @@ interface ScenarioProps {
 }
 
 export function Scenario({ title, setup, steps }: ScenarioProps) {
+  const { onScenarioComplete } = useContent();
   const [currentStep, setCurrentStep] = useState(0);
   const [userAnswer, setUserAnswer] = useState('');
   const [checked, setChecked] = useState(false);
@@ -21,10 +23,19 @@ export function Scenario({ title, setup, steps }: ScenarioProps) {
   const [showHint, setShowHint] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [stepResults, setStepResults] = useState<boolean[]>([]);
+  const [hasTracked, setHasTracked] = useState(false);
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
   const isComplete = currentStep >= steps.length;
+
+  // Track scenario completion when all steps are done
+  useEffect(() => {
+    if (currentStep >= steps.length && !hasTracked) {
+      onScenarioComplete();
+      setHasTracked(true);
+    }
+  }, [currentStep, steps.length, hasTracked, onScenarioComplete]);
 
   const handleCheck = () => {
     const correct = userAnswer.trim().toLowerCase() === currentStepData.answer.trim().toLowerCase();

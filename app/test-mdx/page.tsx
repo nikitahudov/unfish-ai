@@ -8,11 +8,30 @@ import { Scenario } from '@/components/content/Scenario';
 import { Calculator } from '@/components/content/Calculator';
 import { Comparison } from '@/components/content/Comparison';
 import { QuizLink } from '@/components/content/QuizLink';
+import { ContentProvider } from '@/components/content/ContentContext';
+import { useProgressStore } from '@/lib/progressStore';
+
+// Debug component to show current progress
+function ProgressDebug({ skillId }: { skillId: string }) {
+  const contentProgress = useProgressStore((state) => state.contentProgress);
+  const progress = contentProgress[skillId];
+
+  if (!progress) return <div className="text-slate-400">No progress yet</div>;
+
+  return (
+    <div className="bg-slate-800 rounded-lg p-4 font-mono text-sm">
+      <pre className="text-slate-300">
+        {JSON.stringify(progress, null, 2)}
+      </pre>
+    </div>
+  );
+}
 
 export default function TestMDX() {
   return (
-    <div className="p-8 max-w-3xl mx-auto space-y-12">
-      <h1 className="text-3xl font-bold text-white">MDX Component Test</h1>
+    <ContentProvider skillId="test" exercisesTotal={6} scenariosTotal={1}>
+      <div className="p-8 max-w-3xl mx-auto space-y-12">
+        <h1 className="text-3xl font-bold text-white">MDX Component Test</h1>
 
       {/* Existing Components */}
       <section className="space-y-4">
@@ -148,6 +167,13 @@ export default function TestMDX() {
         <h2 className="text-xl font-semibold text-amber-400">QuizLink</h2>
         <QuizLink moduleId="1.1" />
       </section>
+
+      {/* Progress Debug */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-amber-400">Progress Debug</h2>
+        <ProgressDebug skillId="test" />
+      </section>
     </div>
+    </ContentProvider>
   );
 }

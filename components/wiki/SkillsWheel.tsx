@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { skillsData, type Skill, type SkillCategory } from '@/data/skills';
+import { SkillModal } from './SkillModal';
 
 interface SkillsWheelProps {
   onSkillSelect?: (skill: Skill, category: string) => void;
@@ -38,6 +39,18 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSkillIndex, setSelectedSkillIndex] = useState<number | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSkillClick = (skill: Skill) => {
+    setSelectedSkill(skill);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedSkill(null);
+  };
 
   const categories = Object.keys(skillsData);
   const totalCategories = categories.length;
@@ -194,17 +207,8 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                   {skillsData[selectedCategory].skills.map((skill, idx) => (
                     <button
                       key={skill.id}
-                      onClick={() => {
-                        setSelectedSkillIndex(selectedSkillIndex === idx ? null : idx);
-                        if (onSkillSelect) {
-                          onSkillSelect(skill, selectedCategory);
-                        }
-                      }}
-                      className={`w-full text-left p-3 rounded-lg transition-all ${
-                        selectedSkillIndex === idx
-                          ? 'bg-slate-600'
-                          : 'bg-slate-700/50 hover:bg-slate-700'
-                      }`}
+                      onClick={() => handleSkillClick(skill)}
+                      className="w-full text-left p-3 rounded-lg transition-all bg-slate-700/50 hover:bg-slate-700"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
@@ -216,17 +220,6 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                               {skill.name}
                             </span>
                           </div>
-                          {selectedSkillIndex === idx && (
-                            <div className="mt-2 space-y-2">
-                              <p className="text-slate-400 text-xs">{skill.description}</p>
-                              <Link
-                                href={`/wiki/${skill.id}`}
-                                className="inline-block text-amber-400 hover:text-amber-300 text-xs font-medium"
-                              >
-                                Learn More →
-                              </Link>
-                            </div>
-                          )}
                         </div>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${getLevelColor(
@@ -273,12 +266,12 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                 {skillsData[category].skills.map((skill) => (
                   <li key={skill.id} className="flex items-center gap-2">
                     <span className={`w-1.5 h-1.5 rounded-full ${getLevelDotColor(skill.level)}`}></span>
-                    <Link
-                      href={`/wiki/${skill.id}`}
-                      className="text-slate-300 text-xs hover:text-amber-400 transition-colors"
+                    <button
+                      onClick={() => handleSkillClick(skill)}
+                      className="text-slate-300 text-xs hover:text-amber-400 transition-colors text-left"
                     >
                       {skill.name}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -321,6 +314,13 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
           <div className="text-slate-400 text-sm">Advanced</div>
         </div>
       </div>
+
+      {/* Skill Modal */}
+      <SkillModal
+        skill={selectedSkill}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };

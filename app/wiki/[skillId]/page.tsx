@@ -7,11 +7,11 @@ import { hasQuiz } from '@/data/quizRegistry';
 import { SkillContentClient } from './SkillContentClient';
 
 interface PageProps {
-  params: { skillId: string };
+  params: Promise<{ skillId: string }>;
 }
 
 export default async function SkillContentPage({ params }: PageProps) {
-  const { skillId } = params;
+  const { skillId } = await params;
 
   const skill = getSkillById(skillId);
   if (!skill) {

@@ -1,0 +1,371 @@
+---
+id: "1.1"
+title: "Pot Odds"
+category: "Mathematical Foundations"
+level: "Fundamental"
+prerequisites: []
+estimatedTime: "20 minutes"
+exercisesTotal: 12
+scenariosTotal: 1
+---
+
+## Introduction
+
+Every poker decision comes down to one question: *Is this profitable in the long run?*
+
+Pot odds are your answer. They tell you the **price** you're getting on a call and help you determine if that price is good enough based on your chances of winning.
+
+Think of it like shopping. If someone offers to sell you a lottery ticket with a 25% chance of winning $100, how much would you pay? If the ticket costs $20, it's a good deal (expected value: $25). If it costs $30, it's a bad deal.
+
+Pot odds work the same way in poker.
+
+<KeyConcept title="The Core Principle">
+**Call when your chance of winning exceeds the price you're paying.**
+
+If you need to call $25 to win a $100 pot, you're getting 4:1 odds. You only need to win 20% of the time to break even.
+</KeyConcept>
+
+---
+
+## What Are Pot Odds?
+
+Pot odds express the relationship between the current pot and the cost of your call. They can be written two ways:
+
+**As a Ratio:** 4:1 (read as "four to one")
+- Means you win $4 for every $1 you risk
+
+**As a Percentage:** 20%
+- Means you need to win 20% of the time to break even
+
+Both formats tell you the same thing - they're just different ways of expressing the "price" of your call.
+
+### The Pot Odds Formula
+
+<KeyConcept variant="formula" title="Pot Odds Formula">
+**Ratio Format:**
+Pot Odds = Total Pot : Your Call
+
+**Percentage Format:**
+Pot Odds % = Your Call ÷ (Total Pot + Your Call) × 100
+</KeyConcept>
+
+Let's break this down:
+
+1. **Total Pot** = Everything in the pot INCLUDING your opponent's current bet
+2. **Your Call** = The amount you need to put in to continue
+
+### Example Calculation
+
+The pot is $75. Your opponent bets $25. What are your pot odds?
+
+**Step 1:** Calculate the total pot after the bet
+- Total pot = $75 + $25 = $100
+
+**Step 2:** Express as a ratio
+- Pot odds = $100 : $25 = 4:1
+
+**Step 3:** Convert to percentage (optional)
+- $25 ÷ ($100 + $25) = $25 ÷ $125 = 0.20 = 20%
+
+You're getting 4:1 odds, meaning you need to win just 20% of the time to break even.
+
+<Exercise
+  question="The pot is $60. Your opponent bets $20. What are your pot odds as a ratio?"
+  type="text"
+  answer="4:1"
+  acceptableAnswers={["4:1", "4 to 1", "4-1", "4 : 1"]}
+  hint="First add the bet to the pot, then express as Pot : Call"
+  explanation="Total pot = $60 + $20 = $80. Pot odds = $80 : $20 = 4:1. You're getting 4-to-1 on your call."
+/>
+
+<Exercise
+  question="The pot is $150. Your opponent bets $50. What percentage of the time do you need to win to break even?"
+  type="number"
+  answer={25}
+  acceptableRange={[24, 26]}
+  unit="%"
+  hint="Use the formula: Call ÷ (Pot + Call) × 100"
+  explanation="Total pot = $150 + $50 = $200. You call $50. Percentage = $50 ÷ ($200 + $50) = $50 ÷ $250 = 0.20 = 25%"
+/>
+
+---
+
+## Converting Between Ratios and Percentages
+
+Being able to quickly convert between formats is essential. Here's how:
+
+### Ratio to Percentage
+
+<KeyConcept variant="formula" title="Ratio → Percentage">
+Percentage = 1 ÷ (Ratio + 1) × 100
+
+**Example:** 3:1 odds
+= 1 ÷ (3 + 1) × 100
+= 1 ÷ 4 × 100
+= 25%
+</KeyConcept>
+
+### Percentage to Ratio
+
+<KeyConcept variant="formula" title="Percentage → Ratio">
+Ratio = (100 - Percentage) : Percentage
+
+**Example:** 25%
+= (100 - 25) : 25
+= 75 : 25
+= 3:1
+</KeyConcept>
+
+<Exercise
+  question="Convert 5:1 pot odds to a percentage."
+  type="number"
+  answer={16.7}
+  acceptableRange={[16, 17]}
+  unit="%"
+  hint="Use: 1 ÷ (5 + 1) × 100"
+  explanation="1 ÷ (5 + 1) = 1 ÷ 6 = 0.167 = 16.7%. With 5:1 odds, you need to win about 17% of the time."
+/>
+
+<Exercise
+  question="Convert 2:1 pot odds to a percentage."
+  type="number"
+  answer={33}
+  acceptableRange={[32, 34]}
+  unit="%"
+  hint="Use: 1 ÷ (2 + 1) × 100"
+  explanation="1 ÷ (2 + 1) = 1 ÷ 3 = 0.333 = 33%. With 2:1 odds, you need to win about 33% of the time."
+/>
+
+---
+
+## Common Bet Sizes and Their Pot Odds
+
+Certain bet sizes come up constantly in poker. Memorizing these will let you calculate instantly at the table:
+
+<FlashCards
+  title="Memorize These Common Pot Odds"
+  cards={[
+    { front: "1/4 Pot Bet (25%)", back: "5:1 odds → Need 17% equity" },
+    { front: "1/3 Pot Bet (33%)", back: "4:1 odds → Need 20% equity" },
+    { front: "1/2 Pot Bet (50%)", back: "3:1 odds → Need 25% equity" },
+    { front: "2/3 Pot Bet (66%)", back: "2.5:1 odds → Need 29% equity" },
+    { front: "3/4 Pot Bet (75%)", back: "2.3:1 odds → Need 30% equity" },
+    { front: "Pot-Sized Bet (100%)", back: "2:1 odds → Need 33% equity" },
+    { front: "1.5x Pot Overbet", back: "1.7:1 odds → Need 37% equity" },
+    { front: "2x Pot Overbet", back: "1.5:1 odds → Need 40% equity" }
+  ]}
+/>
+
+<Exercise
+  question="Your opponent bets half the pot. What pot odds are you getting?"
+  type="text"
+  answer="3:1"
+  acceptableAnswers={["3:1", "3 to 1", "3-1", "3 : 1"]}
+  hint="Half-pot bet is one of the most common - try to memorize this one"
+  explanation="A half-pot bet gives you 3:1 odds (25% equity needed). This is one of the most common bet sizes you'll face."
+/>
+
+---
+
+## The Rule of 2 and 4
+
+Now you know how to calculate pot odds. But how do you know your chances of winning?
+
+When you have a **draw** (like a flush draw or straight draw), you can quickly estimate your equity using the Rule of 2 and 4.
+
+<KeyConcept title="Rule of 2 and 4">
+**Rule of 2:** Multiply your outs by 2 for the chance to hit on the next card.
+
+**Rule of 4:** Multiply your outs by 4 for the chance to hit by the river (when facing an all-in on the flop).
+</KeyConcept>
+
+### What Are Outs?
+
+**Outs** are cards that will improve your hand to (likely) the best hand.
+
+Common draws and their outs:
+- **Flush draw:** 9 outs (13 cards of suit - 4 you can see)
+- **Open-ended straight draw (OESD):** 8 outs
+- **Gutshot straight draw:** 4 outs
+- **Two overcards:** 6 outs (3 of each card)
+- **Flush draw + gutshot:** 12 outs (combo draw)
+
+### When to Use Each Rule
+
+<Comparison
+  title="Rule of 2 vs Rule of 4"
+  left={{
+    title: "Use Rule of 2",
+    items: [
+      "One card to come",
+      "Facing a bet on the turn",
+      "Opponent likely to bet river too",
+      "Multiply outs × 2"
+    ]
+  }}
+  right={{
+    title: "Use Rule of 4",
+    items: [
+      "Two cards to come",
+      "Facing an all-in on the flop",
+      "You'll definitely see both cards",
+      "Multiply outs × 4"
+    ]
+  }}
+/>
+
+### Examples
+
+**Flush draw on the turn (one card to come):**
+- 9 outs × 2 = 18% chance to hit
+
+**Flush draw on the flop vs all-in (two cards to come):**
+- 9 outs × 4 = 36% chance to hit
+
+<Exercise
+  question="You have an open-ended straight draw (8 outs) on the turn. Using the Rule of 2, what's your approximate equity?"
+  type="number"
+  answer={16}
+  acceptableRange={[15, 17]}
+  unit="%"
+  hint="Rule of 2: Outs × 2"
+  explanation="8 outs × 2 = 16%. You have about a 16% chance to hit your straight on the river."
+/>
+
+<Exercise
+  question="You have a flush draw (9 outs) on the flop and face an all-in. Using the Rule of 4, what's your approximate equity?"
+  type="number"
+  answer={36}
+  acceptableRange={[35, 37]}
+  unit="%"
+  hint="Rule of 4: Outs × 4 (because you'll see both turn and river)"
+  explanation="9 outs × 4 = 36%. Since you're seeing two cards, you have about a 36% chance to complete your flush."
+/>
+
+---
+
+## Putting It All Together
+
+Here's the decision-making framework:
+
+<KeyConcept title="The Pot Odds Decision">
+1. **Calculate your pot odds** (the price)
+2. **Estimate your equity** (your chance to win)
+3. **Compare:** If equity > pot odds percentage → **Call**
+4. **If equity < pot odds percentage** → **Fold** (unless implied odds justify it)
+</KeyConcept>
+
+### Complete Hand Example
+
+<Scenario
+  title="Should You Call This River Bet?"
+  setup="You have 8♠7♠ on a board of K♠9♠2♦J♣4♥. You missed your flush draw. The pot is $100 and your opponent bets $50. You have 8-high (basically nothing)."
+  steps={[
+    {
+      question: "What are your pot odds?",
+      answer: "3:1",
+      hint: "Pot after bet = $100 + $50 = $150. You call $50.",
+      explanation: "Pot odds = $150 : $50 = 3:1 (or 25%)"
+    },
+    {
+      question: "What is your equity (approximately)?",
+      answer: "0%",
+      hint: "You have 8-high on a K-J board. Can you win at showdown?",
+      explanation: "With 8-high, you have essentially 0% equity. You can only win if opponent is bluffing."
+    },
+    {
+      question: "Do pot odds justify a call? (yes/no)",
+      answer: "no",
+      hint: "Compare: Is your equity greater than 25%?",
+      explanation: "0% equity < 25% needed. This is a clear fold. Pot odds don't justify calling with no chance to win."
+    },
+    {
+      question: "What if you thought opponent bluffs 30% of the time here?",
+      answer: "call",
+      hint: "If opponent bluffs 30%, your 'equity' is 30% (you win when they're bluffing)",
+      explanation: "If you believe opponent bluffs >25% of the time, calling becomes profitable! This is where reads and game theory intersect with pot odds."
+    }
+  ]}
+/>
+
+---
+
+## Practice Problems
+
+Let's cement your understanding with some rapid-fire practice:
+
+<MultiExercise
+  title="Quick Pot Odds Practice"
+  exercises={[
+    {
+      question: "Pot $80, opponent bets $40. Pot odds ratio?",
+      answer: "3:1",
+      explanation: "Total pot = $120. Odds = $120 : $40 = 3:1"
+    },
+    {
+      question: "Pot $100, opponent bets $100. Pot odds ratio?",
+      answer: "2:1",
+      explanation: "Total pot = $200. Odds = $200 : $100 = 2:1"
+    },
+    {
+      question: "You have 12 outs on the flop vs all-in. Equity?",
+      answer: "48%",
+      explanation: "Rule of 4: 12 × 4 = 48%"
+    },
+    {
+      question: "4:1 pot odds. What equity % do you need?",
+      answer: "20%",
+      explanation: "1 ÷ (4+1) = 1 ÷ 5 = 20%"
+    },
+    {
+      question: "You need 25% equity. Opponent bets half-pot. Call? (yes/no)",
+      answer: "yes",
+      explanation: "Half-pot = 3:1 = 25% needed. You have exactly 25%. It's break-even, so slightly profitable when you factor in times you might win more."
+    }
+  ]}
+/>
+
+---
+
+## Common Mistakes to Avoid
+
+### Mistake 1: Forgetting to Add the Bet to the Pot
+
+**Wrong:** Pot is $100, bet is $50, so odds are 100:50 = 2:1
+**Right:** Pot is $100 + $50 = $150, so odds are 150:50 = 3:1
+
+Always calculate pot odds based on what you're winning (pot + bet), not just the original pot.
+
+### Mistake 2: Using Rule of 4 When You Shouldn't
+
+Only use Rule of 4 when you're **guaranteed** to see both cards (facing an all-in). If opponent can bet again on the turn, use Rule of 2.
+
+### Mistake 3: Ignoring Implied Odds
+
+Pot odds tell you the *immediate* price. But sometimes you can win more money on later streets. This is called **implied odds** - we'll cover this in a future lesson.
+
+### Mistake 4: Counting Outs That Aren't Clean
+
+Not all outs are created equal. If you're drawing to a flush but a flush card also completes an obvious straight for your opponent, that out is "dirty" and less valuable.
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Pot odds = Pot : Call** — tells you the price you're getting
+2. **Rule of 2** — outs × 2 for one card (turn OR river)
+3. **Rule of 4** — outs × 4 for two cards (facing all-in on flop)
+4. **Call when equity > pot odds percentage**
+5. **Memorize common bet sizes** — half-pot = 3:1, pot = 2:1
+</KeyConcept>
+
+Pot odds are foundational. Every advanced concept builds on this skill. Practice until these calculations become instant and automatic.
+
+---
+
+## Test Your Knowledge
+
+Ready to see how well you've learned pot odds?
+
+<QuizLink moduleId="1.1" />

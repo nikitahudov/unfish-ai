@@ -315,12 +315,14 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
         </div>
       </div>
 
-      {/* Skill Modal */}
-      <SkillModal
-        skill={selectedSkill}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
+      {/* Skill Modal - Only mount when needed to avoid SSR hydration issues */}
+      {isModalOpen && (
+        <SkillModal
+          skill={selectedSkill}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

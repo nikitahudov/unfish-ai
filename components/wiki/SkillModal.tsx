@@ -14,6 +14,9 @@ interface SkillModalProps {
 }
 
 export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
+  // Get progress data - MUST be called unconditionally (Rules of Hooks)
+  const { contentProgress, skills: quizProgress, getContentStatus } = useProgressStore();
+
   // Close on escape key and manage body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -33,13 +36,12 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // Don't render if not open or no skill
-  if (!isOpen || !skill) {
+  // Don't render if no skill (isOpen check is now handled by parent component)
+  if (!skill) {
     return null;
   }
 
-  // Get progress data
-  const { contentProgress, skills: quizProgress, getContentStatus } = useProgressStore();
+  // Get skill-specific progress data
   const content = contentProgress[skill.id];
   const quiz = quizProgress[skill.id];
 
@@ -91,7 +93,7 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative bg-slate-800 rounded-2xl max-w-lg w-full border border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative bg-slate-800 rounded-2xl max-w-lg w-full border border-slate-700 shadow-2xl transition-all duration-200 ease-out">
         {/* Close Button */}
         <button
           onClick={onClose}

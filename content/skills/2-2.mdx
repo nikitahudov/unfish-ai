@@ -1,0 +1,452 @@
+---
+id: "2.2"
+title: "Position Awareness"
+category: "Pre-Flop Strategy"
+level: "Fundamental"
+prerequisites: ["2.1"]
+estimatedTime: "20 minutes"
+exercisesTotal: 10
+scenariosTotal: 1
+---
+
+## Introduction
+
+If there's one concept that separates poker from other card games, it's **position**. In blackjack, your seat doesn't matter. In poker, it's everything.
+
+Position refers to where you sit relative to the dealer button and, more importantly, when you act during a hand. Acting last is a massive advantage—you get to see what everyone else does before making your decision.
+
+<KeyConcept title="The Power of Position">
+**Position is so valuable that professional players often say:**
+
+"I'd rather have a mediocre hand in position than a good hand out of position."
+
+This isn't hyperbole. Data shows that the button (best position) has win rates 2-3x higher than the blinds.
+</KeyConcept>
+
+In this module, you'll learn every table position, understand why acting last is so powerful, and discover how to adjust your strategy based on where you're sitting.
+
+---
+
+## Table Positions Explained
+
+### 9-Max (Full Ring) Positions
+
+At a full 9-player table, positions are named from earliest to latest:
+
+| Position | Abbreviation | Category |
+|----------|--------------|----------|
+| Under the Gun | UTG | Early |
+| Under the Gun +1 | UTG+1 | Early |
+| Under the Gun +2 | UTG+2 | Early |
+| Middle Position | MP | Middle |
+| Middle Position +1 | MP+1 | Middle |
+| Hijack | HJ | Late |
+| Cutoff | CO | Late |
+| Button | BTN | Late |
+| Small Blind | SB | Blinds |
+| Big Blind | BB | Blinds |
+
+### 6-Max Positions
+
+At a 6-player table (more common online), positions compress:
+
+| Position | Abbreviation | Category |
+|----------|--------------|----------|
+| Under the Gun | UTG | Early |
+| Middle Position | MP | Middle |
+| Hijack | HJ | Late |
+| Cutoff | CO | Late |
+| Button | BTN | Late |
+| Small Blind | SB | Blinds |
+| Big Blind | BB | Blinds |
+
+<Exercise
+  question="In a 6-max game, which position acts first preflop?"
+  type="text"
+  answer="UTG"
+  acceptableAnswers={["UTG", "utg", "under the gun", "Under the Gun"]}
+  hint="The earliest position in 6-max..."
+  explanation="UTG (Under the Gun) acts first preflop in 6-max. The action moves clockwise from there."
+/>
+
+<Exercise
+  question="In a 6-max game, which position acts last preflop (before the blinds respond)?"
+  type="text"
+  answer="Button"
+  acceptableAnswers={["Button", "button", "BTN", "btn"]}
+  hint="This is the most profitable position..."
+  explanation="The Button acts last preflop (besides the blinds when facing a raise). Postflop, the button ALWAYS acts last, which is why it's the best seat."
+/>
+
+---
+
+## Why Position Matters
+
+Position provides four key advantages:
+
+### 1. Information Advantage
+
+When you act last, you see what your opponents do before deciding. Did they check (showing weakness)? Bet small? Bet big? You get to use this information; they don't get to use yours.
+
+<KeyConcept title="Information = Money">
+Every piece of information has value. If your opponent checks and you hold a marginal hand:
+
+- **In position:** You can check back for a free card or value bet thinly
+- **Out of position:** You have to act first, often guessing wrong
+</KeyConcept>
+
+### 2. Pot Control
+
+When you're in position, you control the size of the pot much more easily:
+
+- Want to keep the pot small with a medium-strength hand? Check behind.
+- Want to build the pot with a strong hand? Bet.
+
+Out of position, you either bet and risk raises or check and give free cards.
+
+### 3. Bluffing Credibility
+
+Bluffs from the button are more believable than bluffs from early position. Why?
+
+- You could have any hand (wide range)
+- You've seen everyone check (showing weakness)
+- Your story makes sense
+
+<Exercise
+  question="You're on the button. Everyone checks to you on the river. Is this a good spot to bluff?"
+  type="text"
+  answer="yes"
+  acceptableAnswers={["yes", "Yes", "YES"]}
+  hint="Think about the information you've gathered..."
+  explanation="Yes! When everyone checks to you on the river, they've shown weakness. Your bluff has high credibility because: (1) they've demonstrated they don't have a strong hand, and (2) you could have been slow-playing anything."
+/>
+
+### 4. Equity Realization
+
+Remember realized equity from Module 1.2? Position is the biggest factor in how much of your theoretical equity you actually capture.
+
+**Example:** You have 7♠6♠ vs. A♦K♦ — roughly 40% equity.
+
+- **In position:** You can see cheap turns, control pot size, and fold when you miss
+- **Out of position:** You face bets when you miss, can't control sizing, and often fold too early or pay too much
+
+In position, you might realize 90%+ of your 40% equity. Out of position, maybe only 60%.
+
+---
+
+## Position Statistics
+
+Data from millions of online hands proves position's importance:
+
+<FlashCards
+  title="Average Win Rates by Position (bb/100 hands)"
+  cards={[
+    { front: "Button (BTN)", back: "+25 to +35 bb/100 — Most profitable seat" },
+    { front: "Cutoff (CO)", back: "+15 to +25 bb/100 — Second most profitable" },
+    { front: "Hijack (HJ)", back: "+5 to +15 bb/100 — Still solidly profitable" },
+    { front: "Middle Position", back: "+2 to +8 bb/100 — Modest profit" },
+    { front: "UTG / Early", back: "+0 to +5 bb/100 — Break-even to small profit" },
+    { front: "Small Blind (SB)", back: "-15 to -25 bb/100 — Worst seat" },
+    { front: "Big Blind (BB)", back: "-10 to -20 bb/100 — Forced money in" }
+  ]}
+/>
+
+Notice the pattern: profit increases as position improves. The button can be 10x more profitable than UTG. This isn't coincidence—it's the power of acting last.
+
+<Exercise
+  question="Which position has the WORST expected win rate?"
+  type="text"
+  answer="Small Blind"
+  acceptableAnswers={["Small Blind", "small blind", "SB", "sb"]}
+  hint="This position has worst postflop position AND has to post money preflop..."
+  explanation="The Small Blind is the worst position. You're forced to put money in blind, and you'll be out of position to everyone except the BB for the entire hand."
+/>
+
+---
+
+## Position-Based Hand Selection
+
+Your starting hand requirements should change dramatically based on position. From Module 2.1, you learned hand categories. Here's how to apply them by position:
+
+<Comparison
+  title="Hand Ranges by Position"
+  left={{
+    title: "Early Position (UTG)",
+    items: [
+      "Only ~12-15% of hands",
+      "Premium and strong hands",
+      "AA, KK, QQ, JJ, TT, AK, AQs",
+      "NO speculative hands",
+      "NO trouble hands"
+    ]
+  }}
+  right={{
+    title: "Button (BTN)",
+    items: [
+      "Up to ~40-50% of hands",
+      "All playable hands",
+      "Add suited connectors, suited gappers",
+      "Small pairs for set-mining",
+      "Even some trouble hands"
+    ]
+  }}
+/>
+
+### Why Can You Play More on the Button?
+
+1. **Fewer players to act:** Only the blinds remain. Less chance someone has a strong hand.
+2. **Guaranteed position:** You'll act last on every postflop street.
+3. **Stealing opportunity:** Blinds fold often, awarding you dead money.
+
+### Position-Based Opening Percentages
+
+| Position | Approximate Opening Range |
+|----------|--------------------------|
+| UTG | 12-15% |
+| UTG+1 | 14-16% |
+| MP | 16-20% |
+| HJ | 20-25% |
+| CO | 25-32% |
+| BTN | 40-50% |
+| SB | 35-45% (vs BB only) |
+
+<Exercise
+  question="From the cutoff, should you play a wider or narrower range than from UTG?"
+  type="text"
+  answer="wider"
+  acceptableAnswers={["wider", "Wider", "WIDER"]}
+  hint="CO has much better position than UTG..."
+  explanation="Much wider! The CO plays roughly 25-32% of hands vs UTG's 12-15%. Better position = more hands profitable to play."
+/>
+
+---
+
+## Relative Position
+
+There's another layer to position: your position **relative to the preflop aggressor**.
+
+<KeyConcept title="Relative Position">
+**Absolute position:** Where you sit relative to the button.
+
+**Relative position:** Where you sit relative to the player who has betting lead (usually the preflop raiser).
+
+Acting AFTER the aggressor is valuable because you see what they do before acting.
+</KeyConcept>
+
+### Example: The Sandwich
+
+You're in the small blind. UTG raises, you call, and the big blind calls.
+
+On the flop, the action goes: **You → BB → UTG raiser**
+
+This is terrible relative position! You have to act first, but the person with the betting lead (UTG) acts last. You're "sandwiched"—whatever you do, UTG can punish you.
+
+Compare this to being on the button with the same three players. Now you act AFTER UTG, seeing what they do before deciding.
+
+<Exercise
+  question="The cutoff raises and the button calls. You're in the big blind. Who has the best relative position postflop?"
+  type="text"
+  answer="Button"
+  acceptableAnswers={["Button", "button", "BTN", "btn"]}
+  hint="Who acts after the preflop raiser?"
+  explanation="The Button has the best relative position. They act after the cutoff (the preflop raiser) on every street, gaining maximum information before deciding."
+/>
+
+---
+
+## Playing from the Blinds
+
+The blinds are unique: you're forced to put money in, but you have terrible position postflop.
+
+### Small Blind Problems
+
+The small blind is the worst seat because:
+1. You post 0.5bb without seeing cards (forced investment)
+2. You're out of position to everyone except the BB
+3. You're last to act preflop but first to act postflop
+
+**Strategy:** Play tighter than you think. Many players defend the small blind way too wide.
+
+### Big Blind Considerations
+
+The big blind is slightly better because:
+1. You close the action preflop (can see everyone's decision)
+2. You're getting a discount (already posted 1bb)
+3. Pot odds often justify wider calls
+
+**Big Blind Defense Math:**
+
+If everyone folds to the button who raises to 2.5bb, you need to call 1.5bb to win 4bb (2.5 + 0.5 + 1).
+- Pot odds: 4:1.5 = 2.67:1
+- Required equity: 27%
+
+Many hands have 27% equity against a wide button range, making wide big blind defense correct.
+
+<KeyConcept title="Blind Defense Balance">
+**Don't defend blinds too tight:** You're getting good pot odds; folding too much bleeds chips.
+
+**Don't defend too wide:** Being out of position is costly. You'll make postflop mistakes that eat into your pot odds advantage.
+
+Find the balance—defend with playable hands that can navigate postflop.
+</KeyConcept>
+
+<Exercise
+  question="You're in the big blind. The button min-raises to 2bb, SB folds. You need to call 1bb to win 3.5bb. What pot odds are you getting?"
+  type="text"
+  answer="3.5:1"
+  acceptableAnswers={["3.5:1", "3.5 to 1", "3.5-1"]}
+  hint="Pot = 2bb + 0.5bb + 1bb = 3.5bb. You call 1bb."
+  explanation="You're getting 3.5:1 odds (1bb to win 3.5bb). This means you only need ~22% equity to break even, justifying calls with a wide range of hands."
+/>
+
+---
+
+## Exploiting Position
+
+Understanding position lets you exploit opponents who ignore it.
+
+### Against Players in Early Position
+
+Early position raisers have strong ranges (they SHOULD, anyway). Respect their bets and tighten your calling range.
+
+### Against Players in Late Position
+
+Late position raisers might have anything. You can 3-bet more liberally for value or as a bluff.
+
+### When You Have Position
+
+- **Bet more draws:** You can take free cards when you miss
+- **Value bet thinner:** Easier to fold to raises
+- **Bluff more rivers:** Your story is more credible
+
+### When Out of Position
+
+- **Play tighter ranges:** You need stronger hands to compensate
+- **Check-raise more:** It's your main way to build pots and protect
+- **Give up more often:** Being OOP and weak is losing poker
+
+<Exercise
+  question="You're in position with a medium-strength hand. Opponent checks. Should you usually bet or check?"
+  type="text"
+  answer="it depends"
+  acceptableAnswers={["it depends", "depends", "Depends", "It depends", "both can be correct", "situational"]}
+  hint="There's no universal answer—what factors matter?"
+  explanation="It depends! With a medium hand in position, both options are viable. Checking takes a free card and pot controls. Betting gets value from worse hands but risks raises. Consider board texture, opponent tendencies, and stack depth."
+/>
+
+---
+
+## Common Positional Mistakes
+
+### Mistake 1: Playing Too Many Hands from EP
+
+"But AJo is a good hand!" Not from UTG it isn't. When 8 players act behind you, someone likely has you dominated.
+
+### Mistake 2: Not Widening Enough on the Button
+
+Folding 98s on the button because "it's not premium" throws away profit. You have every advantage; use it.
+
+### Mistake 3: Over-Defending Blinds
+
+"But I already have money in!" Sunk cost fallacy. Bad pot odds with Q5o are still bad, even if you posted a blind.
+
+### Mistake 4: Ignoring Relative Position
+
+Calling a raise with the original raiser still to act is dangerous. You'll be sandwiched if they continue.
+
+### Mistake 5: Playing OOP as if You're IP
+
+Out of position, you should be checking more, betting smaller, and folding more. You can't play the same strategy from everywhere.
+
+---
+
+## Practice Problems
+
+<MultiExercise
+  title="Position Recognition Practice"
+  exercises={[
+    {
+      question: "In 6-max, how many positions are considered 'late position'?",
+      answer: "3",
+      explanation: "Hijack, Cutoff, and Button are late position (sometimes HJ is grouped as middle). These are the profitable stealing positions."
+    },
+    {
+      question: "You're on the button with K8s. UTG raises. Is cold-calling a good play?",
+      answer: "Usually fold",
+      explanation: "Usually fold. K8s doesn't play well against an UTG opening range (which is tight). You'll be dominated by Kx hands and can't realize your equity well enough."
+    },
+    {
+      question: "The cutoff opens, you 3-bet from the button, CO calls. Who has position postflop?",
+      answer: "Button",
+      explanation: "You (Button) have position. You'll act last on every postflop street, giving you maximum information advantage."
+    },
+    {
+      question: "Should you play more hands from the SB or the BB?",
+      answer: "BB",
+      explanation: "BB plays more hands because: (1) you get a discount (already posted 1bb), (2) you close the preflop action, and (3) you're only OOP to one player (vs SB being OOP to everyone)."
+    },
+    {
+      question: "What percentage of hands should you roughly open from UTG in 6-max?",
+      answer: "12-15%",
+      explanation: "About 12-15%. This includes premiums (AA-TT), strong broadways (AK, AQ, AJ), and a few other strong hands. No speculative hands from EP."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Position-Based Decision
+
+<Scenario
+  title="Adjusting for Position"
+  setup="You're playing 6-max online, 100bb deep. The same hand—J♥T♥—comes up in different positions. Consider how position changes your decision."
+  steps={[
+    {
+      question: "You're UTG with J♥T♥. Everyone has folded to you. Should you raise, limp, or fold?",
+      answer: "fold",
+      hint: "JTs is a nice hand, but UTG is the tightest position...",
+      explanation: "Fold. JTs is too weak to open from UTG in most games. You'll face overcards often, and 5 players behind could wake up with better hands. In aggressive games with 3-bettors behind, this is definitely a fold."
+    },
+    {
+      question: "You're in the Hijack with J♥T♥. Everyone folds to you. Raise, limp, or fold?",
+      answer: "raise",
+      hint: "HJ is late position with only 3 players behind...",
+      explanation: "Raise! From the HJ with only CO, BTN, and blinds behind, JTs becomes playable. You have reasonable equity if called and can take down the blinds uncontested often."
+    },
+    {
+      question: "You're on the Button with J♥T♥. Everyone folds to you. Raise, limp, or fold?",
+      answer: "raise",
+      hint: "The button is the best position...",
+      explanation: "Definitely raise! JTs is a clear open from the button. You have position on the blinds, great playability postflop, and steal equity. This is one of the most profitable spots in poker."
+    },
+    {
+      question: "You're in the Big Blind with J♥T♥. Button raises to 2.5bb, SB folds. Raise (3-bet), call, or fold?",
+      answer: "call",
+      hint: "Consider your pot odds and JTs's playability...",
+      explanation: "Call. You're getting 3.5:1 pot odds and JTs has excellent postflop playability with straight and flush potential. 3-betting turns your hand into a bluff (which can work), but calling to see a flop is the standard play here."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Position = Information = Profit** — Acting last is a massive advantage
+2. **Know your positions** — BTN is best, SB is worst
+3. **Adjust ranges by position** — 12% from UTG, 45% from BTN
+4. **Relative position matters** — Act after the aggressor when possible
+5. **Defend blinds wisely** — Not too tight, not too wide
+6. **Exploit position imbalances** — Pressure players OOP, respect EP raisers
+</KeyConcept>
+
+Position is the great equalizer in poker. A skilled player with position can outplay a mediocre player with better cards. Never underestimate it. In the next module, you'll learn exactly which hands to open-raise from each position.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your position awareness?
+
+<QuizLink moduleId="2.2" />

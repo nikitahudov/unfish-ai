@@ -1,0 +1,409 @@
+---
+id: "4.1"
+title: "Semi-Bluffing"
+category: "Bluffing & Deception"
+level: "Fundamental"
+prerequisites: ["1.2", "3.2"]
+estimatedTime: "20 minutes"
+exercisesTotal: 12
+scenariosTotal: 1
+---
+
+## Introduction
+
+In Module 3.2, you learned about value betting—betting to get called by worse hands. But what about when you don't have a made hand? What about when you have a draw?
+
+This is where the **semi-bluff** comes in—one of the most powerful plays in poker.
+
+<KeyConcept title="What Is a Semi-Bluff?">
+A **semi-bluff** is a bet or raise made with a drawing hand that isn't currently the best hand but has equity to improve.
+
+Unlike a pure bluff (where you have no chance to win if called), a semi-bluff has **two ways to win**.
+</KeyConcept>
+
+Semi-bluffs are the perfect blend of aggression and equity. You're applying pressure while maintaining a backup plan. When executed correctly, they're among the most profitable plays in poker.
+
+---
+
+## The Two Ways to Win
+
+This is the core principle of semi-bluffing:
+
+<KeyConcept title="Two Ways to Win">
+**Way 1: Opponent Folds** — You win the pot immediately.
+
+**Way 2: Opponent Calls** — You can improve to the best hand on future streets.
+
+A pure bluff only has Way 1. A value bet relies on Way 2 working in your favor. A semi-bluff has BOTH.
+</KeyConcept>
+
+### Why This Is So Powerful
+
+Imagine you have a flush draw on the flop (9 outs, ~35% to hit by the river).
+
+**If you just call:**
+- You win when you hit (~35%)
+- You lose when you miss (~65%)
+
+**If you semi-bluff:**
+- You win when opponent folds (let's say 40%)
+- You win when you're called AND hit (60% × 35% = 21%)
+- You lose when called AND miss (60% × 65% = 39%)
+- **Total win rate: 61%**
+
+Semi-bluffing transforms a 35% equity hand into a 61% winning play.
+
+<Exercise
+  question="You semi-bluff with a flush draw. Opponent folds 50% of the time. When called, you hit your flush 35% of the time. What's your approximate total win percentage?"
+  type="number"
+  answer={67}
+  acceptableRange={[65, 70]}
+  unit="%"
+  hint="Add fold equity to (call% × hit%)"
+  explanation="50% (fold equity) + (50% × 35%) = 50% + 17.5% = 67.5%. Your semi-bluff wins about two-thirds of the time!"
+/>
+
+---
+
+## Semi-Bluff Candidates
+
+Not all draws make good semi-bluffs. You need enough equity to justify the aggression.
+
+<FlashCards
+  title="Semi-Bluff Hand Strength"
+  cards={[
+    { front: "Combo Draw (flush draw + straight draw)", back: "12-15 outs, ~50% equity. Premium semi-bluff. Can bet/raise large." },
+    { front: "Flush Draw (9 outs)", back: "~35% equity by river, ~19% per street. Excellent semi-bluff candidate." },
+    { front: "Open-Ended Straight Draw (8 outs)", back: "~32% equity by river, ~17% per street. Strong semi-bluff candidate." },
+    { front: "Flush Draw + Overcards", back: "~45% equity. Very strong—often favorite vs top pair. Premium semi-bluff." },
+    { front: "Gutshot Straight Draw (4 outs)", back: "~17% equity by river. Needs significant fold equity to semi-bluff." },
+    { front: "Backdoor Draws", back: "~4% equity alone. Not enough for standalone semi-bluff. Adds value to other draws." },
+    { front: "Overcards Only (6 outs)", back: "~24% equity. Marginal—needs fold equity and good board to semi-bluff." },
+    { front: "Pair + Flush Draw", back: "~55% equity. Often a favorite! Can bet/raise aggressively." }
+  ]}
+/>
+
+<Exercise
+  question="You have J♥T♥ on a flop of Q♥8♥4♣. How many outs do you have approximately?"
+  type="number"
+  answer={12}
+  acceptableRange={[11, 13]}
+  hint="Count flush outs (9) plus straight outs (careful not to double-count)"
+  explanation="You have 12 outs: 9 hearts for the flush, plus the 9♣ and 9♦ for the straight (the 9♥ is already counted as a flush out), and the K♣ and K♦ (the K♥ is counted). This is a powerful combo draw."
+/>
+
+---
+
+## Semi-Bluff Math
+
+Let's formalize when semi-bluffs are profitable:
+
+<KeyConcept variant="formula" title="Semi-Bluff EV Formula">
+**EV = (Fold% × Pot) + (Call% × (Equity × New Pot - Bet))**
+
+Where:
+- Fold% = How often opponent folds
+- Pot = Current pot size
+- Call% = How often opponent calls
+- Equity = Your chance to win when called
+- New Pot = Pot after opponent calls
+- Bet = Your bet size
+</KeyConcept>
+
+### Example Calculation
+
+**Situation:**
+- Pot: $100
+- Your bet: $75
+- Opponent folds: 40%
+- Your equity when called: 35%
+
+**EV = (0.40 × $100) + (0.60 × (0.35 × $250 - $75))**
+**EV = $40 + (0.60 × ($87.50 - $75))**
+**EV = $40 + (0.60 × $12.50)**
+**EV = $40 + $7.50**
+**EV = +$47.50**
+
+This semi-bluff is highly profitable!
+
+<Exercise
+  question="Your semi-bluff has 0% fold equity (opponent always calls). You have 35% equity. Is this semi-bluff profitable?"
+  type="text"
+  answer="yes, if pot odds are right"
+  acceptableAnswers={["yes if pot odds are right", "depends", "maybe", "depends on pot odds", "yes"]
+}
+  hint="With no fold equity, this becomes a pure equity play"
+  explanation="It depends on pot odds. With 35% equity, you need better than 2:1 pot odds to profit. If you're getting good pot odds, calling is fine. If not, your 'semi-bluff' is losing money. Without fold equity, you need the math to work on equity alone."
+/>
+
+---
+
+## Semi-Bluff Sizing
+
+Your bet size affects both fold equity and pot odds:
+
+### Standard Semi-Bluff Sizing
+
+**50-75% pot** is typical for semi-bluffs:
+- Large enough to generate folds
+- Small enough that you're not risking too much
+- Creates reasonable pot odds for the next street
+
+### All-In Semi-Bluffs
+
+When stack-to-pot ratio is right (around 1:1 or less), shoving can be correct:
+- Maximum fold equity
+- Realize all your equity if called
+- No more decisions—simplifies the hand
+
+### Small Semi-Bluffs (Probing)
+
+Sometimes a small bet (25-40% pot) works:
+- Tests opponent's hand strength
+- Builds the pot for later
+- Good on turns when draws brick
+
+<Exercise
+  question="The pot is $80. You have a flush draw on the turn with $60 behind. What's the best semi-bluff action?"
+  type="text"
+  answer="all-in"
+  acceptableAnswers={["all-in", "shove", "all in", "jam"]}
+  hint="Consider the stack-to-pot ratio"
+  explanation="All-in (shove). With only $60 behind and an $80 pot (SPR < 1), moving all-in maximizes fold equity while ensuring you see the river. A smaller bet leaves you in an awkward spot if raised."
+/>
+
+---
+
+## Semi-Bluffing by Position
+
+Position matters for semi-bluffs just as it does for all poker decisions:
+
+<Comparison
+  title="Semi-Bluffing IP vs OOP"
+  left={{
+    title: "In Position (IP)",
+    items: [
+      "Can bet or raise as semi-bluff",
+      "See opponent's action first",
+      "Can take free cards if check-through",
+      "More control over pot size",
+      "Higher success rate on semi-bluffs"
+    ]
+  }}
+  right={{
+    title: "Out of Position (OOP)",
+    items: [
+      "Check-raise is primary semi-bluff move",
+      "Must act without information",
+      "Donk betting can work situationally",
+      "Risk of facing raises",
+      "Requires stronger draws"
+    ]
+  }}
+/>
+
+### The Check-Raise Semi-Bluff
+
+Out of position, the check-raise is your most powerful semi-bluffing weapon.
+
+<KeyConcept title="Check-Raise Semi-Bluff">
+**How it works:** Check to the aggressor, they bet, you raise.
+
+**Why it's powerful:**
+- Represents extreme strength
+- Puts maximum pressure on opponent
+- Can take down pots immediately
+- Sets up big turn/river bets
+
+**Best hands:** Combo draws, flush draws with overcards, pair + flush draw
+</KeyConcept>
+
+<Exercise
+  question="You're in the big blind with A♠5♠. The flop is K♠8♠4♦. The preflop raiser bets. What's a strong semi-bluff play?"
+  type="text"
+  answer="check-raise"
+  acceptableAnswers={["check-raise", "Check-raise", "raise", "check raise"]}
+  hint="You're out of position with a strong draw"
+  explanation="Check-raise! You have the nut flush draw (9 outs) with a backdoor wheel draw. A check-raise represents a strong made hand like a set or two pair, applying maximum pressure while having great equity if called."
+/>
+
+---
+
+## When NOT to Semi-Bluff
+
+Semi-bluffs aren't always correct. Avoid them in these situations:
+
+### Against Calling Stations
+
+If your opponent never folds, you have no fold equity. Your "semi-bluff" becomes just a bet with equity—which might still be okay, but you're not getting the full benefit.
+
+### With Weak Draws
+
+Gutshots and backdoor draws alone don't have enough equity. You need significant fold equity to compensate, and you're better off taking a free card.
+
+### In Multiway Pots
+
+With multiple opponents, someone likely has a hand. Semi-bluffs lose effectiveness when you need everyone to fold.
+
+### When You Have Showdown Value
+
+If you have a medium-strength hand that can win at showdown (like bottom pair with a flush draw), sometimes checking is better than turning your hand into a bluff.
+
+<Exercise
+  question="You have a gutshot (4 outs) on the flop against a player who calls 90% of bets. Should you semi-bluff?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO"]}
+  hint="Consider both your equity and fold equity"
+  explanation="No. With only 4 outs (~17% equity) and essentially no fold equity against a calling station, this isn't a semi-bluff—it's just a bad bluff. Take the cheap card or fold to aggression."
+/>
+
+---
+
+## Common Semi-Bluff Mistakes
+
+### Mistake 1: Semi-Bluffing Without Enough Equity
+
+A gutshot isn't a semi-bluff—it's a bluff with a tiny chance of hitting. You need real equity (8+ outs) to semi-bluff effectively.
+
+### Mistake 2: Over-Aggression With Draws
+
+Bombing every draw for three streets will get exploited. Mix in some calls and checks to remain unpredictable.
+
+### Mistake 3: Ignoring Opponent Tendencies
+
+Semi-bluffs work against players who fold. Against calling stations, just see your cards cheaply or bet for thin value when you hit.
+
+### Mistake 4: Not Considering Stack Depth
+
+Short stacks change the math. With 15bb, you can't semi-bluff small—it's shove or fold. Deep stacks give more flexibility.
+
+### Mistake 5: Semi-Bluffing Dry Boards
+
+On K♠7♦2♣, there are few draws. "Semi-bluffing" with a gutshot here is really just bluffing—you need a wet board to have meaningful draws.
+
+---
+
+## Practice: Semi-Bluff Decisions
+
+<MultiExercise
+  title="Semi-Bluff or Check?"
+  exercises={[
+    {
+      question: "Flop: J♥9♥4♣. You have Q♥T♥ (flush draw + gutshot). Semi-bluff or check?",
+      answer: "Semi-bluff",
+      explanation: "Semi-bluff! You have a flush draw (9 outs) plus a gutshot (3 more outs) = 12 outs. This is a premium semi-bluff hand with ~45% equity."
+    },
+    {
+      question: "Flop: K♠8♦3♣. You have 6♠5♠ (no pair, backdoor draw only). Semi-bluff or check?",
+      answer: "Check",
+      explanation: "Check. You have almost nothing—no pair, no real draw except a backdoor flush. This would be a pure bluff, not a semi-bluff. Give up or take a free card."
+    },
+    {
+      question: "Turn: K♠J♦7♥2♣. You have A♠Q♠ (gutshot + overcards). Bet as semi-bluff?",
+      answer: "Check (usually)",
+      explanation: "Usually check. You have a gutshot (4 outs) and overcards (6 outs), but on this dry board, your semi-bluff has little credibility. Consider a small stab, but checking is often best."
+    },
+    {
+      question: "Flop: T♥8♥4♦. You have A♥K♥ (nut flush draw). Opponent is a calling station. Semi-bluff or check?",
+      answer: "Bet for value/equity",
+      explanation: "Bet, but understand it's more about equity than fold equity. Against a calling station, you won't get folds, but you're building a pot with ~35% equity to the nuts. You want action!"
+    },
+    {
+      question: "Flop: Q♠9♣5♦. You have J♦T♦ (open-ended straight draw). Three opponents in the pot. Semi-bluff?",
+      answer: "Check",
+      explanation: "Check. In a multiway pot, someone likely has a queen or better. Your semi-bluff will get called too often. Take the cheap card and hope to hit."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Should You Semi-Bluff?
+
+<Scenario
+  title="The Flush Draw Decision"
+  setup="You raise A♦9♦ from the cutoff, and the big blind calls. The flop comes K♦7♦3♠. The pot is $6.50. You have $94 behind. Big blind checks to you."
+  steps={[
+    {
+      question: "What is your hand's equity approximately? (flush draw with one overcard)",
+      answer: "38-40%",
+      hint: "You have 9 flush outs plus maybe 3 ace outs",
+      explanation: "Around 38-40%. You have 9 flush outs (~35% alone) plus approximately 3 outs to pair your ace (if it's good), giving you around 12 outs or ~38-40% equity."
+    },
+    {
+      question: "If you bet $4.50 (2/3 pot) and opponent folds 50% of the time, is this a profitable semi-bluff?",
+      answer: "yes",
+      hint: "Calculate: (Fold% × Pot) + (Call% × (Equity × New Pot - Bet))",
+      explanation: "Yes! EV = (0.50 × $6.50) + (0.50 × (0.38 × $15.50 - $4.50)) = $3.25 + (0.50 × $1.39) = $3.25 + $0.70 = +$3.95. Profitable semi-bluff!"
+    },
+    {
+      question: "What if opponent only folds 20% of the time (they're sticky)?",
+      answer: "still profitable but less so",
+      hint: "Recalculate with 20% fold equity",
+      explanation: "EV = (0.20 × $6.50) + (0.80 × (0.38 × $15.50 - $4.50)) = $1.30 + (0.80 × $1.39) = $1.30 + $1.11 = +$2.41. Still profitable because your equity is strong!"
+    },
+    {
+      question: "Should you c-bet this flop as a semi-bluff?",
+      answer: "yes",
+      hint: "Consider all factors: equity, position, board texture",
+      explanation: "Yes! You have a strong draw (nut flush draw + overcard), you're in position, and the board is reasonably dry. C-betting as a semi-bluff is clearly profitable here."
+    }
+  ]}
+/>
+
+---
+
+## Advanced: Balancing Semi-Bluffs
+
+Good players don't just semi-bluff draws—they balance their ranges.
+
+### What This Means
+
+When you bet a draw-heavy board, you should have:
+- **Value hands:** Sets, two pair, overpairs
+- **Semi-bluffs:** Flush draws, straight draws
+- **Some checks:** Trap hands, weaker draws
+
+This balance makes you harder to play against. Opponents can't simply raise you off every draw.
+
+### The Concept of Polarization
+
+On some boards, you want a **polarized** strategy:
+- Bet strong hands (value)
+- Bet strong draws (semi-bluffs)
+- Check medium hands
+
+This creates a betting range of "nutted hands or draws" that pressures opponents effectively.
+
+<Exercise
+  question="You should semi-bluff with ALL your draws on wet boards to maximize aggression. True or false?"
+  type="text"
+  answer="false"
+  acceptableAnswers={["false", "False", "FALSE"]}
+  hint="Think about balance and being exploitable"
+  explanation="False. Semi-bluffing every draw makes you predictable and exploitable. Good players mix in some calls and checks with draws to balance their range and avoid being raised off their equity."
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Two ways to win** — Opponent folds OR you improve. This is the power of semi-bluffing.
+2. **Need real equity** — 8+ outs (flush draws, OESDs, combo draws). Gutshots alone aren't enough.
+3. **Fold equity matters** — Semi-bluffs work best against players who can fold.
+4. **Position affects strategy** — Bet/raise in position; check-raise out of position.
+5. **Avoid multiway and calling stations** — You need opponents to fold.
+6. **Balance your range** — Don't semi-bluff every draw; mix in calls and checks.
+</KeyConcept>
+
+Semi-bluffing is what makes draws exciting and profitable. Instead of passively hoping to hit, you're taking control of the pot with built-in equity. Master this skill, and you'll extract value from situations where passive players break even at best.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your semi-bluffing skills?
+
+<QuizLink moduleId="4.1" />

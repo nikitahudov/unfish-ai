@@ -1,0 +1,425 @@
+---
+id: "8.1"
+title: "Bankroll Management"
+category: "Bankroll & Career"
+level: "Fundamental"
+prerequisites: []
+estimatedTime: "20 minutes"
+exercisesTotal: 12
+scenariosTotal: 1
+---
+
+## Introduction
+
+Every professional poker player has a story about going broke. Usually multiple stories.
+
+The common thread? **Ignoring bankroll management.**
+
+You can be a winning player and still go broke. Variance doesn't care about your skill level. One bad downswing with inadequate bankroll, and you're out of the game.
+
+<KeyConcept title="What Is Bankroll Management?">
+**Bankroll:** Money dedicated exclusively to poker. Not rent money. Not savings. Poker money only.
+
+**Bankroll Management (BRM):** Rules for:
+- What stakes to play based on bankroll size
+- When to move up in stakes
+- When to move down in stakes
+- How much to risk per session
+
+**Why it matters:** Even winning players experience losing stretches due to variance. Proper BRM ensures you survive these stretches and stay in the game.
+</KeyConcept>
+
+This module gives you specific numbers and rules to protect your bankroll while still allowing you to move up in stakes.
+
+---
+
+## Why Bankroll Management Matters
+
+### Variance Is Real
+
+Even if you're a consistent 5bb/100 winner (excellent win rate), you will:
+- Have losing days
+- Have losing weeks
+- Have losing months
+- Occasionally have losing multi-month stretches
+
+This is mathematically certain. Variance affects everyone, regardless of skill.
+
+### The Risk of Ruin
+
+**Risk of Ruin (RoR):** The probability of losing your entire bankroll.
+
+| Win Rate | 20 Buy-In Bankroll RoR | 50 Buy-In Bankroll RoR |
+|----------|------------------------|------------------------|
+| 2bb/100 | ~35% | ~5% |
+| 5bb/100 | ~10% | ~1% |
+| 8bb/100 | ~3% | ~0.1% |
+
+Even with a 5bb/100 win rate (very good), a 20 buy-in bankroll still has ~10% chance of going bust.
+
+<Exercise
+  question="You have a 3bb/100 win rate at NL50 with a $500 bankroll (10 buy-ins). Your risk of ruin is approximately 40%. Is this bankroll adequate?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO", "not adequate", "too small"]}
+  hint="Would you accept a 40% chance of going broke?"
+  explanation="No! A 40% risk of ruin means there's nearly a coin-flip chance you'll go broke before your edge materializes. You need more buy-ins to reduce this risk to acceptable levels (under 5%)."
+/>
+
+---
+
+## Bankroll Requirements by Format
+
+Different formats have different variance levels, requiring different bankroll sizes:
+
+<FlashCards
+  title="Buy-In Requirements by Format"
+  cards={[
+    { front: "Cash Games (Standard)", back: "20-30 buy-ins. Moderate variance, steady income potential. Example: $2,000-$3,000 for NL100." },
+    { front: "Cash Games (Conservative)", back: "40-50 buy-ins. For risk-averse or professional players. Example: $4,000-$5,000 for NL100." },
+    { front: "MTTs (Multi-Table Tournaments)", back: "100-200 buy-ins. Very high variance. Can lose for months while playing well. Example: $1,000-$2,000 for $10 average buy-in." },
+    { front: "SNGs (Sit & Gos)", back: "50-100 buy-ins. Medium variance. More consistent than MTTs. Example: $500-$1,000 for $10 SNGs." },
+    { front: "Heads-Up Cash", back: "40-50 buy-ins. Higher variance than full ring. Faster swings." },
+    { front: "Shot-Taking Rule", back: "Never risk more than 10% of bankroll on a single shot at higher stakes." }
+  ]}
+/>
+
+### Why Different Requirements?
+
+**Cash games:** You always play your edge. 100bb deep every hand. Moderate variance.
+
+**MTTs:** High variance because you need to finish in the top 10-15% to profit. Long stretches of min-cashes and bubbles.
+
+**SNGs:** Less variance than MTTs because fields are smaller, but still significant.
+
+<Exercise
+  question="You have a $1,500 bankroll and want to play MTTs. What average buy-in can you afford?"
+  type="text"
+  answer="$7.50-$15"
+  acceptableAnswers={["$7.50", "$10", "$15", "$7.50-$15", "7-15", "$10-$15"]}
+  hint="MTTs need 100-200 buy-ins"
+  explanation="With $1,500 and needing 100-200 buy-ins, you can afford $7.50-$15 average buy-in. At $10 average, you have 150 buy-ins—solid for MTT variance."
+/>
+
+---
+
+## The Bankroll Ladder
+
+Here's a concrete framework for moving through stakes:
+
+<KeyConcept title="Cash Game Bankroll Ladder">
+| Stake | Minimum Bankroll | Move UP at | Move DOWN at |
+|-------|------------------|------------|--------------|
+| NL10 | $300 (30 BI) | $500 | $200 |
+| NL25 | $750 (30 BI) | $1,250 | $500 |
+| NL50 | $1,500 (30 BI) | $2,500 | $1,000 |
+| NL100 | $3,000 (30 BI) | $5,000 | $2,000 |
+| NL200 | $6,000 (30 BI) | $10,000 | $4,000 |
+| NL500 | $15,000 (30 BI) | $25,000 | $10,000 |
+
+**Rule:** Move up when you reach the "Move UP" number. Move down immediately if you hit "Move DOWN."
+</KeyConcept>
+
+### How This Works
+
+**Example:** You're playing NL50 with a $1,500 bankroll.
+- You run well and build to $2,500
+- You move up to NL100
+- You run bad and drop to $2,000
+- You move back down to NL50 immediately
+- You rebuild to $2,500 again, move up again
+
+The ladder protects you from busting while allowing upward progression.
+
+<Exercise
+  question="You're playing NL100 with a $3,500 bankroll. You lose $1,600 over a tough stretch, dropping to $1,900. What should you do?"
+  type="text"
+  answer="Move down to NL50"
+  acceptableAnswers={["move down", "Move down", "NL50", "drop to NL50", "move to NL50"]}
+  hint="Check the 'Move DOWN' threshold for NL100"
+  explanation="Move down to NL50 immediately. $1,900 is below the $2,000 'move down' threshold for NL100. Don't wait hoping to run good—protect your bankroll first."
+/>
+
+---
+
+## Moving Up Stakes
+
+### When to Move Up
+
+**Standard approach:**
+- You've reached the "move up" bankroll threshold
+- You're beating your current stake (at least break-even over significant sample)
+- You feel mentally ready for bigger games
+
+**Conservative approach:**
+- 50 buy-ins for the new stake
+- Proven winner at current stake (5bb/100+ over 50k+ hands)
+- Studied the new stake's dynamics
+
+### Shot-Taking
+
+**Shot-taking:** Playing a limited session at higher stakes to test the waters.
+
+**Shot-taking rules:**
+- Never risk more than 10% of bankroll
+- Set a stop-loss for the shot (e.g., 3 buy-ins)
+- If you lose the stop-loss, return to normal stakes
+- If you win, evaluate if you should stay
+
+**Example:** $3,000 bankroll, normally play NL50
+- Shot at NL100: max risk = $300 (3 buy-ins)
+- Win 2 buy-ins? Evaluate continuing
+- Lose 3 buy-ins? Back to NL50, no questions
+
+<Exercise
+  question="You have a $2,000 bankroll and normally play NL50. You want to take a shot at NL100. What's the maximum you should risk?"
+  type="number"
+  answer={200}
+  acceptableRange={[150, 300]}
+  unit="$"
+  hint="Use the 10% shot-taking rule"
+  explanation="$200 (10% of bankroll). This is 2 buy-ins at NL100. Set a firm stop-loss: if you lose 2 buy-ins ($200), immediately return to NL50. Shots should be controlled experiments, not full commitments."
+/>
+
+---
+
+## Moving Down Stakes
+
+This is where discipline matters most.
+
+<Comparison
+  title="Moving Down: Ego vs Smart"
+  left={{
+    title: "Ego Response",
+    items: [
+      "\"I can beat this stake, I just ran bad\"",
+      "\"Moving down is admitting defeat\"",
+      "\"I'll win it back at this level\"",
+      "\"One more session...\"",
+      "Result: Potential bust"
+    ]
+  }}
+  right={{
+    title: "Smart Response",
+    items: [
+      "\"Variance hit, I'll rebuild\"",
+      "\"Moving down protects my bankroll\"",
+      "\"The games will be here tomorrow\"",
+      "\"Discipline keeps me in the game\"",
+      "Result: Sustainable career"
+    ]
+  }}
+/>
+
+### Why Moving Down Is Smart
+
+1. **Lower stakes = lower variance** — You'll rebuild faster
+2. **Less pressure** — You can play your A-game
+3. **Bankroll protection** — You won't bust
+4. **Still profitable** — You're still playing winning poker, just at lower stakes
+
+### The Immediate Rule
+
+**When you hit the "move down" threshold, move down immediately.**
+
+Not "after this session." Not "tomorrow." **Now.**
+
+Every hand played under-rolled increases your risk of ruin.
+
+<Exercise
+  question="You play NL200 with proper bankroll. After a brutal week, you're at the move-down threshold. You think, 'I'll just play one more session to try to get back above.' Is this a good idea?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO", "bad idea"]}
+  hint="What's the risk of playing another session under-rolled?"
+  explanation="Terrible idea. You're already at elevated risk of ruin. Playing another session under-rolled could push you into dangerous territory. Move down now. The 'one more session' mindset is how players go broke."
+/>
+
+---
+
+## Practical BRM Systems
+
+### Separating Poker Money
+
+**Rule #1: Poker bankroll ≠ Life money**
+
+Never mix:
+- Use separate bank accounts
+- Use separate e-wallets
+- Track poker money completely separately
+
+**Why?** If your bankroll is mixed with rent money, you'll:
+- Play scared when you should play confident
+- Dip into poker money for life expenses
+- Play higher stakes than you should (it's "just" money)
+
+### Tracking Your Bankroll
+
+Use a system to track:
+- Starting bankroll
+- Deposits and withdrawals
+- Session results
+- Current bankroll
+- Stakes history
+
+**Tools:**
+- Spreadsheet (simple, free)
+- Poker Bankroll Tracker (mobile app)
+- Built into tracking software (PT4, HM3)
+
+### Cash-Out Guidelines
+
+Don't keep your entire net worth in poker accounts.
+
+**Recommendations:**
+- Keep 6 months of living expenses in savings (not poker bankroll)
+- Cash out profits above your needed bankroll regularly
+- Set a "target bankroll" and cash out excess
+
+**Example:** Target NL100 bankroll is $3,000. When you hit $4,000, cash out $1,000 to savings.
+
+<Exercise
+  question="You have $5,000 in your poker account and normally play NL50 (requiring $1,500). Your car needs a $500 repair. Should you use poker money?"
+  type="text"
+  answer="no - but you should cash out and use the excess"
+  acceptableAnswers={["no", "No", "cash out", "use excess", "use savings"]}
+  hint="Is the $5,000 all needed for poker?"
+  explanation="Don't treat your poker account as a bank account. However, you have $3,500 more than you need for NL50. Cash out the excess to savings, then use savings for the repair. Keep poker money separate."
+/>
+
+---
+
+## Special Situations
+
+### Transitioning to Professional Play
+
+If considering poker as income:
+- Need larger bankroll (50+ buy-ins minimum)
+- Need 6+ months expenses saved separately
+- Need proven track record (50k+ hands winning)
+- Account for taxes, health insurance, etc.
+
+### Recreational Player BRM
+
+If poker is just a hobby:
+- Still use BRM (protects enjoyment)
+- Can use looser guidelines (15-20 buy-ins)
+- Set a "loss limit" you're comfortable with
+- Don't play with money that affects your life
+
+### Dealing with Downswings
+
+During extended downswings:
+- Review hands for leaks (are you actually playing well?)
+- Stick to BRM rules religiously
+- Take mental game breaks if needed
+- Trust the process—variance regresses to the mean
+
+<Exercise
+  question="You're in a 15 buy-in downswing over 3 weeks at NL100. Your bankroll dropped from $5,000 to $3,500. You're still above the move-down threshold. What should you do?"
+  type="text"
+  answer="Review hands for leaks, continue playing if confirmed running bad, stick to BRM"
+  acceptableAnswers={["review hands", "check for leaks", "continue if playing well", "trust the process", "stick to BRM"]}
+  hint="You're still above threshold—is it variance or leaks?"
+  explanation="Review hands to confirm you're playing well (not tilted or having leaks). If confirmed variance, continue playing—you're still properly rolled at $3,500. Stick to BRM: if you drop to $2,000, move down. Trust the process."
+/>
+
+---
+
+## Practice: BRM Calculations
+
+<MultiExercise
+  title="Bankroll Management Math"
+  exercises={[
+    {
+      question: "You have a $500 bankroll. What's the highest cash game stake you should play (using 30 BI standard)?",
+      answer: "NL16 or lower",
+      explanation: "$500 / 30 = $16.67. You can afford up to NL16. Most sites have NL10 and NL25, so you'd play NL10 until you build to $750 for NL25."
+    },
+    {
+      question: "You want to play NL200 cash games. Using the conservative 50 BI approach, what bankroll do you need?",
+      answer: "$10,000",
+      explanation: "NL200 = $200 max buy-in. Conservative BRM: 50 × $200 = $10,000. This gives you ample cushion for variance at higher stakes."
+    },
+    {
+      question: "You're an MTT player. Your average buy-in is $20. What bankroll do you need (using 150 BI)?",
+      answer: "$3,000",
+      explanation: "150 × $20 = $3,000. MTT variance is brutal—this bankroll lets you handle the long stretches between big scores."
+    },
+    {
+      question: "You play NL50 with $1,800. You drop to $950 after a bad run. What stake should you play?",
+      answer: "NL25",
+      explanation: "$950 is below the $1,000 move-down threshold for NL50. Drop to NL25 (where you have 38 buy-ins) and rebuild. Don't wait."
+    },
+    {
+      question: "You have a $2,500 bankroll at NL50. How much can you risk on an NL100 shot?",
+      answer: "$250",
+      explanation: "10% shot-taking rule: $2,500 × 10% = $250 (2.5 buy-ins at NL100). Set a firm stop-loss at 2-3 buy-ins for your shot."
+    },
+    {
+      question: "What's wrong with this plan: 'I have $1,000 and want to play NL50 because the games are soft there.'",
+      answer: "Only 20 buy-ins - needs 30 for standard BRM",
+      explanation: "$1,000 is only 20 buy-ins for NL50. Even if games are soft, you're taking too much risk of ruin. Standard BRM is 30 buy-ins ($1,500) minimum. Soft games don't eliminate variance."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Managing a Downswing
+
+<Scenario
+  title="The Tough Month"
+  setup="You have a $4,000 bankroll and play NL100. You're a proven winner at 4bb/100 over 100k hands. This month has been brutal—you've lost 15 buy-ins and your bankroll is now $2,500. Let's navigate this."
+  steps={[
+    {
+      question: "At $2,500, are you still properly rolled for NL100? (Move-down threshold is $2,000)",
+      answer: "Yes, but barely - $500 above threshold",
+      hint: "Compare to the ladder",
+      explanation: "Yes, but you're in the danger zone. You're only $500 above the move-down threshold. One bad session could push you below. Be aware but not panicked—you're still technically okay."
+    },
+    {
+      question: "Should you move down proactively, or wait until you hit the $2,000 threshold?",
+      answer: "Both approaches are valid - depends on risk tolerance",
+      hint: "There's no single right answer here",
+      explanation: "Both are valid. Conservative approach: move down now to protect bankroll (smart). Standard approach: stay at NL100 until $2,000 (the rule you set). Either is fine—just be ready to move immediately if you hit $2,000."
+    },
+    {
+      question: "You lose another session and drop to $1,900. What do you do?",
+      answer: "Move to NL50 immediately",
+      hint: "You've hit the threshold",
+      explanation: "Move to NL50 immediately. You're at $1,900, below the $2,000 threshold. No deliberation, no 'one more session.' Move down now. At NL50, you have 38 buy-ins and can rebuild safely."
+    },
+    {
+      question: "At NL50, you rebuild to $2,800 over the next month. When can you move back to NL100?",
+      answer: "At $3,000 (move-up threshold)",
+      hint: "Check the ladder for NL100 requirements",
+      explanation: "Wait until $3,000 (the move-up threshold for NL100). Don't rush back at $2,500—that's right at the minimum. Give yourself cushion. At $3,000, you have 30 buy-ins and proper room to handle variance."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Bankroll ≠ Life money** — Keep them completely separate
+2. **Cash games: 20-30 buy-ins** — More for conservative players
+3. **MTTs: 100-200 buy-ins** — Variance is extreme
+4. **Follow the ladder** — Move up and down at predefined thresholds
+5. **Shot-taking: 10% max** — Controlled experiments at higher stakes
+6. **Move down immediately** — When you hit threshold, no exceptions
+7. **Ego is expensive** — Moving down is smart, not shameful
+8. **Track everything** — Know your numbers always
+</KeyConcept>
+
+Bankroll management isn't exciting, but it's essential. The players who last in poker aren't always the most talented—they're the ones who manage their money properly. Protect your bankroll, and you'll always have another chance to play.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your bankroll management skills?
+
+<QuizLink moduleId="8.1" />

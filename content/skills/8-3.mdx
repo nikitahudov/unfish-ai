@@ -1,0 +1,413 @@
+---
+id: "8.3"
+title: "Record Keeping"
+category: "Bankroll & Career"
+level: "Fundamental"
+prerequisites: []
+estimatedTime: "20 minutes"
+exercisesTotal: 10
+scenariosTotal: 1
+---
+
+## Introduction
+
+How much did you win last month? What's your win rate at NL50? Are you more profitable in the mornings or evenings?
+
+If you can't answer these questions with data, you're flying blind.
+
+<KeyConcept title="Why Track Everything?">
+**"What gets measured gets managed."**
+
+Record keeping transforms your poker from a series of random sessions into a business you can analyze and improve.
+
+Without data:
+- You rely on biased memory
+- You can't identify leaks
+- You don't know if you're winning
+- You can't set informed goals
+
+With data:
+- Objective performance measurement
+- Clear leak identification
+- Progress tracking over time
+- Evidence-based decisions
+</KeyConcept>
+
+This module teaches you what to track, how to track it, and how to use your data to improve.
+
+---
+
+## What to Track
+
+### Essential Financial Data
+
+**Every session, record:**
+- Date and time
+- Stakes played
+- Buy-in amount
+- Cash-out amount
+- Net result (profit/loss)
+- Duration (hours played)
+- Number of hands (if online)
+
+**Example session log:**
+| Date | Stakes | Buy-in | Cash-out | Result | Hours | Hands |
+|------|--------|--------|----------|--------|-------|-------|
+| 1/15 | NL50 | $50 | $78 | +$28 | 2.5 | 412 |
+| 1/16 | NL50 | $50 | $34 | -$16 | 1.5 | 248 |
+
+### Session Context Data
+
+**Helpful additions:**
+- Time of day (morning/afternoon/evening/night)
+- Day of week
+- Location/site
+- Mental state (1-10 focus rating)
+- Notes (any notable events)
+
+This context helps identify patterns: "I win more on weekends" or "My focus drops in evening sessions."
+
+<Exercise
+  question="You've tracked 50 sessions but only recorded buy-in and cash-out. What important data are you missing?"
+  type="text"
+  answer="Hours/hands played (can't calculate hourly/per-100 win rates)"
+  acceptableAnswers={["hours", "hands", "duration", "time", "can't calculate win rate"]}
+  hint="Can you calculate your hourly win rate?"
+  explanation="Without hours or hands, you can't calculate win rate (bb/100 or $/hr). Raw profit doesn't tell you if you're efficient. A $500 month is great in 40 hours, terrible in 200 hours."
+/>
+
+---
+
+## Tracking Tools
+
+<FlashCards
+  title="Popular Tracking Tools"
+  cards={[
+    { front: "PokerTracker 4", back: "Full tracking + HUD. Imports hand histories, calculates all stats. ~$100. Industry standard for serious players." },
+    { front: "Hold'em Manager 3", back: "Similar to PT4. Personal preference which to use. ~$100. Full hand history analysis and HUD." },
+    { front: "Hand2Note", back: "Modern alternative. Good free tier. Dynamic HUD features. Growing in popularity." },
+    { front: "Spreadsheets (Excel/Sheets)", back: "Free, customizable. Requires manual entry. Good for live players. Templates available online." },
+    { front: "Poker Bankroll Tracker", back: "Free mobile app. Simple entry. Good for casual tracking. Lacks detailed analysis." },
+    { front: "Primedope", back: "Free online tool. Web-based. Basic tracking. Good for beginners." }
+  ]}
+/>
+
+### Online vs Live Tracking
+
+**Online:** Use PokerTracker/HM3
+- Automatic import of hand histories
+- Calculates everything for you
+- Generates graphs and reports
+- Enables HUD use during play
+
+**Live:** Use spreadsheets or apps
+- Manual entry after each session
+- Track hours, location, game type
+- Add notes about opponents/conditions
+- Review weekly/monthly
+
+<Exercise
+  question="You primarily play live poker. What's the best tracking approach?"
+  type="text"
+  answer="Spreadsheet or mobile app with manual entry after each session"
+  acceptableAnswers={["spreadsheet", "Spreadsheet", "mobile app", "manual entry", "manual tracking"]}
+  hint="Can you import live hand histories?"
+  explanation="Spreadsheet or mobile app. Live poker can't be automatically tracked. Enter results immediately after each session (don't wait—you'll forget details). Track hours, game type, and brief notes about game quality."
+/>
+
+---
+
+## Understanding Your Statistics
+
+For online players, tracking software provides dozens of stats. Here are the essential ones:
+
+<KeyConcept title="Core Statistics Explained">
+**VPIP (Voluntarily Put $ In Pot):**
+How often you voluntarily enter pots. Higher = looser.
+
+**PFR (Pre-Flop Raise):**
+How often you raise preflop. Should be close to VPIP for aggressive play.
+
+**3-Bet %:**
+How often you 3-bet when facing a raise. 7-10% is standard.
+
+**WTSD (Went to Showdown):**
+How often you see showdown when seeing the flop. 25-30% is typical.
+
+**W$SD (Won $ at Showdown):**
+How often you win when you reach showdown. 50%+ means you're showdowning strong hands.
+
+**BB/100:**
+Big blinds won per 100 hands. Your fundamental win rate metric.
+</KeyConcept>
+
+### What Good Stats Look Like (6-Max Online Cash)
+
+| Stat | Weak | Solid | Strong |
+|------|------|-------|--------|
+| VPIP | <18% or >32% | 22-28% | 24-26% |
+| PFR | <15% or >28% | 18-24% | 20-23% |
+| 3-Bet | <5% or >14% | 7-10% | 8-9% |
+| WTSD | <22% or >35% | 25-30% | 26-28% |
+| W$SD | <48% | 50-54% | 52-56% |
+| BB/100 | <2 | 2-6 | 6-10+ |
+
+### Warning Sign Statistics
+
+**VPIP-PFR gap > 6%:** You're calling too much preflop (passive leak)
+**WTSD > 35%:** You're going to showdown too often (calling station tendencies)
+**WTSD < 22%:** You're folding too much postflop (weak-tight)
+**W$SD < 48%:** You're reaching showdown with weak hands
+
+<Exercise
+  question="A player's stats: VPIP 28%, PFR 14%, WTSD 38%. What are their likely leaks?"
+  type="text"
+  answer="Too passive preflop (large VPIP-PFR gap) and calling down too much (high WTSD)"
+  acceptableAnswers={["passive and calling too much", "VPIP-PFR gap", "calling station", "passive preflop, calls too much"]}
+  hint="Check the gap and compare WTSD to norms"
+  explanation="Two leaks: (1) VPIP-PFR gap of 14% means they're calling way more than raising—passive leak. (2) WTSD of 38% is too high—they're going to showdown with weak hands. They're likely a calling station."
+/>
+
+---
+
+## Data Analysis
+
+Collecting data is step one. Analyzing it is where improvement happens.
+
+### Regular Review Schedule
+
+<KeyConcept title="Review Schedule">
+**Daily (2-3 minutes):**
+- Log session results
+- Rate your mental state
+- Note any key hands for later review
+
+**Weekly (15-30 minutes):**
+- Calculate weekly profit/loss
+- Check win rate trend
+- Identify any stat anomalies
+- Review 3-5 interesting hands
+
+**Monthly (1-2 hours):**
+- Full statistical review
+- Compare to previous months
+- Identify persistent leaks
+- Set goals for next month
+- Analyze results by position, time of day, stake
+
+**Quarterly (2-3 hours):**
+- Big picture assessment
+- Format and stake evaluation
+- Long-term trend analysis
+- Annual goal progress check
+</KeyConcept>
+
+### Leak Identification Process
+
+**Step 1:** Look at your overall BB/100. Is it positive?
+
+**Step 2:** Check stats against norms. Any obvious outliers?
+
+**Step 3:** Break down by position. Are you losing from SB? That's normal. Losing from BTN? Problem.
+
+**Step 4:** Filter by situation. How do you do in 3-bet pots? Facing c-bets?
+
+**Step 5:** Create action items. "My fold-to-3-bet is too low. This month I'll focus on defending correctly."
+
+<Exercise
+  question="Your BB/100 at NL50 is 3.5, but your BTN win rate is -2bb/100. What does this suggest?"
+  type="text"
+  answer="Major leak from the button - should be your most profitable position"
+  acceptableAnswers={["button leak", "BTN leak", "problem on button", "button should be profitable"]}
+  hint="The button should be your most profitable position"
+  explanation="Big leak! The button should be your most profitable position (typically +15 to +30 bb/100). Negative from BTN means you're either playing too tight, not stealing enough, or misplaying postflop when you have position. Investigate immediately."
+/>
+
+---
+
+## Using Data for Improvement
+
+### Setting Data-Driven Goals
+
+**Bad goal:** "Play better"
+**Good goal:** "Reduce my WTSD from 34% to 28% over the next month"
+
+Your data shows you exactly what to work on.
+
+### Examples of Data-Driven Improvements
+
+**Observation:** VPIP-PFR gap is 8%
+**Action:** Study and implement a more aggressive preflop strategy. Focus on raising rather than calling.
+
+**Observation:** Losing money in the blinds beyond expectation
+**Action:** Review blind defense strategy. Either defend wider or tighter based on specific leaks found.
+
+**Observation:** Win rate drops after 2+ hours
+**Action:** Implement mandatory breaks or shorten sessions.
+
+**Observation:** Evening sessions are 30% more profitable than morning sessions
+**Action:** Shift more volume to evenings.
+
+### Turning Numbers into Action
+
+Every stat that's off should become a study topic:
+
+| Problem Stat | Study Focus |
+|--------------|-------------|
+| VPIP too high | Preflop hand selection |
+| PFR too low | Opening ranges, isolation raises |
+| 3-bet too low | 3-betting ranges, defending vs 3-bets |
+| WTSD too high | Postflop folding discipline |
+| W$SD too low | Value betting, hand reading |
+| Losing from BTN | Stealing, postflop IP play |
+
+<Exercise
+  question="Your data shows you're winning 4bb/100 overall, but your red line (non-showdown winnings) is -8bb/100. What should you study?"
+  type="text"
+  answer="Bluffing and aggression - winning too much at showdown, not enough from folds"
+  acceptableAnswers={["bluffing", "aggression", "non-showdown winnings", "need to bluff more", "bet more"]}
+  hint="Red line = money won without showdown"
+  explanation="You need to study bluffing and aggression. Negative red line means you're winning almost entirely at showdown. You're either not bluffing enough, not c-betting enough, or giving up too easily. You're leaving money on the table from folds you should be getting."
+/>
+
+---
+
+## Building the Tracking Habit
+
+<KeyConcept title="Making Tracking Automatic">
+**Make it easy:**
+- Track immediately after every session (don't wait)
+- Use templates and automation where possible
+- Keep your tracking tool open during sessions
+
+**Make it consistent:**
+- Track every session (even losing ones—especially losing ones)
+- Use the same format every time
+- Don't skip sessions "just this once"
+
+**Make it meaningful:**
+- Actually review your data
+- Use it to make decisions
+- Celebrate progress you can see in numbers
+</KeyConcept>
+
+### Common Tracking Mistakes
+
+**Mistake 1:** Only tracking winning sessions
+Your data will be useless if you skip losses. Track everything.
+
+**Mistake 2:** Not tracking immediately
+Memory is unreliable. Hours later, you'll forget details. Track within minutes of finishing.
+
+**Mistake 3:** Tracking but never reviewing
+Data collection without analysis is pointless. Schedule reviews.
+
+**Mistake 4:** Over-complicating
+Start simple. You can always add more metrics later. Don't let complexity stop you from tracking at all.
+
+**Mistake 5:** Ignoring context
+Results without context are misleading. Track time, mental state, game conditions.
+
+<Exercise
+  question="You track all sessions but realize you haven't looked at your data in 3 months. What should you do first?"
+  type="text"
+  answer="Do a comprehensive review now, then schedule regular reviews"
+  acceptableAnswers={["review now", "do a review", "analyze the data", "schedule reviews"]}
+  hint="The data exists but isn't being used"
+  explanation="Do a comprehensive review now—you have 3 months of insight sitting unused. Then schedule regular reviews (weekly minimum) so this doesn't happen again. Data without analysis is just numbers."
+/>
+
+---
+
+## Practice: Analyze These Stats
+
+<MultiExercise
+  title="Stat Analysis Practice"
+  exercises={[
+    {
+      question: "Player stats: VPIP 32%, PFR 28%, 3-bet 12%, WTSD 24%, W$SD 58%, BB/100: 2.5. What's their likely play style?",
+      answer: "LAG (Loose-Aggressive) - and it's working",
+      explanation: "High VPIP (32%) and high PFR (28%) = LAG. Low WTSD (24%) means they're selective about showdowns. High W$SD (58%) means they showdown strong hands. Profitable at 2.5bb/100. This is aggressive, working LAG poker."
+    },
+    {
+      question: "Player stats: VPIP 18%, PFR 16%, 3-bet 6%, WTSD 32%, W$SD 49%, BB/100: 0.5. What leaks do you see?",
+      answer: "Going to showdown too often with weak hands (high WTSD, low W$SD)",
+      explanation: "Tight preflop (fine), but WTSD of 32% with only 49% W$SD = they're reaching showdown too often with losing hands. They're probably calling too much postflop. They should either call less or showdown stronger hands."
+    },
+    {
+      question: "Your BB/100 by position: UTG +2, MP +3, CO +8, BTN +12, SB -15, BB -8. Which position needs work?",
+      answer: "Small blind (-15 is too much)",
+      explanation: "SB at -15bb/100 is too much—typically should be -5 to -10. You're either defending too wide, playing too passively from SB, or misplaying postflop OOP. The BB at -8 is normal (you're forced to post). Focus on SB strategy."
+    },
+    {
+      question: "You're profitable at NL25 (4bb/100) but losing at NL50 (-2bb/100) over 30k hands each. What should you do?",
+      answer: "Drop to NL25 until you fix NL50 leaks",
+      explanation: "30k hands is enough sample to identify a problem. You're a winning NL25 player but losing at NL50. Drop to NL25, study what's different at NL50 (tougher competition, bigger mistakes punished), and only return when you've addressed the leaks."
+    },
+    {
+      question: "Your win rate is 5bb/100 overall, but after filtering by 'session > 3 hours', it drops to 1bb/100. What does this suggest?",
+      answer: "Focus/fatigue issues in long sessions - consider shorter sessions",
+      explanation: "Clear fatigue pattern. Your edge diminishes dramatically after 3 hours. Either implement mandatory breaks at the 3-hour mark or cap sessions at 2.5 hours. Your 5bb/100 potential is being dragged down by tired play."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Monthly Review Process
+
+<Scenario
+  title="The Monthly Analysis"
+  setup="It's the first of the month. You have last month's data ready for review. You played NL50 online, 45 hours, 7,500 hands. Let's walk through your monthly analysis."
+  steps={[
+    {
+      question: "Your raw results: +$312 profit. Your hours: 45. What's your hourly rate?",
+      answer: "$6.93/hour",
+      hint: "Profit / hours",
+      explanation: "$312 / 45 hours = $6.93/hour. This is a solid hourly for NL50. But let's dig deeper to see if there are improvements available."
+    },
+    {
+      question: "Your hands: 7,500. Your profit in big blinds: 624bb ($0.50 BB). What's your BB/100?",
+      answer: "8.3bb/100",
+      hint: "(Profit in BB / hands) × 100",
+      explanation: "624bb / 7,500 hands × 100 = 8.32bb/100. Excellent win rate—well above the 5bb/100 solid threshold. But is this sustainable or did you run good?"
+    },
+    {
+      question: "Your tracking software shows your EV-adjusted BB/100 is 5.2bb/100 (you ran 3.1bb/100 above expectation). What does this tell you?",
+      answer: "You ran good - true win rate is likely closer to 5.2bb/100",
+      hint: "What does EV-adjusted mean?",
+      explanation: "You ran above EV by 3.1bb/100—meaning luck inflated your results. Your actual playing performance (EV-adjusted) is 5.2bb/100. Still very good! But don't expect 8.3bb/100 to continue. Budget for 5bb/100."
+    },
+    {
+      question: "Your VPIP is 31% and your VTSD is 36%. Both are higher than optimal (24-28% VPIP, 25-30% WTSD). What action items should you set?",
+      answer: "Tighten preflop (lower VPIP) and fold more postflop (lower WTSD)",
+      hint: "Both stats are too high",
+      explanation: "Two action items: (1) Tighten preflop—31% VPIP is too loose for 6-max. Review your opening ranges, especially from early positions. (2) Fold more postflop—36% WTSD means you're calling too much. Practice folding marginal hands."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Track everything** — Results, hours, hands, context
+2. **Use proper tools** — PT4/HM3 for online, spreadsheets for live
+3. **Know your key stats** — VPIP, PFR, 3-bet, WTSD, W$SD, BB/100
+4. **Review regularly** — Daily log, weekly check, monthly deep dive
+5. **Identify leaks from data** — Compare your stats to optimal ranges
+6. **Turn numbers into actions** — Every bad stat = study topic
+7. **Build the habit** — Track immediately, every session, no exceptions
+8. **Context matters** — Track when, where, and how you felt
+</KeyConcept>
+
+Record keeping transforms poker from gambling into a business. The data tells you where you're winning, where you're losing, and exactly what to study. Treat your poker career like a professional—track, analyze, improve.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your record keeping skills?
+
+<QuizLink moduleId="8.3" />

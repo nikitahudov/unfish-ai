@@ -1,0 +1,513 @@
+---
+id: "1.2"
+title: "Equity Calculation"
+category: "Mathematical Foundations"
+level: "Fundamental"
+prerequisites: ["1.1"]
+estimatedTime: "20 minutes"
+exercisesTotal: 12
+scenariosTotal: 1
+---
+
+## Introduction
+
+In the last module, you learned about pot odds—the **price** you're paying to stay in a hand. But knowing the price is only half the equation. You also need to know what you're getting for that price.
+
+That's where **equity** comes in.
+
+Equity is your **share of the pot** based on your probability of winning. If you have 40% equity in a $100 pot, you "own" $40 of that pot on average over the long run.
+
+<KeyConcept title="The Equity Principle">
+**Equity = Your expected share of the pot based on winning probability.**
+
+If you have 60% equity, you'll win the pot 60% of the time. Your fair share of a $100 pot is $60.
+</KeyConcept>
+
+Think of equity like owning stock in a company. If you own 30% of a company worth $1 million, your stake is worth $300,000—even though you can't access that money until the company is sold. Similarly, your poker equity represents your "ownership" of the pot, which you'll collect when the hand ends.
+
+---
+
+## Equity vs. Pot Odds
+
+Before we dive deeper, let's clarify how equity relates to what you learned in Module 1.1:
+
+<Comparison
+  title="Pot Odds vs. Equity"
+  left={{
+    title: "Pot Odds",
+    items: [
+      "The PRICE you pay",
+      "Calculated from bet sizes",
+      "Expressed as ratio (3:1) or percentage (25%)",
+      "Tells you how often you need to win"
+    ]
+  }}
+  right={{
+    title: "Equity",
+    items: [
+      "Your CHANCE of winning",
+      "Based on hand strength vs opponent",
+      "Expressed as percentage (40%)",
+      "Tells you how often you will win"
+    ]
+  }}
+/>
+
+The magic happens when you **compare** these two numbers:
+
+- **Equity > Pot Odds %** → Profitable call (you win more often than required)
+- **Equity < Pot Odds %** → Unprofitable call (fold or need implied odds)
+- **Equity = Pot Odds %** → Break-even (indifferent)
+
+<Exercise
+  question="You're getting 3:1 pot odds (25%) and estimate you have 35% equity. Should you call?"
+  type="text"
+  answer="yes"
+  acceptableAnswers={["yes", "Yes", "YES", "call", "Call"]}
+  hint="Compare your equity to what you need. Is 35% more or less than 25%?"
+  explanation="35% equity > 25% required = profitable call. You'll win more often than you need to, so calling makes money long-term."
+/>
+
+---
+
+## Hand vs. Hand Equity
+
+The simplest form of equity calculation is **hand vs. hand**—when you know exactly what both players hold.
+
+### Premium Pair Matchups
+
+The most dramatic equity situations occur with big pocket pairs:
+
+**AA vs. KK:** ~82% vs. 18%
+
+This is as good as it gets in Hold'em. Aces are a massive favorite, but kings still win about 1 in 5 times. This is why "coolers" happen—sometimes you just have to lose your stack.
+
+**KK vs. QQ:** ~82% vs. 18%
+
+Same story. The higher pair dominates.
+
+<Exercise
+  question="You have AA against an opponent's KK. Approximately what percentage of the time will you win?"
+  type="number"
+  answer={82}
+  acceptableRange={[80, 84]}
+  unit="%"
+  hint="AA vs KK is one of the most lopsided preflop matchups"
+  explanation="AA vs KK is approximately 82% vs 18%. Aces are a huge favorite, but kings will still crack them about 18% of the time."
+/>
+
+### Pair vs. Overcards (The "Coinflip")
+
+When a pair faces two overcards, the equity is much closer:
+
+**JJ vs. AKo:** ~57% vs. 43%
+
+The pair is still favored, but not by much. This matchup is often called a "coinflip" even though it's not quite 50/50.
+
+**QQ vs. AKo:** ~57% vs. 43%
+
+**77 vs. AKs:** ~54% vs. 46%
+
+Notice the pattern: the pair is always a small favorite (around 55-57%) against overcards.
+
+<Exercise
+  question="You have QQ and your opponent shows AKo. Who is the favorite and by approximately how much?"
+  type="text"
+  answer="QQ by about 14%"
+  acceptableAnswers={["QQ by about 14%", "QQ", "QQ by 14%", "QQ by ~14%", "queens", "Queens", "QQ 57%"]}
+  hint="Pairs are favored against overcards, but by how much?"
+  explanation="QQ is approximately a 57% favorite vs AKo's 43%. The pair wins about 14% more often than the overcards—solid, but far from dominant."
+/>
+
+### Dominated Hands
+
+**Domination** occurs when one hand shares a card with another but has a better kicker:
+
+**AK vs. AQ:** ~70% vs. 30%
+**AK vs. AJ:** ~72% vs. 28%
+**KQ vs. KJ:** ~72% vs. 28%
+
+When dominated, you can only win by hitting your weaker kicker (3 outs) or making an unlikely two-pair/trips. This is why hands like KJ and QJ can be dangerous—they're often dominated when you hit a pair.
+
+<KeyConcept title="Domination">
+A hand is **dominated** when it shares one card with the opponent's hand but has a worse kicker.
+
+Dominated hands only have ~30% equity. This is why avoiding dominated situations is crucial to preflop strategy.
+</KeyConcept>
+
+<Exercise
+  question="You have AJ and suspect your opponent has AK. What is your approximate equity?"
+  type="number"
+  answer={28}
+  acceptableRange={[26, 30]}
+  unit="%"
+  hint="This is a classic domination situation"
+  explanation="AJ vs AK is about 28% vs 72%. You're dominated—sharing the ace means you can only win by hitting a jack (3 outs) or making a straight/two-pair."
+/>
+
+### Suited vs. Offsuit
+
+Adding the flush potential of suited cards typically adds **3-4% equity**:
+
+**AKs vs. QQ:** ~46% vs. 54%
+**AKo vs. QQ:** ~43% vs. 57%
+
+That extra 3% might not sound like much, but over thousands of hands, it adds up significantly.
+
+---
+
+## Key Matchups to Memorize
+
+Knowing these common matchups will help you make faster decisions:
+
+<FlashCards
+  title="Essential Preflop Equity Matchups"
+  cards={[
+    { front: "AA vs. KK", back: "82% vs. 18% — Aces are huge favorite" },
+    { front: "AA vs. AKs", back: "87% vs. 13% — Domination + blockers" },
+    { front: "QQ vs. AKo", back: "57% vs. 43% — Classic 'coinflip'" },
+    { front: "JJ vs. AKs", back: "54% vs. 46% — Very close" },
+    { front: "AKs vs. 22", back: "48% vs. 52% — Small pair slightly ahead" },
+    { front: "KQs vs. ATo", back: "49% vs. 51% — Essentially a flip" },
+    { front: "77 vs. AKo", back: "55% vs. 45% — Pair edges overcards" },
+    { front: "AK vs. AQ", back: "70% vs. 30% — Domination in action" }
+  ]}
+/>
+
+<Exercise
+  question="AKs goes all-in preflop against 22. Who is the favorite?"
+  type="text"
+  answer="22"
+  acceptableAnswers={["22", "the pair", "deuces", "Deuces", "pocket twos", "Pocket twos"]}
+  hint="Even the smallest pair is ahead of overcards preflop..."
+  explanation="22 is about a 52% favorite against AKs! Even the smallest pair beats the best unpaired hand. This is why you'll see AK lose to small pairs surprisingly often."
+/>
+
+---
+
+## Hand vs. Range Equity
+
+In reality, you rarely know your opponent's exact hand. Instead, you estimate a **range** of possible hands they could have.
+
+### What Is a Range?
+
+A range is all the hands your opponent could hold based on their actions. For example:
+
+- A player who raises from early position might have: AA-TT, AK, AQs
+- A player who calls a 3-bet might have: 77-TT, AJs-AQs, KQs
+- A player who min-raises from the button might have: a very wide range of 40%+ of hands
+
+<KeyConcept title="Range Definition">
+A **range** is the collection of all possible hands an opponent could have, weighted by likelihood.
+
+Your equity against a range is your average equity against all hands in that range.
+</KeyConcept>
+
+### Calculating Range Equity
+
+When you calculate equity against a range, you're finding your **average** equity against all the hands in that range:
+
+Example: You have AKo vs. a range of {QQ, JJ, TT}:
+- AKo vs. QQ: 43%
+- AKo vs. JJ: 43%
+- AKo vs. TT: 43%
+- Average: 43%
+
+But what if the range includes hands you dominate?
+
+Example: You have AKo vs. a range of {AQ, AJ, KQ}:
+- AKo vs. AQ: 70%
+- AKo vs. AJ: 72%
+- AKo vs. KQ: 72%
+- Average: ~71%
+
+Your equity changes dramatically based on what's in your opponent's range.
+
+<Exercise
+  question="You have JJ. Your opponent's range is exactly {AK, AQ}. Are you a favorite or underdog?"
+  type="text"
+  answer="favorite"
+  acceptableAnswers={["favorite", "Favorite", "ahead", "favored"]}
+  hint="JJ vs overcards—what did we learn about that matchup?"
+  explanation="JJ is about 55-57% against both AK and AQ. Against a range of only overcards, you're a solid favorite! This is why pocket pairs love getting it in against 'AK or nothing' type players."
+/>
+
+### Range Advantage
+
+**Range advantage** describes when one player's entire range is stronger than the other's. This matters for postflop strategy:
+
+- If you 3-bet and get called, you likely have range advantage (more strong hands)
+- If you call a raise from the big blind, the raiser has range advantage (your range is capped)
+
+Understanding range advantage helps you know when to bet confidently and when to proceed cautiously.
+
+---
+
+## Realized vs. Unrealized Equity
+
+Here's a crucial concept that separates beginners from intermediate players:
+
+<KeyConcept title="Realized vs. Unrealized Equity">
+**Unrealized Equity:** Your theoretical share of the pot based on pure hand strength.
+
+**Realized Equity:** What you actually win after accounting for position, playability, and the ability to fold when behind.
+
+You almost never realize 100% of your equity. Good hands in position realize more; weak hands out of position realize less.
+</KeyConcept>
+
+### Example: 72o vs. AKs All-In Preflop
+
+72o has about 32% equity against AKs. If you're all-in preflop, you'll win 32% of the time.
+
+But what if you're NOT all-in? What if you have to play postflop?
+
+72o will:
+- Miss most flops
+- Have no drawing potential
+- Be easily pushed off the hand
+- Never make confident value bets
+
+In reality, 72o might only realize 15-20% of its 32% theoretical equity. The hand is too weak to effectively continue.
+
+### Factors That Affect Realization
+
+**Position:** In position, you act last and can make more informed decisions. You realize more equity.
+
+**Hand playability:** Suited connectors and pairs play well postflop. They can make strong hands (straights, flushes, sets) and continue confidently. They realize high equity.
+
+**Stack depth:** Deep stacks favor speculative hands that can win big pots when they hit. Short stacks favor high-card hands that win at showdown.
+
+<Comparison
+  title="High vs. Low Equity Realization"
+  left={{
+    title: "High Realization Hands",
+    items: [
+      "Pocket pairs (can hit sets)",
+      "Suited connectors (draw potential)",
+      "Strong top-pair hands (AK, AQ)",
+      "Hands played in position"
+    ]
+  }}
+  right={{
+    title: "Low Realization Hands",
+    items: [
+      "Weak offsuit hands (72o, 83o)",
+      "Dominated hands (KJ vs AK)",
+      "Hands played out of position",
+      "Hands with reverse implied odds"
+    ]
+  }}
+/>
+
+<Exercise
+  question="Who realizes more equity: the button or the big blind?"
+  type="text"
+  answer="button"
+  acceptableAnswers={["button", "Button", "BTN", "btn"]}
+  hint="Which position acts last postflop?"
+  explanation="The button realizes more equity because they always act last postflop. They get to see what everyone does before making their decision, which helps them avoid costly mistakes and extract maximum value."
+/>
+
+---
+
+## Equity and Decision Making
+
+Now let's connect equity to your pot odds knowledge from Module 1.1.
+
+### The Complete Decision Framework
+
+<KeyConcept title="The Equity Decision">
+1. **Calculate pot odds** (from Module 1.1)
+2. **Estimate your equity** against opponent's range
+3. **Compare:** Equity vs. Required Equity
+4. **Decide:** Call if equity is higher, fold if lower
+</KeyConcept>
+
+### Example: Facing a Preflop All-In
+
+You have A♠K♠ and face an all-in for $100 into a $50 pot.
+
+**Step 1: Pot Odds**
+- Pot after all-in: $50 + $100 = $150
+- You call: $100
+- Pot odds: $150 : $100 = 1.5:1
+- Required equity: $100 / ($150 + $100) = 40%
+
+**Step 2: Estimate Equity**
+- Opponent's range: likely QQ+, AK
+- vs. AA: 12%
+- vs. KK: 30%
+- vs. QQ: 46%
+- vs. AKo: 50% (tie possibilities)
+- Weighted average against {AA, KK, QQ, AK}: ~35%
+
+**Step 3: Compare**
+- Your equity: ~35%
+- Required equity: 40%
+- 35% < 40%
+
+**Step 4: Decision**
+This is a fold! Your equity doesn't meet the pot odds requirement against a tight all-in range.
+
+*But wait—what if villain is looser?*
+
+If villain also jams JJ, TT, AQ:
+- Your equity rises to ~45%
+- Now 45% > 40% = profitable call
+
+This is why understanding opponent ranges is so important.
+
+<Exercise
+  question="You need 33% equity to call. You estimate you have 40% equity. Should you call?"
+  type="text"
+  answer="yes"
+  acceptableAnswers={["yes", "Yes", "YES", "call", "Call"]}
+  hint="Compare your equity to what you need"
+  explanation="Yes! 40% > 33% means you're getting a good price. You'll win more often than required, making this a profitable call."
+/>
+
+<Exercise
+  question="The pot is $200 and villain jams $200 more. What equity do you need to call?"
+  type="number"
+  answer={33}
+  acceptableRange={[32, 34]}
+  unit="%"
+  hint="Pot odds % = Call / (Pot + Call)"
+  explanation="You call $200 into a total pot of $400. Equity needed = $200 / ($400 + $200) = $200 / $600 = 33.3%. You need about 33% equity to break even."
+/>
+
+### Equity Denial
+
+There's one more concept worth introducing: **equity denial**.
+
+When you bet, you do two things:
+1. Build the pot (value)
+2. Force opponents to pay to see more cards
+
+By betting, you deny your opponent the chance to realize their equity for free. This is especially important against draws.
+
+Example: You have K♠K♥ on a J♠7♠4♦ flop. Opponent has A♠5♠ (nut flush draw).
+- If you check, they see a free turn—realizing their 36% equity
+- If you bet, they must pay to continue—and might fold, surrendering that equity
+
+<Exercise
+  question="You have top pair on a flush draw board. Should you bet to deny equity or check to pot control?"
+  type="text"
+  answer="bet"
+  acceptableAnswers={["bet", "Bet", "BET"]}
+  hint="Think about what happens if draws see free cards"
+  explanation="Generally, bet! Making draws pay is almost always correct. If they call, they're paying too much (or getting correct odds, in which case you still profit from their calls). If they fold, you win immediately and deny their equity."
+/>
+
+---
+
+## Complete Scenario: Preflop All-In Decision
+
+<Scenario
+  title="Should You Call This All-In?"
+  setup="You're in a tournament with 25 big blinds. You open A♦Q♦ from the cutoff to 2.5bb. The big blind, a tight player, moves all-in for 22bb total. Everyone else folds. The pot is now 2.5bb (your raise) + 0.5bb (small blind) + 22bb (all-in) = 25bb."
+  steps={[
+    {
+      question: "How much do you need to call?",
+      answer: "19.5bb",
+      hint: "You already put in 2.5bb. The all-in is 22bb total.",
+      explanation: "You need to call 22bb - 2.5bb = 19.5bb more to continue."
+    },
+    {
+      question: "What pot odds are you getting? (Express as required equity percentage)",
+      answer: "44%",
+      hint: "You call 19.5bb to win 25bb. Use: Call / (Pot + Call)",
+      explanation: "Required equity = 19.5 / (25 + 19.5) = 19.5 / 44.5 = 43.8%, approximately 44%."
+    },
+    {
+      question: "Against a tight range of QQ+, AK only, estimate your equity. (Hint: You're dominated by AK, crushed by QQ+)",
+      answer: "30%",
+      hint: "AQs vs AA/KK is ~30%, vs QQ is ~30%, vs AK is ~25% (dominated).",
+      explanation: "Against {QQ+, AK}, AQs has roughly 30% equity. You're crushed by the big pairs and dominated by AK."
+    },
+    {
+      question: "Based on pot odds (44% needed) and your equity (30%), should you call or fold?",
+      answer: "fold",
+      hint: "Is 30% greater than or less than 44%?",
+      explanation: "Fold! 30% equity < 44% required. Against a tight 3-bet shoving range, AQs doesn't have enough equity. This is a disciplined fold, even though AQ feels strong. If villain were looser (including JJ, TT, AJ), calling would become correct."
+    }
+  ]}
+/>
+
+---
+
+## Practice Problems
+
+<MultiExercise
+  title="Equity Calculation Practice"
+  exercises={[
+    {
+      question: "AA vs. 72o — who is the favorite and by roughly how much?",
+      answer: "AA by about 88%",
+      explanation: "AA is about 88% vs 12% against 72o. Aces dominate random trash hands."
+    },
+    {
+      question: "You have 40% equity and need 25% to call. Should you call?",
+      answer: "Yes",
+      explanation: "Yes! 40% > 25% means you're getting a great price. Call and profit long-term."
+    },
+    {
+      question: "Suited hands have approximately how much more equity than their offsuit counterparts?",
+      answer: "3-4%",
+      explanation: "Suited cards add about 3-4% equity due to flush potential. AKs is ~3% better than AKo."
+    },
+    {
+      question: "You have 55 vs. opponent's AKo. Who is the favorite?",
+      answer: "55",
+      explanation: "55 is about 52-54% favorite against AKo. Even small pairs beat big unpaired cards."
+    },
+    {
+      question: "Is being dominated (like AJ vs AK) worse than being against an overpair (like AJ vs QQ)?",
+      answer: "Yes",
+      explanation: "Yes! AJ vs AK is about 28% equity (dominated), while AJ vs QQ is about 32%. Domination is worse because you share an out with your opponent."
+    }
+  ]}
+/>
+
+---
+
+## Common Mistakes to Avoid
+
+### Mistake 1: Confusing Equity with Probability of Winning THIS Hand
+
+Equity is a long-run average. If you have 60% equity, you'll lose 40% of the time. Don't be results-oriented—a correct call can still lose, and that's okay.
+
+### Mistake 2: Ignoring Equity Realization
+
+Raw equity doesn't account for playability. That 45% equity with 72o doesn't mean much when you can't continue on most flops.
+
+### Mistake 3: Using All-In Equity for Non-All-In Situations
+
+When not all-in, you'll face more decisions. Use all-in equity calculations only for all-in situations.
+
+### Mistake 4: Not Adjusting for Opponent's Range
+
+"I have AK, I'm calling" isn't good thinking. AK's equity varies wildly—from 30% against {AA, KK} to 65% against {JJ-99, AQ, KQ}.
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Equity** is your share of the pot based on winning probability
+2. **Hand vs. hand** equity can be memorized for common matchups
+3. **Range equity** is your average equity against all hands in opponent's range
+4. **Realized equity** is what you actually win—affected by position and playability
+5. **Compare equity to pot odds** to make profitable decisions
+6. **Deny equity** by betting to make draws pay
+</KeyConcept>
+
+You now have both pieces of the fundamental poker math puzzle: pot odds (the price) and equity (your chances). In the next modules, you'll learn which hands to play in the first place.
+
+---
+
+## Test Your Knowledge
+
+Ready to see how well you've mastered equity calculation?
+
+<QuizLink moduleId="1.2" />

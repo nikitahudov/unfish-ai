@@ -1,0 +1,398 @@
+---
+id: "3.2"
+title: "Value Betting"
+category: "Post-Flop Play"
+level: "Fundamental"
+prerequisites: ["3.1"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+In Module 3.1, you learned when and how to continuation bet. But not all bets are created equal. The most important bet in poker—the one that makes you money over the long run—is the **value bet**.
+
+<KeyConcept title="What Is a Value Bet?">
+A **value bet** is a bet made with the intention of getting called by a worse hand.
+
+You believe you have the best hand and want to extract money from your opponent's inferior holdings.
+</KeyConcept>
+
+Bluffing is exciting. It's what makes poker feel like poker. But here's the truth: **value betting is how you make money**. The best players in the world aren't the best bluffers—they're the best at extracting maximum value when they have it.
+
+---
+
+## The Golden Rule of Value Betting
+
+Before betting for value, ask yourself one critical question:
+
+<KeyConcept title="The Golden Rule">
+**"Will more worse hands call than better hands?"**
+
+If yes → Value bet
+If no → Check (or consider a bluff)
+
+This is the most important question in poker. Answer it before every value bet.
+</KeyConcept>
+
+### Breaking It Down
+
+When you bet, opponents either fold, call, or raise. For a value bet:
+
+- **Worse hands calling** = You make money
+- **Better hands calling** = You lose money
+- **Folds** = You win what's in the pot (neutral for thin value)
+
+If the sum of worse hands that call exceeds the better hands that call, your bet is profitable.
+
+<Exercise
+  question="You have top pair on the river. You estimate 8 worse hands would call and 4 better hands would call. Should you value bet?"
+  type="text"
+  answer="yes"
+  acceptableAnswers={["yes", "Yes", "YES"]}
+  hint="Compare worse hands calling to better hands calling"
+  explanation="Yes! More worse hands call (8) than better hands (4). Even though you'll sometimes get called by better, you make money overall from the calls by worse hands."
+/>
+
+---
+
+## Hand Strength Assessment
+
+Not every strong hand is a value bet, and not every weak hand must check. Context matters.
+
+### Relative vs. Absolute Strength
+
+**Absolute strength:** Your hand's ranking (top pair, two pair, flush, etc.)
+
+**Relative strength:** How your hand compares to what opponents likely have
+
+Example: Top pair with ace kicker (TPTK) is absolutely strong. But on a board of A♠K♥Q♦J♣T♠, anyone with a nine has a straight. Your TPTK is relatively weak.
+
+### Board Texture Changes Strength
+
+The same hand can be strong or weak depending on the board:
+
+- **A♠K♠ on K♥7♦2♣:** Very strong—few hands beat you
+- **A♠K♠ on K♥Q♠J♠T♥:** Weak—straights and flushes everywhere
+
+<Exercise
+  question="You have K♥K♦ on a board of A♠8♦4♣3♥2♠. Is your hand relatively strong or weak?"
+  type="text"
+  answer="weak"
+  acceptableAnswers={["weak", "Weak", "WEAK", "relatively weak"]}
+  hint="What hands that called preflop beat you now?"
+  explanation="Relatively weak. Any ace beats you, and opponents who called preflop often have aces in their range (AK, AQ, AJ, AT, suited aces). Your kings are an underpair to the board."
+/>
+
+---
+
+## Opponent's Calling Range
+
+To value bet effectively, you need to estimate what hands your opponent would call with.
+
+### Factors That Affect Calling Range
+
+**Player type:**
+- **Calling stations:** Call with any pair, any draw, ace-high
+- **Tight/nitty players:** Only call with strong hands
+- **Good regulars:** Call with a balanced, position-aware range
+
+**Board texture:**
+- Wet boards create more calling hands (draws, pairs)
+- Dry boards create narrower calling ranges
+
+**Bet sizing:**
+- Larger bets get called by stronger ranges
+- Smaller bets get called by wider ranges
+
+<Comparison
+  title="Opponent Type and Value Betting"
+  left={{
+    title: "Against Calling Stations",
+    items: [
+      "Value bet widely and thinly",
+      "Bet larger for maximum value",
+      "Don't bluff (they don't fold)",
+      "Second pair can be a value bet",
+      "Extract three streets often"
+    ]
+  }}
+  right={{
+    title: "Against Tight Players",
+    items: [
+      "Value bet only strong hands",
+      "Smaller bets may get crying calls",
+      "Don't value-own with medium hands",
+      "They fold most hands",
+      "One or two streets of value max"
+    ]
+  }}
+/>
+
+<Exercise
+  question="Against a player who calls with any pair and most draws, should you value bet more thinly or only with strong hands?"
+  type="text"
+  answer="more thinly"
+  acceptableAnswers={["more thinly", "thinly", "thin", "wider", "more often"]}
+  hint="What kind of player is this?"
+  explanation="Value bet more thinly against calling stations. Since they call with many weak hands, your medium-strength hands get value from worse. Maximize extraction!"
+/>
+
+---
+
+## Value Bet Sizing
+
+Your bet size affects which hands call:
+
+<KeyConcept title="Value Bet Sizing Principles">
+**Stronger hands → Larger bets:** You want maximum chips from calling ranges.
+
+**Medium hands → Smaller bets:** Keep worse hands in; don't bloat the pot against better.
+
+**Against calling stations → Bet bigger:** They call anyway; extract maximum.
+
+**Against tight players → Bet smaller:** They need inducement to call.
+
+**Consistent sizing:** Don't give away information by sizing differently with different hands.
+</KeyConcept>
+
+### The Sizing Spectrum
+
+- **25-40% pot:** Thin value, blocking bets, inducing calls
+- **50-66% pot:** Standard value betting
+- **75-100% pot:** Strong value, charging draws
+- **Overbets (100%+):** Polarized, very strong or bluff
+
+<Exercise
+  question="You have the nut flush on the river against a calling station. Should you bet 33% pot or 80% pot?"
+  type="text"
+  answer="80% pot"
+  acceptableAnswers={["80% pot", "80%", "large", "big", "80"]}
+  hint="This player calls too much with weaker hands"
+  explanation="Bet 80% pot (or even larger). Against a calling station with the nuts, you want maximum value. They'll call with worse anyway—make them pay."
+/>
+
+<Exercise
+  question="You have top pair weak kicker on the river against a tight player who only calls with top pair good kicker or better. Should you bet for value?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO", "check"]}
+  hint="What worse hands would call?"
+  explanation="No—check. If this player only calls with top pair good kicker or better, no worse hands call your bet. Betting would only get called by better hands (value-owning yourself)."
+/>
+
+---
+
+## Thin Value Betting
+
+**Thin value** means betting when it's close—when your hand might be best, but it's not a slam dunk.
+
+### When Thin Value Is Good
+
+- Against calling stations (they call with worse)
+- When opponent's range is capped (limited to weak/medium hands)
+- On river when no draws came in
+- When you have information reads
+
+### When to Avoid Thin Value
+
+- Against aggressive players who raise (they'll put you in a tough spot)
+- When many better hands are possible
+- When you have showdown value and risk getting raised off
+
+<KeyConcept title="The Thin Value Test">
+Ask: **"If I bet and get called, do I expect to win more than 50% of the time?"**
+
+If yes → Thin value bet is correct
+If no → Check for showdown value
+
+Against passive opponents, thin value is great. Against aggressive opponents, it's risky.
+</KeyConcept>
+
+<Exercise
+  question="You have second pair on the river. Villain is passive and calls too much. Is this potentially a thin value bet?"
+  type="text"
+  answer="yes"
+  acceptableAnswers={["yes", "Yes", "YES", "potentially"]}
+  hint="Consider what a passive calling station might call with"
+  explanation="Yes! Against a passive player who calls too much, second pair can be a thin value bet. They'll call with third pair, ace-high, even worse. Extract that value."
+/>
+
+---
+
+## Value Betting by Street
+
+Your approach to value betting changes as the hand progresses:
+
+<FlashCards
+  title="Value Betting Strategy by Street"
+  cards={[
+    { front: "Flop Value Betting", back: "Wide value range. Include top pair, overpairs, strong draws. Protection betting is valid." },
+    { front: "Turn Value Betting", back: "Narrower range. Two pair+ is clear value. Top pair depends on texture and opponent." },
+    { front: "River Value Betting", back: "Thinnest value decisions. Most information available. Must answer: worse hands call?" },
+    { front: "Three Streets of Value", back: "Very strong hands (sets, straights+) can bet all three streets for value." },
+    { front: "Two Streets of Value", back: "Strong hands (top pair top kicker) often bet flop and turn, then decide river." },
+    { front: "One Street of Value", back: "Medium hands may only get one street. Don't force extra value." },
+    { front: "Check-Call Lines", back: "Medium hands sometimes check to control pot, calling opponent's bets." },
+    { front: "Bet-Check-Bet Lines", back: "Viable with some hands: value flop, control turn, value river." }
+  ]}
+/>
+
+### Example: Three Streets of Value
+
+You have A♠A♥ on K♦7♣3♠ against a calling station.
+
+- **Flop:** Bet for value (you have the overpair)
+- **Turn (2♦):** Bet for value (still best hand often)
+- **River (9♥):** Bet for value (they'll call with Kx, 77, etc.)
+
+### Example: One Street of Value
+
+You have A♥9♦ on A♣7♦4♠ against a tight regular.
+
+- **Flop:** Bet for value (top pair is good here)
+- **Turn (K♠):** Check (your kicker is weak; don't inflate pot)
+- **River (2♥):** Check (unless you have a read they're weaker)
+
+<Exercise
+  question="You have a set of sevens on a dry board against a loose player. How many streets of value can you typically get?"
+  type="text"
+  answer="three"
+  acceptableAnswers={["three", "Three", "3", "three streets"]}
+  hint="Sets are among the strongest hands"
+  explanation="Three streets of value. A set on a dry board is extremely strong. Against a loose player who calls too much, bet all three streets—flop, turn, and river."
+/>
+
+---
+
+## Common Value Bet Mistakes
+
+### Mistake 1: Missing Value (Under-Betting)
+
+Checking too much with strong hands is a massive leak. If worse hands would call, bet!
+
+**Signs you're missing value:**
+- Opponents show weak hands at showdown after you checked
+- You rarely bet three streets for value
+- You're scared of getting raised
+
+### Mistake 2: Value-Owning Yourself (Over-Betting)
+
+Betting into hands that beat you is the opposite problem. You're turning a winning hand into a losing one.
+
+**Signs you're value-owning:**
+- You bet and only get called by better hands
+- You bet thin against players who don't call with worse
+- You ignore obvious strength from opponents
+
+### Mistake 3: Wrong Sizing
+
+- **Too small with monsters:** Missing value from hands that would've called more
+- **Too big with marginal hands:** Only getting called by better hands
+
+### Mistake 4: Not Adjusting to Opponent Type
+
+A value bet against a calling station is different from one against a tight player. Adjust your range and sizing.
+
+<Exercise
+  question="You bet the river with top pair, and your opponent calls with a set. Did you necessarily make a mistake?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO", "not necessarily"]}
+  hint="What matters is whether worse hands also would have called"
+  explanation="Not necessarily. If many worse hands also would have called (second pair, weaker top pairs), your value bet was correct even though this time you got called by better. Don't be results-oriented."
+/>
+
+---
+
+## Practice: Value Bet or Check?
+
+<MultiExercise
+  title="Value Betting Decisions"
+  exercises={[
+    {
+      question: "River: You have A♠K♠ on A♥8♦4♣9♠2♦ (top pair top kicker). Opponent is a calling station. Value bet or check?",
+      answer: "Value bet",
+      explanation: "Value bet! TPTK is strong, and calling stations call with any ace, 8x, even worse. Bet around 66% pot to extract maximum value."
+    },
+    {
+      question: "River: You have Q♥Q♦ on A♣K♠7♦3♥J♠ (third pair). Opponent is a tight regular. Value bet or check?",
+      answer: "Check",
+      explanation: "Check. On this AKJ board, most hands that call beat your queens. A tight player likely has an ace, king, or jack. Don't value-own yourself."
+    },
+    {
+      question: "River: You have 8♠8♦ on 8♣4♦4♠2♥9♥ (full house). Opponent is aggressive. Value bet or check?",
+      answer: "Value bet (or check-raise)",
+      explanation: "Value bet! With a full house, you crush everything. Against an aggressive opponent, you could even check to induce a bluff, then raise. Either way, you're getting value."
+    },
+    {
+      question: "River: You have K♥J♦ on K♣9♠4♦2♥7♣ (top pair). Opponent has been passive all hand. Value bet or check?",
+      answer: "Value bet (thin)",
+      explanation: "Thin value bet. Against a passive opponent on this dry board, KJ is often best. Bet small (around 40%) to get called by worse kings, 9x, even ace-high."
+    },
+    {
+      question: "River: You have A♠A♦ on Q♥J♠T♦9♣8♠ (overpair). Value bet or check?",
+      answer: "Check",
+      explanation: "Check. On this four-straight board, any king makes a straight. Your aces are only one pair—likely losing or chopping. Don't value-own into straights."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: River Value Bet Decision
+
+<Scenario
+  title="To Bet or Not to Bet?"
+  setup="You raised A♥Q♥ from the cutoff, and only the big blind called. The board runs out K♠Q♦7♣4♥2♦. You bet the flop and turn, and the big blind called both. The pot is $85. You have $100 behind."
+  steps={[
+    {
+      question: "What is your hand strength on this river?",
+      answer: "second pair good kicker",
+      hint: "There's a king on board, and you have a queen",
+      explanation: "You have second pair (queens) with a good kicker (ace). The board is K-Q-7-4-2 with no flush possible. Your hand is decent but not premium."
+    },
+    {
+      question: "What hands in the big blind's range beat you?",
+      answer: "any king, 77, QQ+",
+      hint: "Think about what they could have called with preflop and on two streets",
+      explanation: "Hands that beat you: any Kx (K9, KT, KJ, etc.), 77 (set), and QQ-AA (though those might've raised). That's a fair number of combos."
+    },
+    {
+      question: "What worse hands might call a river bet?",
+      answer: "weaker queens, 77, pocket pairs, maybe 7x",
+      hint: "What could they have that you beat?",
+      explanation: "Worse hands that might call: QJ, QT (weaker queens), 99-88 (underpairs that might be stubborn), maybe 87s or A7s. The list isn't huge."
+    },
+    {
+      question: "Given this is a standard opponent (not a calling station), should you bet for value?",
+      answer: "check",
+      hint: "Compare the better hands that call vs worse hands that call",
+      explanation: "Check. Against a standard player, more better hands call than worse hands. Kx combos outnumber the random weaker holdings that would call. You have showdown value—use it."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Value betting is how you make money** — It's more important than bluffing
+2. **Ask the golden question** — "Will more worse hands call than better hands?"
+3. **Hand strength is relative** — Board texture and opponent range matter
+4. **Adjust sizing** — Bigger with monsters, smaller with thin value, adjust for opponent
+5. **Know your opponent** — Calling stations get thin value; tight players get less
+6. **Avoid value-owning** — Don't bet into hands that beat you
+</KeyConcept>
+
+Value betting is the foundation of winning poker. Every time you check a hand that should bet, you're leaving money on the table. Every time you bet into better hands, you're giving money away. Find the balance, and your win rate will soar.
+
+---
+
+## Test Your Knowledge
+
+Ready to test your value betting instincts?
+
+<QuizLink moduleId="3.2" />

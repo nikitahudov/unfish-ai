@@ -1,0 +1,531 @@
+---
+id: "10.1"
+title: "Cash Game Strategy"
+category: "Format-Specific Skills"
+level: "Fundamental"
+prerequisites: ["3.2", "8.1"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+Cash games are poker in its purest form. No bubble pressure, no escalating blinds, no tournament structure forcing action. Just you, your opponents, and the cards.
+
+This simplicity creates a different strategic landscape than tournaments—and requires a different mindset.
+
+<KeyConcept title="What Makes Cash Games Unique">
+**Key differences from tournaments:**
+
+- **Chips = Money:** Every chip has direct dollar value (no ICM)
+- **Unlimited Rebuys:** Lose a stack? Buy back in immediately
+- **Fixed Blinds:** The structure never changes
+- **Leave Anytime:** Cash out whenever you want
+- **Deep Stacks:** Typically 100bb+, often much more
+- **Table Selection:** Choose your opponents
+
+These differences fundamentally change optimal strategy.
+</KeyConcept>
+
+This module teaches you cash game-specific concepts that will help you thrive in this format.
+
+---
+
+## Cash vs Tournament Mindset
+
+<Comparison
+  title="Different Games, Different Thinking"
+  leftHeader="Cash Games"
+  rightHeader="Tournaments"
+  leftItems={[
+    "Chips = real dollars directly",
+    "No survival pressure",
+    "Can always rebuy",
+    "Consistent hourly rate focus",
+    "Leave when you want",
+    "Table selection is crucial"
+  ]}
+  rightItems={[
+    "Chips ≠ money (ICM applies)",
+    "Survival matters (bubbles)",
+    "One life (usually)",
+    "ROI/ITM focus",
+    "Play until eliminated or win",
+    "Table assignments random"
+  ]}
+/>
+
+### Why This Matters
+
+In tournaments, a 51% edge on a flip might be worth avoiding near the bubble because survival has extra value (ICM).
+
+In cash games, a 51% edge on a flip is ALWAYS worth taking. Chips are chips. Every edge should be exploited.
+
+**Cash game mantra:** Maximize expected value on every decision. Period.
+
+<Exercise
+  question="In a cash game, you have 51% equity in an all-in situation for 100bb. In a tournament on the bubble with the same equity, should you call both?"
+  type="choice"
+  options={["Call both - edge is edge", "Call cash, consider folding tournament", "Fold both - too much variance"]}
+  answer="Call cash, consider folding tournament"
+  explanation="In cash, 51% equity means you should call every time - positive EV is positive EV. In a tournament on the bubble, ICM considerations mean survival has extra value. A 51% flip might not be worth the risk of bubbling. Different games, different decisions."
+/>
+
+---
+
+## Deep Stack Play
+
+<KeyConcept title="Why Stack Depth Matters">
+**Standard cash game depth: 100 big blinds (100bb)**
+
+With 100bb stacks:
+- Implied odds become significant
+- Post-flop skill matters more
+- Speculative hands gain value
+- Stack-to-pot ratio (SPR) affects strategy
+
+**Deep stacks (150bb+) amplify these effects further.**
+
+The deeper the stacks, the more skill matters post-flop.
+</KeyConcept>
+
+### SPR (Stack-to-Pot Ratio)
+
+**SPR = Effective stack / Pot size after flop**
+
+Example: 100bb effective stacks, pot is 7bb after flop
+SPR = 100 / 7 ≈ 14
+
+**High SPR (10+):**
+- Play more speculative hands (suited connectors, small pairs)
+- Set mining is profitable
+- Implied odds drive decisions
+
+**Low SPR (under 4):**
+- Big pairs and big cards dominate
+- Less room for tricky plays
+- Commit or fold decisions
+
+<Exercise
+  question="You have 65s and the pot is 40bb on the flop with 60bb behind (SPR = 1.5). Should you continue drawing to straights?"
+  type="choice"
+  options={["Yes - draws are always good", "No - SPR is too low for speculative hands", "Maybe - depends on flush draw"]}
+  answer="No - SPR is too low for speculative hands"
+  explanation="With SPR of 1.5, there's not enough behind to profitably draw. Even if you hit, you can't win enough to justify the chase. Low SPR = favor made hands. Speculative hands need high SPR for implied odds."
+/>
+
+### Deep Stack Adjustments
+
+When stacks are 150bb+:
+
+**Play more:**
+- Suited connectors (54s, 76s, 87s)
+- Suited one-gappers (86s, T8s)
+- Small pairs (22-66)
+
+**Why?** When you hit big (set, straight, flush), you win huge pots. Implied odds justify weaker starting hands.
+
+**Be careful with:**
+- One-pair hands in big pots
+- Top pair in 3-bet pots
+- Overplaying overpairs
+
+**Why?** Deep stacks mean bigger pots = need stronger hands to commit.
+
+<Exercise
+  question="You open 54s from the button with 200bb stacks. Opponent 3-bets from the BB. Normally you'd fold, but deep stacks might change this. Why?"
+  type="text"
+  answer="Deep stacks provide implied odds - if you hit big, you can stack opponent"
+  acceptableAnswers={["implied odds", "win bigger pots", "stack opponent", "deep stacks", "potential to win more"]}
+  hint="What happens when 54s makes a straight against an overpair?"
+  explanation="With 200bb effective, if you call the 3-bet and hit your straight or flush, you have potential to win opponent's entire stack. 54s vs overpairs plays great when you connect. The deep stacks provide the implied odds to make this speculative call profitable."
+/>
+
+---
+
+## Stack Management
+
+<FlashCards
+  title="Stack Management Principles"
+  cards={[
+    { front: "Buy in full", back: "Always buy in for 100bb (or table maximum). Smaller buy-ins reduce your edge and limit implied odds." },
+    { front: "Top up regularly", back: "When you fall below 80-90bb, add chips to return to 100bb. Never play short unless intentional." },
+    { front: "Use auto-reload", back: "Most sites offer auto-reload to keep you at 100bb. Enable this feature to stay topped up." },
+    { front: "Don't short-stack unless strategic", back: "Some players short-stack intentionally (40bb). This is a specific strategy, not a default." },
+    { front: "Leaving with profit", back: "Leave when YOU decide, not at arbitrary profit amount. There's no need to 'lock in wins.'" },
+    { front: "Stop-loss (optional)", back: "Some players set a 3-5 buy-in stop-loss. This is personal preference, not mathematically required." }
+  ]}
+/>
+
+### Why Full Stacks Matter
+
+**Misconception:** "I'll buy in short to reduce variance"
+
+**Reality:** Short-stacking reduces your edge more than your variance
+
+When you have 100bb instead of 40bb:
+- More post-flop decisions (where skill shines)
+- Better implied odds
+- Can win bigger pots when ahead
+- More room for strategic plays
+
+<Exercise
+  question="You sit down at NL50 ($50 max buy-in) with $20. Why is this suboptimal?"
+  type="text"
+  answer="You reduce implied odds and give up skill edge in postflop play"
+  acceptableAnswers={["reduce edge", "less implied odds", "less postflop skill", "limits winning potential", "less skill advantage"]}
+  hint="What advantages does having more chips give you?"
+  explanation="With $20 (40bb) instead of $50 (100bb), you can't win as much when you have the best hand, and you have fewer post-flop decisions where skill matters. You're essentially playing a push-fold game instead of deep-stack poker."
+/>
+
+### The "Locking In Profit" Myth
+
+**Myth:** "I'm up $100, I should leave to lock in my win."
+
+**Reality:** There is no such thing as "locking in" profit in cash games.
+
+Every session is one continuous game. If you're still the best player at the table and playing your A-game, leaving gives up future +EV.
+
+**Good reasons to leave:**
+- You're tilted or tired
+- Game has gotten tougher
+- You have other obligations
+- You've played long enough (fatigue)
+
+**Bad reasons to leave:**
+- "I'm up X dollars"
+- "I don't want to give it back"
+
+<Exercise
+  question="You're up 3 buy-ins after 2 hours. The game is still great and you feel focused. Should you leave to 'book the win'?"
+  type="choice"
+  options={["Yes - protect your profit", "No - keep playing the +EV situation", "Maybe - depends on stop-win strategy"]}
+  answer="No - keep playing the +EV situation"
+  explanation="If the game is still good and you're playing well, leaving sacrifices future expected value. Your chips don't know or care that you're 'up' - every hand is a new +EV opportunity. The only reason to leave is if conditions change (tilt, fatigue, bad game)."
+/>
+
+---
+
+## The Cash Game Mindset
+
+<KeyConcept title="Think Long-Term">
+**Don't think about sessions. Think about your lifetime results.**
+
+Key mindset principles:
+
+1. **Measure in bb/100, not session results**
+   - Win rate = big blinds won per 100 hands
+   - Good rate: 3-10bb/100 depending on stakes/rake
+
+2. **Understand variance**
+   - Winning players lose 40% of sessions
+   - Need 30,000+ hands to assess skill accurately
+   - Short-term results are mostly noise
+
+3. **Focus on decisions, not outcomes**
+   - "Did I play that correctly?" > "Did I win?"
+   - Right decisions + time = profit
+
+4. **Detach from individual results**
+   - Each hand is independent
+   - Each session is independent
+   - Your job: make good decisions repeatedly
+</KeyConcept>
+
+### Win Rate Reality Check
+
+**At NL50 (50¢/100¢):**
+
+| Win Rate | Status | Expected Variance |
+|----------|--------|-------------------|
+| Under 0bb/100 | Losing player | Will lose over time |
+| 0-2bb/100 | Breakeven/marginal | Might beat rake barely |
+| 3-5bb/100 | Solid winner | Standard winning rate |
+| 6-10bb/100 | Strong winner | Very good |
+| Over 10bb/100 | Excellent | Elite or soft games |
+
+Note: Win rates decrease as stakes increase. A 10bb/100 winner at NL10 might be 4bb/100 at NL50.
+
+<Exercise
+  question="You've played 5,000 hands at NL50 with a win rate of 15bb/100. How confident can you be in this number?"
+  type="choice"
+  options={["Very confident - it's positive", "Moderately confident - decent sample", "Not confident - sample too small"]}
+  answer="Not confident - sample too small"
+  explanation="5,000 hands is far too small a sample to assess true win rate. Standard deviation over 5k hands is enormous. You could be a losing player running hot, or a strong winner running slightly below expectation. Need 30,000+ hands for meaningful data."
+/>
+
+---
+
+## Session Strategy
+
+### Optimal Session Length
+
+**Typical recommendation: 2-3 hours**
+
+Why not longer?
+- Focus degrades over time
+- Decision quality drops when tired
+- Tilt risk increases
+
+**Signs you should end the session:**
+- Making mistakes you wouldn't normally make
+- Feeling frustrated or impatient
+- Checking phone frequently
+- Hoping hands end quickly
+
+### Game Selection Priority
+
+**Better to play 1 good table than 4 mediocre tables.**
+
+Cash games offer table selection freedom. Use it:
+
+1. Identify soft tables (high VPIP, recreational players)
+2. Sit with fish to your right (position advantage)
+3. Leave bad games (all regulars, tough spots)
+4. Don't let ego keep you in bad games
+
+<Exercise
+  question="Table A has a 45% VPIP fish and three solid regulars. Table B has five average players. Which is likely more profitable?"
+  type="choice"
+  options={["Table A - the fish is worth targeting", "Table B - easier to beat average players", "Equal - both have value"]}
+  answer="Table A - the fish is worth targeting"
+  explanation="One true fish can make a table extremely profitable even with regs present. The fish will make huge mistakes that you can exploit. Average players make small errors. Target the tables with recreational players, even if regs are present."
+/>
+
+### The "Just One More Orbit" Trap
+
+**Scenario:** You're tired, it's late, but you want one more chance to win a big pot.
+
+**Reality:** "One more orbit" tired poker is losing poker.
+
+Your hourly win rate when exhausted or tilted might be NEGATIVE. The one more orbit often costs you money, not makes you money.
+
+**Rule:** When you think "I should stop soon," stop now.
+
+---
+
+## Positional Play in Cash Games
+
+### Position Matters More Deep
+
+With deep stacks, acting last has amplified value:
+
+- **Control pot size:** Check back or bet as you choose
+- **Realize equity:** See how they act before deciding
+- **Better bluffs:** Last to act = more credible bluffs
+- **Better value:** Size bets based on their action
+
+<Exercise
+  question="You're the button in a cash game with 100bb stacks. Why is this the most profitable seat?"
+  type="text"
+  answer="You act last on every postflop street, giving you maximum information and control"
+  acceptableAnswers={["act last", "position", "information", "control", "postflop advantage"]}
+  hint="What advantage does acting last provide?"
+  explanation="On the button, you see everyone else act before you decide on flop, turn, and river. You can bet when checked to, check back for pot control, size based on their actions, and bluff more effectively. Position = profit."
+/>
+
+### Positional Adjustments
+
+**Button and Cutoff:**
+- Play more hands (position compensates)
+- More speculative hands profitable
+- Steal more liberally
+
+**Blinds (SB and BB):**
+- Hardest positions - will lose money overall
+- Goal: minimize losses, not maximize profit
+- Defend enough to prevent exploitation
+- Don't overdefend just because "it's only half a bet more"
+
+<Exercise
+  question="Your stats show you're losing 35bb/100 from the small blind. Is this acceptable?"
+  type="choice"
+  options={["No - you should be winning everywhere", "Maybe - depends on how much you lose in BB", "Probably yes - losing from blinds is normal"]}
+  answer="Probably yes - losing from blinds is normal"
+  explanation="Everyone loses from the blinds - you post money and play out of position. Typical losses: SB -35 to -45bb/100, BB -20 to -35bb/100. Your goal is minimizing these losses, not turning them into wins. -35bb/100 from SB is acceptable."
+/>
+
+---
+
+## Common Cash Game Mistakes
+
+### Strategic Mistakes
+
+**1. Playing too many tables**
+- Each additional table reduces edge per table
+- Start with 1-2, add more only when comfortable
+- Quality decisions > quantity of hands
+
+**2. Not buying in full**
+- Reduces implied odds and skill advantage
+- Always max buy-in unless intentional short-stack strategy
+
+**3. Staying in bad games**
+- If table is all regs, find a better game
+- Ego says "I can beat anyone" - wallet says otherwise
+
+**4. Overvaluing session results**
+- Today's loss doesn't mean you played badly
+- Today's win doesn't mean you played well
+- Judge decisions, not outcomes
+
+### Mindset Mistakes
+
+**5. "Just one more orbit" syndrome**
+- When tired or tilted, every orbit costs money
+- Leave immediately when your A-game slips
+
+**6. Treating sessions as must-win**
+- Creates pressure that affects decisions
+- Every session is just a small piece of your career
+
+**7. Chasing losses**
+- Moving up stakes to "get even" is disaster
+- Moving down or quitting for the day is correct
+
+<Exercise
+  question="After losing 2 buy-ins, you think 'I should move up to NL100 to win it back faster.' Why is this wrong?"
+  type="text"
+  answer="Moving up when losing compounds losses - higher stakes when tilted/frustrated leads to bigger losses"
+  acceptableAnswers={["compounds losses", "tilted", "bigger losses", "emotional decision", "chasing", "wrong mindset"]}
+  hint="How does your decision quality change after losses?"
+  explanation="Chasing losses at higher stakes is a tilt response. Your decision-making is compromised, and now each mistake costs more. The correct move after losses: take a break, review hands to ensure you're playing well, and continue at your regular stakes."
+/>
+
+---
+
+## Building Your Cash Game Routine
+
+### Pre-Session Checklist
+
+**Mental check-in:**
+- Am I in a good headspace?
+- Am I well-rested and focused?
+- Any external distractions?
+
+**Environment check:**
+- Quiet space, no interruptions
+- Water and snacks ready
+- Comfortable temperature
+
+**Game selection:**
+- Find soft tables
+- Position yourself near fish
+- Avoid reg-heavy tables
+
+### During Session
+
+**Every 30 minutes:**
+- Mental state check (tilted? tired? distracted?)
+- Table quality check (still soft? fish leave?)
+- Physical check (hydrated? need break?)
+
+**Take breaks:**
+- 5-10 minutes every hour
+- Step away from the screen
+- Clear your head
+
+### Post-Session
+
+**Quick review (5 minutes):**
+- Log results (profit/loss, hours, hands)
+- Note any interesting hands to review
+- Rate your play 1-10
+
+**Detailed review (separate session):**
+- Review tagged hands
+- Analyze biggest pots
+- Look for patterns
+
+<MultiExercise
+  title="Cash Game Scenarios"
+  description="Apply cash game strategy principles to these situations."
+  exercises={[
+    {
+      question: "You're playing NL50 with $48 and the max buy-in is $50. What should you do?",
+      answer: "Add $2 to top up to full buy-in",
+      explanation: "Playing 96bb instead of 100bb costs implied odds and doesn't protect you from anything. Top up immediately. Most sites have auto-reload - enable it to stay at max."
+    },
+    {
+      question: "You've played 3 hours and feel your focus slipping. The game is excellent with two recreational players. Continue or leave?",
+      answer: "Leave - tired play costs more than the good game provides",
+      explanation: "Even great games aren't worth playing poorly. Your expected value when tired might be negative, canceling the table's softness. Leave now, the game (or a similar one) will be there tomorrow."
+    },
+    {
+      question: "You're down 4 buy-ins at NL50. You're playing fine, just running bad. Should you move down to NL25?",
+      answer: "Not if you're playing well and properly rolled - stick to your game",
+      explanation: "Moving down after losses due to variance (not tilt or bad play) isn't required. If you're playing your A-game and have the bankroll, continue. Moving down for emotional reasons reinforces bad habits."
+    },
+    {
+      question: "The fish at your table just left. The remaining 5 players are all regulars you recognize. What should you do?",
+      answer: "Leave and find a better table",
+      explanation: "A table of regs is likely -EV or barely +EV after rake. Your edge comes from recreational players, not outplaying tough opponents. Use your table selection freedom - find a game with fish."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Managing Your Cash Game Session
+
+<Scenario
+  title="A Day at the Virtual Felt"
+  description="Let's walk through a complete cash game session applying what you've learned."
+  setup="It's 7pm Saturday. You're planning to play NL50 for your evening session. You have a $2,000 bankroll (40 buy-ins). Let's make good decisions throughout the session."
+  steps={[
+    {
+      question: "You open the lobby and see three NL50 tables. Table 1: 22% avg VPIP. Table 2: 35% avg VPIP with a whale showing 65/12 stats. Table 3: 28% avg VPIP. Which do you join?",
+      answer: "Table 2 - has the fish with 65/12 stats",
+      hint: "Where is the weakest player?",
+      explanation: "Table 2 has a recreational player (65/12 is very loose-passive). This one player makes the table significantly more profitable than the others. Always target the table with the biggest fish."
+    },
+    {
+      question: "You sit with $50 (100bb). After an hour, you've drifted to $42 (84bb). The game is still good. What should you do?",
+      answer: "Top up back to $50 (100bb)",
+      explanation: "Playing 84bb instead of 100bb costs you implied odds and reduces your edge. Top up immediately to stay at full buy-in. If the site has auto-reload, make sure it's enabled."
+    },
+    {
+      question: "After 2.5 hours, you're up $75 but feeling tired. The fish is still there. Should you keep playing?",
+      answer: "Leave - fatigue affects decision quality more than the fish helps",
+      hint: "What happens to your decisions when tired?",
+      explanation: "Tired play is losing play. Your win rate when fatigued might be negative, which means the fish's presence doesn't compensate for your declining decision quality. Book the session, rest, and come back tomorrow."
+    },
+    {
+      question: "You log your session: +$75, 2.5 hours, approximately 350 hands. What's your rough win rate for this session (bb/100)?",
+      answer: "Approximately 43bb/100 ($75 / $0.50 = 150bb, divided by 3.5 hundred hands = ~43bb/100)",
+      hint: "Convert dollars to big blinds, then divide by hundreds of hands.",
+      explanation: "$75 = 150bb at NL50. 350 hands = 3.5 hundreds. 150 / 3.5 ≈ 43bb/100. This is excellent for one session, but remember - 350 hands is meaningless statistically. Don't read too much into it."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+Cash games offer a pure form of poker where chips directly equal money and skill compounds over time.
+
+**Key takeaways:**
+- Chips = dollars. Every +EV decision matters.
+- Play with full stacks to maximize edge
+- Deep stacks favor speculative hands and post-flop skill
+- Think in bb/100, not session results
+- Table selection is crucial - find the fish
+- Leave when tired or tilted, not based on profit/loss
+- Position matters even more with deep stacks
+- Build consistent routines for pre, during, and post session
+
+**Your next step:**
+- Review your current cash game approach
+- Identify any stack management leaks
+- Assess your table selection habits
+- Create a session routine and follow it
+
+The cash game grind rewards discipline and consistency. Build good habits, make good decisions, and the results will follow.
+
+<QuizLink
+  skillId="10.1"
+  href="/skills/10.1/quiz"
+  description="Test your understanding of cash game strategy fundamentals"
+/>

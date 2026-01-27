@@ -1,0 +1,470 @@
+---
+id: "3.1"
+title: "Continuation Betting"
+category: "Post-Flop Play"
+level: "Fundamental"
+prerequisites: ["2.3"]
+estimatedTime: "20 minutes"
+exercisesTotal: 12
+scenariosTotal: 1
+---
+
+## Introduction
+
+You've raised preflop. One player called. The flop comes down. Now what?
+
+This is where the **continuation bet** (or "c-bet") comes in. It's the most common postflop action in poker, and understanding when and how to c-bet separates thoughtful players from those who just "bet when they raised."
+
+<KeyConcept title="What Is a Continuation Bet?">
+A **continuation bet** is a bet made by the preflop raiser on the flop, continuing their aggression from preflop.
+
+You raised preflop (showing strength), the flop came, and now you bet again—"continuing" the story you started.
+</KeyConcept>
+
+For years, the conventional wisdom was simple: "Always c-bet. You raised preflop, so bet the flop." But modern poker has evolved. Today's winning players c-bet selectively, choosing the right boards, sizings, and frequencies to maximize profit.
+
+---
+
+## Why Continuation Bets Work
+
+C-bets are effective for several reasons:
+
+### 1. Opponents Miss the Flop Often
+
+Your opponent will miss the flop approximately **two-thirds of the time** with unpaired hands. When they miss, they often can't continue facing a bet.
+
+### 2. You Have the Initiative
+
+By raising preflop, you've claimed the "betting lead." Opponents expect you to bet strong hands, so your c-bet is credible regardless of whether you actually connected.
+
+### 3. You Represent a Strong Range
+
+Your preflop raising range contains premium hands that connect with many flops. When you c-bet, you represent that strength.
+
+<Exercise
+  question="Approximately what percentage of the time does an unpaired hand miss the flop entirely (no pair or better)?"
+  type="number"
+  answer={67}
+  acceptableRange={[65, 70]}
+  unit="%"
+  hint="Think about how often two random cards make at least a pair"
+  explanation="About 67% of the time, an unpaired hand completely misses the flop. This is why c-bets work—your opponent whiffs more often than not."
+/>
+
+---
+
+## Board Texture Categories
+
+Not all flops are created equal. The **texture** of the board dramatically affects your c-bet strategy.
+
+<KeyConcept title="Board Texture">
+**Board texture** describes how connected, coordinated, and draw-heavy a flop is. It determines:
+- How often ranges connect
+- What draws are possible
+- Who has the range advantage
+- Optimal c-bet frequency and sizing
+</KeyConcept>
+
+### Dry Boards
+
+**Characteristics:** Unconnected cards, rainbow (three different suits), few possible draws.
+
+**Examples:**
+- K♠7♦2♣
+- A♥8♦3♠
+- Q♣4♦2♥
+
+**Strategy:** C-bet frequently (70-80%), use small sizing (25-33% pot). Opponents miss these boards often, and there's little to protect against.
+
+### Wet Boards
+
+**Characteristics:** Connected cards, flush draws possible, multiple straight draws.
+
+**Examples:**
+- J♥T♥8♦
+- 9♠8♣7♠
+- Q♥J♦T♣
+
+**Strategy:** C-bet selectively (40-50%), use larger sizing (66-75% pot). Many hands connect here, so you need real equity to bet.
+
+### Semi-Wet Boards
+
+**Characteristics:** Some connectivity but not extremely coordinated.
+
+**Examples:**
+- Q♠9♦4♥
+- K♥T♦6♣
+- J♣8♦3♠
+
+**Strategy:** Moderate frequency (55-65%), medium sizing (50% pot). Balance based on your specific hand.
+
+### Monotone Boards
+
+**Characteristics:** All three cards are the same suit.
+
+**Examples:**
+- Q♠8♠4♠
+- T♥7♥3♥
+- A♦9♦5♦
+
+**Strategy:** Very cautious c-betting. Check many hands—even strong ones without the flush draw. The flush possibility changes everything.
+
+### Paired Boards
+
+**Characteristics:** Two cards of the same rank.
+
+**Examples:**
+- 9♣9♦3♥
+- K♠K♦7♣
+- 5♥5♦A♠
+
+**Strategy:** High c-bet frequency (75%+), small sizing. Neither player connects often, so aggression takes it down.
+
+<Exercise
+  question="Which board is considered 'dry'?"
+  type="text"
+  answer="A♥8♦3♠"
+  acceptableAnswers={["A♥8♦3♠", "A8♦3♠", "A83 rainbow", "A83r"]}
+  hint="Look for unconnected cards with no flush draws"
+  explanation="A♥8♦3♠ is a dry board—the cards are unconnected (no straight draws), and rainbow (no flush draws). Perfect for frequent, small c-bets."
+/>
+
+<Exercise
+  question="You raise preflop and the flop comes J♥T♥8♦. Is this a dry, wet, or monotone board?"
+  type="text"
+  answer="wet"
+  acceptableAnswers={["wet", "Wet", "WET"]}
+  hint="Consider how connected these cards are and what draws exist"
+  explanation="J♥T♥8♦ is very wet. There are straight possibilities (Q9, 97), flush draws (any two hearts), and two-pair/set possibilities. Many hands connect."
+/>
+
+---
+
+## C-Bet Sizing Strategy
+
+Your c-bet size should match the board texture:
+
+<Comparison
+  title="C-Bet Sizing by Board Texture"
+  left={{
+    title: "Small C-Bet (25-33%)",
+    items: [
+      "Dry, unconnected boards",
+      "Paired boards",
+      "When you have range advantage",
+      "To c-bet at high frequency",
+      "Examples: K72r, A83r, 994r"
+    ]
+  }}
+  right={{
+    title: "Large C-Bet (66-75%)",
+    items: [
+      "Wet, connected boards",
+      "When protecting vulnerable hands",
+      "To charge draws appropriately",
+      "With polarized ranges",
+      "Examples: JT8, T97, QJ9"
+    ]
+  }}
+/>
+
+### Why Size Matters
+
+**Small sizing on dry boards:**
+- Opponents fold anyway (they missed)
+- Risking less when called (they have something)
+- Can c-bet more hands profitably
+
+**Large sizing on wet boards:**
+- Charge draws the correct price
+- Protect vulnerable made hands
+- Get value from weaker made hands
+
+<Exercise
+  question="The flop is K♠7♦2♣. What c-bet size should you typically use?"
+  type="text"
+  answer="small (25-33%)"
+  acceptableAnswers={["small", "Small", "25-33%", "33%", "1/3 pot", "small sizing"]}
+  hint="This is a classic dry board"
+  explanation="Use a small c-bet (25-33% pot). On this dry K72 rainbow board, opponents miss often. A small bet accomplishes the same goal as a large one while risking less."
+/>
+
+<Exercise
+  question="The flop is 9♠8♣7♠. What c-bet size should you typically use?"
+  type="text"
+  answer="large (66-75%)"
+  acceptableAnswers={["large", "Large", "66-75%", "75%", "2/3 pot", "large sizing", "big"]}
+  hint="This is an extremely connected board"
+  explanation="Use a large c-bet (66-75% pot). This 987 two-tone board is extremely wet with straight and flush draws everywhere. You need to charge draws and protect made hands."
+/>
+
+---
+
+## When to C-Bet: High Frequency Spots
+
+C-bet frequently (70%+) in these situations:
+
+### Dry, Unconnected Flops
+
+Boards like K♠7♦2♣ or A♥8♦3♠ miss most calling ranges. Your c-bet takes it down often.
+
+### When You Have Range Advantage
+
+If your preflop range connects better with the board than your opponent's, you can c-bet more. High card boards (AKx, KQx) favor the preflop raiser.
+
+### Heads-Up Pots
+
+With only one opponent, they miss often enough that frequent c-betting is profitable.
+
+### Against Weak/Passive Opponents
+
+Players who fold too much make c-betting highly profitable. Exploit them.
+
+<FlashCards
+  title="C-Bet Frequency by Board Type"
+  cards={[
+    { front: "K♠7♦2♣ (dry rainbow)", back: "High frequency (75%+), small sizing (33%)" },
+    { front: "A♥8♦3♠ (dry rainbow)", back: "High frequency (75%+), small sizing (33%)" },
+    { front: "J♥T♥8♦ (wet two-tone)", back: "Low frequency (40%), large sizing (75%)" },
+    { front: "Q♠9♦4♥ (semi-wet)", back: "Medium frequency (55%), medium sizing (50%)" },
+    { front: "9♣9♦3♥ (paired)", back: "High frequency (80%), small sizing (33%)" },
+    { front: "Q♠8♠4♠ (monotone)", back: "Low frequency (30%), check many strong hands" },
+    { front: "7♦6♠5♣ (low connected)", back: "Low frequency (35%), favors caller's range" },
+    { front: "K♥Q♦J♣ (broadway)", back: "Medium frequency (50%), polarized sizing" }
+  ]}
+/>
+
+---
+
+## When to Check: Low Frequency Spots
+
+Check more often (c-bet under 50%) in these situations:
+
+### Very Wet/Connected Boards
+
+On J♥T♥8♦ or 9♠8♣7♠, ranges connect frequently. C-betting bluffs into hands that won't fold is burning money.
+
+### Multiway Pots
+
+With three or more players seeing the flop, someone likely connected. Check your weak hands and be more selective with c-bets.
+
+### When Opponent's Range Hits Better
+
+On 7♦6♠5♣, the big blind's calling range (suited connectors, small pairs) hits better than your raising range. Check more.
+
+### With Hands That Benefit from Free Cards
+
+If you have backdoor draws or weak pairs that want to get to showdown cheaply, checking can be better than c-betting and facing a raise.
+
+<Exercise
+  question="You raise from the cutoff, and both blinds call. The flop is J♣9♦7♥. Should you c-bet or check more often here?"
+  type="text"
+  answer="check"
+  acceptableAnswers={["check", "Check", "CHECK"]}
+  hint="Consider it's multiway and the board texture"
+  explanation="Check more often. This is a multiway pot on a connected board. With two opponents, someone likely has a piece. Your c-bets will get less folds and face more resistance."
+/>
+
+---
+
+## C-Betting In Position vs Out of Position
+
+Your position dramatically affects c-bet strategy:
+
+<Comparison
+  title="C-Betting IP vs OOP"
+  left={{
+    title: "In Position (IP)",
+    items: [
+      "Can c-bet wider range",
+      "Better pot control if called",
+      "Can take free cards when checked to",
+      "Bluffs more credible",
+      "Higher overall c-bet frequency"
+    ]
+  }}
+  right={{
+    title: "Out of Position (OOP)",
+    items: [
+      "More selective c-betting",
+      "Need stronger range to bet",
+      "Check-raise becomes key weapon",
+      "Risk building pots you can't control",
+      "Lower overall c-bet frequency"
+    ]
+  }}
+/>
+
+### OOP Strategy: Check-Raise More
+
+When out of position, your best option is often to check and either:
+- **Give up** if your hand is weak
+- **Call** with medium-strength hands
+- **Check-raise** with strong hands and semi-bluffs
+
+This protects your checking range and keeps opponents from exploiting your c-bets.
+
+<Exercise
+  question="You 3-bet from the big blind and get called by the button. The flop is K♠8♦4♣. Are you more likely to c-bet or check compared to if you had position?"
+  type="text"
+  answer="check more"
+  acceptableAnswers={["check more", "check", "Check more", "Check"]}
+  hint="You're out of position to the button"
+  explanation="Check more often when OOP. Even on this favorable dry board, being out of position means you should check more of your range, including some strong hands to protect your checking range."
+/>
+
+---
+
+## C-Betting in 3-Bet Pots
+
+3-bet pots (where someone raised, you 3-bet, and they called) have different dynamics:
+
+<KeyConcept title="3-Bet Pot C-Betting">
+In 3-bet pots:
+- **Smaller sizing (25-33%)** is standard
+- **Higher frequency** because ranges are stronger
+- **Stack-to-pot ratio (SPR)** is often 1-3, meaning all-ins are near
+- Both players have defined, premium-heavy ranges
+</KeyConcept>
+
+### Why Small Sizing Works
+
+With strong ranges on both sides, big bets aren't needed to deny equity. A small bet accomplishes the goals of:
+- Taking the pot when opponent missed
+- Building the pot with your strong hands
+- Setting up turn and river play
+
+<Exercise
+  question="You 3-bet to 12bb preflop with A♠K♠ and the button calls. The pot is 25bb. What's a typical c-bet size on a dry flop?"
+  type="text"
+  answer="8bb"
+  acceptableAnswers={["8bb", "8", "33%", "1/3 pot", "7-9bb"]}
+  hint="In 3-bet pots, smaller sizing is standard"
+  explanation="Around 8bb (roughly 33% pot) is standard in 3-bet pots. Small sizing works because ranges are strong—you don't need to bet big to get folds or build the pot."
+/>
+
+---
+
+## Common C-Bet Mistakes
+
+### Mistake 1: Auto C-Betting Every Flop
+
+The "I raised, so I bet" mentality costs money. Some boards favor checking; some opponents won't fold.
+
+### Mistake 2: Wrong Sizing for Texture
+
+Betting big on dry boards wastes chips when called. Betting small on wet boards gives draws correct odds.
+
+### Mistake 3: C-Betting Multiway with Air
+
+C-betting into multiple opponents with nothing is burning money. Someone usually has something.
+
+### Mistake 4: Sizing Tells
+
+If you always bet small with weak hands and big with strong hands, observant opponents will exploit you. Use consistent sizing within board textures.
+
+### Mistake 5: Never Checking Strong Hands
+
+If you only c-bet with strong hands and check with weak hands, opponents can exploit you by betting when you check.
+
+<Exercise
+  question="You raise preflop, three players call, and the flop is 8♥7♦6♣. Should you c-bet with ace-high (no pair, no draw)?"
+  type="text"
+  answer="no"
+  acceptableAnswers={["no", "No", "NO", "check", "fold to any bet"]}
+  hint="Consider the board texture and number of opponents"
+  explanation="No! This is a coordinated board with three opponents. Someone almost certainly has a pair, a draw, or better. C-betting ace-high here is lighting money on fire."
+/>
+
+---
+
+## Practice: C-Bet or Check?
+
+<MultiExercise
+  title="C-Bet Decision Practice"
+  exercises={[
+    {
+      question: "You raise UTG, BB calls. Flop: A♠9♦4♣. You have KK. C-bet or check?",
+      answer: "C-bet",
+      explanation: "C-bet! This dry board is great for your range, and KK is strong even with an ace out there. Small sizing (33%) works well."
+    },
+    {
+      question: "You raise BTN, BB calls. Flop: 7♥6♥5♦. You have A♣K♣. C-bet or check?",
+      answer: "Check",
+      explanation: "Check. This extremely wet board favors the BB's calling range. With no pair and no draw, AK has little reason to c-bet here."
+    },
+    {
+      question: "You raise CO, BTN calls. Flop: K♠K♦8♣. You have QQ. C-bet or check?",
+      answer: "C-bet",
+      explanation: "C-bet! Paired boards are great for c-betting. Neither player hits trips often, but your aggression represents strength. Small sizing (33%)."
+    },
+    {
+      question: "You raise MP, two players call. Flop: J♥T♠9♣. You have AA. C-bet or check?",
+      answer: "Check (or bet large)",
+      explanation: "Tricky spot! Many would check to control pot size multiway on this connected board. If you do bet, go large (75%) for protection. Checking is often best."
+    },
+    {
+      question: "You 3-bet from SB, BB calls. Flop: Q♠7♦2♣. You have AK (missed). C-bet or check?",
+      answer: "C-bet",
+      explanation: "C-bet! This dry board is excellent for your 3-betting range. Use small sizing (33%). You'll take it down often, and you have overcards if called."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: The Complete C-Bet Decision
+
+<Scenario
+  title="Should You C-Bet This Flop?"
+  setup="You raise to 2.5bb from the hijack with A♦J♦. The big blind calls. The pot is 5.5bb. The flop comes Q♠8♦4♣."
+  steps={[
+    {
+      question: "How would you categorize this board texture?",
+      answer: "dry",
+      hint: "Look at connectivity and flush possibilities",
+      explanation: "This is a dry board. The cards are unconnected (Q84), and it's rainbow (no flush draws). This is a favorable texture for c-betting."
+    },
+    {
+      question: "Do you have range advantage on this board?",
+      answer: "yes",
+      hint: "Think about what hands each player has. Who has more queens?",
+      explanation: "Yes, you have range advantage. Your hijack raising range has more strong queens (AQ, KQ, QQ) than the big blind's calling range. High cards favor the raiser."
+    },
+    {
+      question: "What sizing should you use if you c-bet?",
+      answer: "small (33%)",
+      hint: "What sizing did we recommend for dry boards?",
+      explanation: "Use small sizing around 33% (roughly 1.8bb into 5.5bb). On dry boards, small bets accomplish the same goals as large ones while risking less."
+    },
+    {
+      question: "Should you c-bet with your AJ here?",
+      answer: "yes",
+      hint: "You have overcards, backdoor draws, and range advantage on a dry board",
+      explanation: "Yes, c-bet! You have two overcards (outs if called), backdoor nut flush draw, range advantage, and a dry board. This is a clear c-bet for small sizing."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **C-bet selectively** — Not every flop deserves a bet
+2. **Board texture is king** — Dry boards = high frequency, small sizing; Wet boards = low frequency, large sizing
+3. **Position matters** — C-bet more in position, check-raise more out of position
+4. **Adjust for opponents** — Passive players get more c-bets; calling stations get fewer bluffs
+5. **Avoid auto-pilot** — Think about texture, position, and opponent on every flop
+6. **Use consistent sizing** — Avoid giving away information with bet sizes
+</KeyConcept>
+
+The c-bet is your bread and butter postflop. Master texture recognition and appropriate sizing, and you'll extract maximum value while avoiding costly mistakes. In the next module, you'll learn when to bet for value versus when to check and control the pot.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your continuation betting skills?
+
+<QuizLink moduleId="3.1" />

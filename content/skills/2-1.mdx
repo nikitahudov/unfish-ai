@@ -1,0 +1,453 @@
+---
+id: "2.1"
+title: "Starting Hand Selection"
+category: "Pre-Flop Strategy"
+level: "Fundamental"
+prerequisites: ["1.2"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+You've learned the math—pot odds and equity. Now it's time to apply that knowledge to the most common decision in poker: **should I play this hand?**
+
+Every orbit, you're dealt two cards. Most of the time, the correct decision is simple: **fold**. The art of poker starts with knowing which hands deserve your chips and which ones belong in the muck.
+
+<KeyConcept title="The Foundation of Winning Poker">
+**Tight is right for beginners.** Playing fewer, stronger hands is the fastest path to profitability.
+
+Every hand you play costs money (blinds, rake, mistakes). Only enter pots when your hand gives you an edge.
+</KeyConcept>
+
+Starting hand selection isn't glamorous. You won't see it highlighted in poker broadcasts. But ask any professional what separates winners from losers at low stakes, and they'll tell you: hand selection discipline.
+
+---
+
+## The 169 Starting Hands
+
+In Texas Hold'em, there are exactly **169 unique starting hand combinations**:
+
+- **13 pocket pairs** (AA, KK, QQ... down to 22)
+- **78 suited combinations** (AKs, AQs, all the way to 32s)
+- **78 offsuit combinations** (AKo, AQo, all the way to 32o)
+
+These 169 hands represent all possible starting situations. Some are gold, most are garbage, and a few are deceptively dangerous.
+
+<Exercise
+  question="How many unique starting hand types are there in Hold'em?"
+  type="number"
+  answer={169}
+  acceptableRange={[169, 169]}
+  hint="Count pairs + suited combos + offsuit combos"
+  explanation="169 unique hands: 13 pairs + 78 suited hands + 78 offsuit hands = 169. Note: there are 1,326 actual combinations, but 169 unique types."
+/>
+
+### The Hand Matrix
+
+Poker players visualize starting hands on a 13x13 grid called the **hand matrix**:
+
+```
+    A   K   Q   J   T   9   8   7   6   5   4   3   2
+A  AA  AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s
+K  AKo KK  KQs KJs KTs K9s K8s K7s K6s K5s K4s K3s K2s
+Q  AQo KQo QQ  QJs QTs Q9s Q8s Q7s Q6s Q5s Q4s Q3s Q2s
+J  AJo KJo QJo JJ  JTs J9s J8s J7s J6s J5s J4s J3s J2s
+T  ATo KTo QTo JTo TT  T9s T8s T7s T6s T5s T4s T3s T2s
+9  A9o K9o Q9o J9o T9o 99  98s 97s 96s 95s 94s 93s 92s
+8  A8o K8o Q8o J8o T8o 98o 88  87s 86s 85s 84s 83s 82s
+7  A7o K7o Q7o J7o T7o 97o 87o 77  76s 75s 74s 73s 72s
+6  A6o K6o Q6o J6o T6o 96o 86o 76o 66  65s 64s 63s 62s
+5  A5o K5o Q5o J5o T5o 95o 85o 75o 65o 55  54s 53s 52s
+4  A4o K4o Q4o J4o T4o 94o 84o 74o 64o 54o 44  43s 42s
+3  A3o K3o Q3o J3o T3o 93o 83o 73o 63o 53o 43o 33  32s
+2  A2o K2o Q2o J2o T2o 92o 82o 72o 62o 52o 42o 32o 22
+```
+
+- **Diagonal** = Pocket pairs
+- **Above diagonal** = Suited hands
+- **Below diagonal** = Offsuit hands
+
+---
+
+## Hand Categories
+
+Let's organize all 169 hands into categories based on playability:
+
+### Tier 1: Premium Hands
+
+These hands are **always playable** from any position:
+
+**AA, KK, QQ** — The powerhouses. You'll build big pots and usually have the best hand.
+
+**AKs** — "Big Slick" suited. Best unpaired hand, plays well postflop.
+
+<KeyConcept title="Premium Hands">
+Premium hands (AA, KK, QQ, AKs) make up only **2.6%** of all hands dealt.
+
+When you have one, your goal is to build the pot preflop. These hands are too strong to slow-play before the flop.
+</KeyConcept>
+
+### Tier 2: Strong Hands
+
+Highly playable from most positions:
+
+**JJ, TT** — Strong pairs, but vulnerable to overcards on the flop.
+
+**AKo, AQs, AQo, AJs** — Big broadway hands that make strong top pairs.
+
+**KQs** — Suited broadway with straight and flush potential.
+
+### Tier 3: Medium Pairs and Strong Broadways
+
+Playable from middle-to-late position:
+
+**99, 88, 77** — Medium pairs. Great for set-mining.
+
+**ATs, KQo, KJs, QJs** — Broadway hands with decent playability.
+
+### Tier 4: Speculative Hands
+
+Playable in the right conditions (late position, deep stacks, multiway pots):
+
+**66, 55, 44, 33, 22** — Small pairs. Live to flop a set.
+
+**Suited connectors:** JTs, T9s, 98s, 87s, 76s, 65s — Make straights and flushes.
+
+**Suited aces:** A5s, A4s, A3s, A2s — Nut flush potential and some straight possibilities.
+
+### Tier 5: Trouble Hands
+
+**Look stronger than they are. Proceed with caution:**
+
+**KJo, KTo, QJo, QTo, JTo** — These hands flop top pair with a bad kicker or second pair frequently. They're often dominated.
+
+**AJo, ATo** — Better than KJ/QJ but still risky against aggressive opponents.
+
+<Exercise
+  question="Which tier does JJ belong to?"
+  type="text"
+  answer="Tier 2"
+  acceptableAnswers={["Tier 2", "tier 2", "2", "Strong Hands", "strong hands"]}
+  hint="JJ is strong but not quite premium"
+  explanation="JJ is a Tier 2 (Strong) hand. It's excellent preflop but vulnerable to overcards on the flop, making it slightly below the premium tier."
+/>
+
+<Exercise
+  question="Is KJo a premium hand, strong hand, or trouble hand?"
+  type="text"
+  answer="trouble hand"
+  acceptableAnswers={["trouble hand", "Trouble hand", "trouble", "Trouble", "Tier 5"]}
+  hint="How does KJ perform when you flop a king?"
+  explanation="KJo is a trouble hand. When you flop a king, you have a weak kicker and are often dominated by KQ or AK. It looks better than it plays."
+/>
+
+---
+
+## Hand Strength Is Relative
+
+Here's what separates good players from beginners: understanding that hand strength depends entirely on **context**.
+
+### Position Impact
+
+The same hand can be a clear raise from the button and a clear fold from under-the-gun. Why?
+
+- **More hands to act behind** = more chance someone has you beat
+- **Worse position postflop** = harder to realize equity
+
+<Comparison
+  title="Same Hand, Different Positions"
+  left={{
+    title: "K9s Under-the-Gun",
+    items: [
+      "7-8 players to act behind",
+      "Likely facing 3-bet with weak hand",
+      "Out of position vs most callers",
+      "Verdict: FOLD"
+    ]
+  }}
+  right={{
+    title: "K9s on the Button",
+    items: [
+      "Only 2 players (blinds) to act",
+      "Likely to take pot uncontested",
+      "Always in position postflop",
+      "Verdict: RAISE"
+    ]
+  }}
+/>
+
+### Number of Opponents
+
+**Heads-up pots:** High card strength matters. AK is great.
+
+**Multiway pots:** Drawing hands improve. Suited connectors gain value; bare high cards decrease.
+
+Why? In multiway pots, someone is more likely to hit the flop hard. Top pair becomes less reliable; straights and flushes become more valuable.
+
+### Stack Depth
+
+**Short stacks (under 30bb):** High card hands increase in value. You're often getting it in preflop or on the flop.
+
+**Deep stacks (100bb+):** Speculative hands improve. Small pairs and suited connectors can win massive pots when they hit big hands.
+
+<Exercise
+  question="With 150bb effective stacks, would you rather have 77 or AJo for an all-in preflop situation?"
+  type="text"
+  answer="AJo"
+  acceptableAnswers={["AJo", "AJ", "ace jack"]}
+  hint="Think about what happens when the money goes in preflop"
+  explanation="AJo is better all-in preflop—it has more high card equity against random hands. However, for normal postflop play at 150bb, 77 would often be preferred because set potential is massive when deep."
+/>
+
+---
+
+## Speculative Hands Deep Dive
+
+Speculative hands are hands that usually miss but win big when they hit. Understanding when to play them is crucial.
+
+### Small Pocket Pairs (22-66)
+
+**The goal:** Flop a set (three of a kind).
+
+**The math:** You'll flop a set about 12% of the time (roughly 1 in 8).
+
+**The requirement:** You need **implied odds** of about 15:1 to profitably set-mine. This means:
+- If you call a 3bb raise, you need to win 45bb when you hit
+- Realistically, you need 75bb+ effective stacks
+
+<KeyConcept title="Set Mining Math">
+**Set probability:** ~12% (1 in 8 flops)
+
+**Required implied odds:** ~15:1 to profit long-term
+
+If effective stacks are below 50bb, set-mining becomes unprofitable against most bet sizes. Fold small pairs or only play them if you can see a cheap flop.
+</KeyConcept>
+
+### Suited Connectors (JTs, 98s, 76s, etc.)
+
+**The goal:** Make straights, flushes, and two pairs.
+
+**Best conditions:**
+- Position (preferably button or cutoff)
+- Multiway pots (more people = bigger implied odds)
+- Deep stacks (need room to realize potential)
+
+**Worst conditions:**
+- Out of position
+- Heads-up against aggressive player
+- Short stacks
+
+<Exercise
+  question="You have 54s in the big blind. The button raises, and you have 25bb. Should you typically call or fold?"
+  type="text"
+  answer="fold"
+  acceptableAnswers={["fold", "Fold", "FOLD"]}
+  hint="Consider stack depth and position"
+  explanation="Fold. At 25bb, you're too shallow to realize the speculative value of 54s. You'll miss most flops and can't profitably call bets. Suited connectors need deeper stacks to profit."
+/>
+
+### Suited Aces (A2s-A5s)
+
+**The goal:** Make nut flushes and occasional straights.
+
+**Value:** When you make a flush with a suited ace, you have the **nuts**. This means maximum extraction against other flushes.
+
+**Danger:** Don't overvalue flopping an ace. A5s flopping ace-high is a weak pair, not a value hand.
+
+---
+
+## Trouble Hands Explained
+
+<KeyConcept title="What Makes a Hand 'Trouble'?">
+Trouble hands have two characteristics:
+1. **They hit top pair with weak kickers** — Leading to second-best hands
+2. **They're easily dominated** — KJ loses big to AK, KQ, AA, KK
+
+The problem isn't that these hands lose—it's HOW they lose. They make expensive second-best hands.
+</KeyConcept>
+
+### The KJ Problem
+
+You have K♠J♥ and the flop comes K♦8♣3♠.
+
+**You think:** "Great, I flopped top pair!"
+
+**Reality:** Any opponent with AK, KQ, or AA/KK has you crushed. You have a dominated kicker.
+
+Now you face bets on three streets. Do you fold top pair? Call and lose big? You're in no-man's land.
+
+### Reverse Implied Odds
+
+Trouble hands have **reverse implied odds**—when you make your hand, you often lose even more money.
+
+<Comparison
+  title="Implied Odds vs. Reverse Implied Odds"
+  left={{
+    title: "Good Implied Odds",
+    items: [
+      "Small pair → flop a set",
+      "Suited connector → hit a straight",
+      "When you hit, opponent often has second-best",
+      "You win big pots"
+    ]
+  }}
+  right={{
+    title: "Reverse Implied Odds",
+    items: [
+      "KJ → flop a king",
+      "Your pair is often second-best",
+      "When you hit, opponent may have better",
+      "You lose big pots"
+    ]
+  }}
+/>
+
+<Exercise
+  question="You have QJo and flop top pair on a Q-7-2 board. An opponent who raised preflop bets. What's your main concern?"
+  type="text"
+  answer="domination"
+  acceptableAnswers={["domination", "Domination", "dominated", "AQ", "KQ", "kicker", "Kicker"]}
+  hint="What hands would a preflop raiser have that beat you?"
+  explanation="You should be concerned about domination. A preflop raiser likely has AQ or KQ in their range, both of which have you crushed. QJo flopping top pair is exactly the trouble scenario."
+/>
+
+---
+
+## Game Type Adjustments
+
+<FlashCards
+  title="Adjustments by Game Type"
+  cards={[
+    { front: "6-max vs 9-max", back: "Play 15-20% more hands in 6-max. Fewer players = more stealing opportunities." },
+    { front: "Cash vs Tournament (early)", back: "Play slightly tighter early in tournaments. Chips are more valuable; avoid marginal spots." },
+    { front: "Cash vs Tournament (late/short)", back: "Play much wider when short-stacked. Any ace or king becomes shove-worthy." },
+    { front: "Loose Table", back: "Tighten up. Let bad players pay you off with premium hands." },
+    { front: "Tight Table", back: "Widen range. Steal blinds more frequently with marginal hands." },
+    { front: "Aggressive Table", back: "Tighten up and 3-bet more with premiums. Avoid speculative hands." },
+    { front: "Passive Table", back: "Play more speculative hands. See cheap flops and get paid when you hit." }
+  ]}
+/>
+
+<Exercise
+  question="At a loose-passive table where 5 players see most flops, should you play more speculative hands or more high-card hands?"
+  type="text"
+  answer="speculative hands"
+  acceptableAnswers={["speculative hands", "speculative", "Speculative", "suited connectors", "small pairs"]}
+  hint="What type of hands benefit from multiway pots with passive players?"
+  explanation="Play more speculative hands! At loose-passive tables, you'll see cheap flops multiway. Small pairs and suited connectors have great implied odds because passive players will pay off your big hands."
+/>
+
+---
+
+## Common Beginner Mistakes
+
+### Mistake 1: Playing Any Ace
+
+A9o, A8o, A7o... these are usually folds. When you hit an ace, you often have kicker problems. When you miss, you have nothing.
+
+### Mistake 2: Overvaluing Suited Cards
+
+K5s is not a good hand. Being suited adds about 3-4% equity, but that doesn't turn trash into treasure.
+
+### Mistake 3: Playing Too Many Hands Out of Position
+
+"But I had odds to call!" You have reverse implied odds. You'll make expensive mistakes postflop.
+
+### Mistake 4: Never Folding Pairs
+
+22 is not playable from every position at every stack depth. Sometimes pocket pairs are folds.
+
+---
+
+## Practice: Categorize These Hands
+
+<MultiExercise
+  title="Hand Classification Practice"
+  exercises={[
+    {
+      question: "AKo — Premium, Strong, Medium, Speculative, or Trouble?",
+      answer: "Strong",
+      explanation: "AKo is a Strong (Tier 2) hand. It's excellent but just slightly below the suited version and premium pairs."
+    },
+    {
+      question: "77 — Premium, Strong, Medium, Speculative, or Trouble?",
+      answer: "Medium",
+      explanation: "77 is a Medium (Tier 3) hand. It's a solid pair but vulnerable to overcards and needs set potential to justify calling raises."
+    },
+    {
+      question: "KTo — Premium, Strong, Medium, Speculative, or Trouble?",
+      answer: "Trouble",
+      explanation: "KTo is a Trouble (Tier 5) hand. It looks playable but often makes dominated pairs. Be very cautious."
+    },
+    {
+      question: "87s — Premium, Strong, Medium, Speculative, or Trouble?",
+      answer: "Speculative",
+      explanation: "87s is Speculative (Tier 4). It needs the right conditions (position, stack depth) but can make powerful hands."
+    },
+    {
+      question: "QQ — Premium, Strong, Medium, Speculative, or Trouble?",
+      answer: "Premium",
+      explanation: "QQ is Premium (Tier 1). It's the third-best starting hand and should be played aggressively preflop."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Should You Play This Hand?
+
+<Scenario
+  title="UTG Decisions"
+  setup="You're playing a 6-max cash game with 100bb effective stacks. You're under-the-gun (first to act), and five players remain behind you. Consider whether to play each hand."
+  steps={[
+    {
+      question: "You look down at JJ. Should you raise, call, or fold?",
+      answer: "raise",
+      hint: "JJ is a strong hand. What's the standard action with strong hands?",
+      explanation: "Raise! JJ is a Tier 2 hand, easily strong enough to open from any position. Standard sizing: 2.5-3bb."
+    },
+    {
+      question: "Next hand you have K9s. Should you raise, limp, or fold?",
+      answer: "fold",
+      hint: "K9s from UTG with 5 players behind... how often will you have the best hand?",
+      explanation: "Fold. K9s is too weak from UTG. You'll face 3-bets with a dominated hand and play postflop out of position. Wait for a better spot."
+    },
+    {
+      question: "Now you have AQo. Raise, call, or fold?",
+      answer: "raise",
+      hint: "AQo is much stronger than K9s. Where does it rank?",
+      explanation: "Raise! AQo is a Tier 2 hand. It's strong enough to open from any position and can handle 3-bets reasonably well."
+    },
+    {
+      question: "Finally, you pick up 22. The table is aggressive with lots of 3-betting. Raise, limp, or fold?",
+      answer: "fold",
+      hint: "With 22 from UTG at an aggressive table, what happens when you get 3-bet?",
+      explanation: "Fold. While 22 can be opened at passive tables, facing frequent 3-bets with a hand that has no postflop playability is -EV. You're set-mining without the odds."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **169 unique starting hands** — Most are folds
+2. **Categorize hands into tiers** — Premium, Strong, Medium, Speculative, Trouble
+3. **Hand strength is contextual** — Position, opponents, stack depth all matter
+4. **Speculative hands need conditions** — Deep stacks, position, multiway pots
+5. **Avoid trouble hands** — They make expensive second-best hands
+6. **Tight is right** — Especially for beginners
+</KeyConcept>
+
+Starting hand selection is your first line of defense against losing money. Master this, and you've already beaten most recreational players. In the next module, you'll learn exactly how position affects which hands you can play.
+
+---
+
+## Test Your Knowledge
+
+Ready to test your starting hand selection skills?
+
+<QuizLink moduleId="2.1" />

@@ -1,0 +1,441 @@
+---
+id: "2.3"
+title: "Open Raising Ranges"
+category: "Pre-Flop Strategy"
+level: "Fundamental"
+prerequisites: ["2.2"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+You've learned which hands are playable (Module 2.1) and how position affects hand selection (Module 2.2). Now it's time to build your **open-raising ranges**—the specific hands you'll raise when the action folds to you.
+
+Open raising (also called "RFI" or Raise First In) is the most common preflop action. You'll face this decision every orbit, often multiple times. Having a clear, well-constructed plan removes guesswork and prevents costly mistakes.
+
+<KeyConcept title="What is RFI?">
+**RFI (Raise First In)** means entering the pot with a raise when everyone before you has folded.
+
+You're the first to put money in voluntarily. Your choices are:
+- **Raise** — The standard play with playable hands
+- **Limp** — Call the big blind without raising (usually bad)
+- **Fold** — The correct play with weak hands
+</KeyConcept>
+
+This module gives you position-specific ranges to memorize and explains the reasoning behind them. By the end, you'll know exactly which hands to raise from each seat.
+
+---
+
+## Why Raise Instead of Limp?
+
+Before diving into ranges, let's address the elephant in the room: why not just limp with speculative hands?
+
+<KeyConcept title="Why Limping Is Usually Wrong">
+Limping (just calling the big blind) is inferior to raising for several reasons:
+
+1. **No fold equity** — You can't win the pot preflop
+2. **No range definition** — Opponents can have anything
+3. **Invite multiway pots** — Others pile in cheaply
+4. **Lose initiative** — Someone else takes control
+</KeyConcept>
+
+### The Raise Advantage
+
+When you raise, you:
+- **Win immediately** when everyone folds
+- **Define opponent's range** (they call or 3-bet with specific hands)
+- **Build the pot** with your good hands
+- **Take initiative** (you're the "aggressor")
+
+<Exercise
+  question="What is the main disadvantage of limping instead of raising?"
+  type="text"
+  answer="no fold equity"
+  acceptableAnswers={["no fold equity", "No fold equity", "fold equity", "can't win preflop", "everyone can call cheaply"]}
+  hint="What can't you accomplish by just calling?"
+  explanation="No fold equity is the biggest issue. When you raise, everyone might fold and you win immediately. When you limp, you're guaranteed to see a flop—and guaranteed to put more money in without knowing your opponents' hands."
+/>
+
+### When Limping CAN Be Okay
+
+There are rare exceptions, primarily in specific live games:
+- **Loose-passive live games** where raises don't thin the field
+- **Behind multiple limpers** with speculative hands (over-limping)
+- **Specific exploitative spots** against very particular opponents
+
+But as a default: **raise or fold**.
+
+---
+
+## Standard Open Raise Sizing
+
+Before we get to ranges, let's establish sizing:
+
+<KeyConcept variant="formula" title="Standard Open Raise Sizing">
+**Online 6-max:** 2.5 big blinds (sometimes 2.2-2.5bb)
+
+**Live poker:** 3 big blinds (sometimes 4bb due to looser calls)
+
+**Adjustments:**
+- Add 1bb per limper if anyone limped
+- You can size up from early position (3bb) if preferred
+- Size down if stacks are short (20bb or less)
+</KeyConcept>
+
+### Keep Sizing Consistent
+
+Don't raise 2.5bb with speculative hands and 4bb with AA. Observant opponents will exploit you. Use the same size with your entire range from each position.
+
+<Exercise
+  question="In a live game, two players limp. What should your raise size be with a hand you'd normally open for 3bb?"
+  type="text"
+  answer="5bb"
+  acceptableAnswers={["5bb", "5 bb", "5", "5 big blinds"]}
+  hint="Standard is 3bb + 1bb per limper"
+  explanation="5bb. Your standard 3bb + 1bb for each limper (2 limpers = 2bb extra) = 5bb. This helps thin the field—you don't want 4 people seeing a flop."
+/>
+
+---
+
+## Position-Based RFI Ranges
+
+Now for the meat of the module: your open-raising ranges by position. These are for **6-max** games, which are most common online. Adjust slightly tighter for 9-max.
+
+<FlashCards
+  title="RFI Ranges by Position (6-Max)"
+  cards={[
+    { front: "UTG (~12-15%)", back: "AA-77, AKs-ATs, KQs-KJs, QJs, AKo-AJo, KQo" },
+    { front: "MP (~16-20%)", back: "UTG range + 66, A9s, KTs, QTs, JTs, ATo" },
+    { front: "HJ (~20-25%)", back: "MP range + 55, A8s-A5s, K9s, Q9s, J9s, T9s, 98s, KJo, QJo" },
+    { front: "CO (~27-32%)", back: "HJ range + 44-22, A4s-A2s, K8s-K6s, Q8s, J8s, T8s, 97s, 87s, 76s, KTo, QTo, JTo" },
+    { front: "BTN (~40-50%)", back: "CO range + K5s-K2s, Q7s-Q5s, J7s, T7s, 96s, 86s, 75s, 65s, 54s, K9o, Q9o, J9o, T9o" },
+    { front: "SB (~35-45%)", back: "Similar to BTN range, sometimes tighter. Some players limp SB in certain games." }
+  ]}
+/>
+
+### Understanding the Percentages
+
+A 15% range means you open 15% of all possible hands. Here's what that feels like:
+- **10%** = Ultra-tight: Only premiums
+- **15%** = Tight: Premiums + strong hands
+- **25%** = Standard: Adding some speculative hands
+- **35%** = Wide: Most playable hands included
+- **50%** = Very wide: Nearly half of all hands
+
+<Exercise
+  question="What approximate percentage of hands should you open from the CO in 6-max?"
+  type="number"
+  answer={30}
+  acceptableRange={[27, 32]}
+  unit="%"
+  hint="CO is late position with only BTN and blinds behind..."
+  explanation="About 27-32%. The CO is a profitable stealing position with only 3 players behind, allowing you to play a much wider range than early positions."
+/>
+
+---
+
+## Visualizing Ranges on the Matrix
+
+Let's see what these ranges look like on the hand matrix. Here's a typical **UTG** range:
+
+```
+    A   K   Q   J   T   9   8   7   6   5   4   3   2
+A  [A] [A] [A] [A] [A]  -   -   -   -   -   -   -   -
+K  [A] [A] [A] [A]  -   -   -   -   -   -   -   -   -
+Q  [A] [A] [A] [A]  -   -   -   -   -   -   -   -   -
+J   -  [A] [A] [A] [A]  -   -   -   -   -   -   -   -
+T   -   -   -  [A] [A]  -   -   -   -   -   -   -   -
+9   -   -   -   -   -  [A]  -   -   -   -   -   -   -
+8   -   -   -   -   -   -  [A]  -   -   -   -   -   -
+7   -   -   -   -   -   -   -  [A]  -   -   -   -   -
+6   -   -   -   -   -   -   -   -   -   -   -   -   -
+5   -   -   -   -   -   -   -   -   -   -   -   -   -
+4   -   -   -   -   -   -   -   -   -   -   -   -   -
+3   -   -   -   -   -   -   -   -   -   -   -   -   -
+2   -   -   -   -   -   -   -   -   -   -   -   -   -
+
+[A] = Always raise
+```
+
+Compare to a typical **Button** range—notice how much more of the matrix is filled:
+
+```
+    A   K   Q   J   T   9   8   7   6   5   4   3   2
+A  [A] [A] [A] [A] [A] [A] [A] [A] [A] [A] [A] [A] [A]
+K  [A] [A] [A] [A] [A] [A] [A] [A] [A] [A]  ~   ~   ~
+Q  [A] [A] [A] [A] [A] [A] [A] [A]  ~   ~   -   -   -
+J  [A] [A] [A] [A] [A] [A] [A]  ~   -   -   -   -   -
+T  [A] [A] [A] [A] [A] [A] [A]  ~   -   -   -   -   -
+9   ~  [A] [A] [A] [A] [A] [A]  ~   -   -   -   -   -
+8   ~   ~   ~   ~  [A] [A] [A] [A]  ~   -   -   -   -
+7   ~   ~   ~   ~   ~  [A] [A] [A] [A]  ~   -   -   -
+6   ~   -   -   -   -   ~  [A] [A] [A] [A]  ~   -   -
+5   ~   -   -   -   -   -   ~  [A] [A] [A] [A]  ~   -
+4   ~   -   -   -   -   -   -   ~   ~  [A] [A]  -   -
+3   ~   -   -   -   -   -   -   -   -   ~  [A] [A]  -
+2   ~   -   -   -   -   -   -   -   -   -   -  [A] [A]
+
+[A] = Always raise    ~ = Sometimes (mixed)    - = Fold
+```
+
+<Exercise
+  question="Looking at range charts, which hands get added from UTG to the Button first: suited connectors or small pairs?"
+  type="text"
+  answer="both around the same time"
+  acceptableAnswers={["both", "Both", "both around the same time", "similar", "Similar", "depends"]}
+  hint="Think about when HJ/CO ranges expand..."
+  explanation="They're added around the same time (HJ-CO). Small pairs get added slightly earlier for set-mining value, but suited connectors join the range by the cutoff. Both are speculative hands that need the positional advantage of late position."
+/>
+
+---
+
+## Dynamic Adjustments
+
+Your baseline ranges are a starting point. Good players adjust based on table conditions:
+
+<Comparison
+  title="When to Widen vs. Tighten Ranges"
+  left={{
+    title: "Widen Your Range When",
+    items: [
+      "Table is tight/passive",
+      "Blinds defend rarely",
+      "No aggressive 3-bettors behind",
+      "You have image as tight player",
+      "Deep stacks (more implied odds)"
+    ]
+  }}
+  right={{
+    title: "Tighten Your Range When",
+    items: [
+      "Table is loose/aggressive",
+      "Players 3-bet frequently",
+      "You've been caught bluffing",
+      "Short stacks behind (shove risk)",
+      "You're running bad (tilt prevention)"
+    ]
+  }}
+/>
+
+### Adjusting for Specific Opponents
+
+- **Tight player in BB?** Steal wider; they'll fold too much.
+- **Maniac on your left?** Tighten up; expect 3-bets.
+- **Calling station behind?** Raise for value; skip bluff hands.
+
+<Exercise
+  question="The player in the big blind folds 80% to steals. Should you open wider or tighter from the button?"
+  type="text"
+  answer="wider"
+  acceptableAnswers={["wider", "Wider", "WIDER"]}
+  hint="If they fold a lot, what does that mean for your marginal hands?"
+  explanation="Much wider! If the BB folds 80% of the time, you're printing money by opening any two cards. Your marginal hands become profitable because you win without a fight most of the time."
+/>
+
+<Exercise
+  question="The player to your left 3-bets you 25% of the time (very aggressive). How should you adjust your opening range?"
+  type="text"
+  answer="tighter"
+  acceptableAnswers={["tighter", "Tighter", "TIGHTER"]}
+  hint="If you open and face a 3-bet often, what hands can handle that?"
+  explanation="Tighten up. With an aggressive 3-bettor behind you, many hands become unprofitable to open because you'll face a 3-bet and be forced to fold (or call/4-bet poorly). Stick to hands that can handle aggression."
+/>
+
+---
+
+## Range Balance Introduction
+
+At higher stakes, opponents study your ranges. If your UTG range is only AA-JJ and AK, observant players will exploit you.
+
+<KeyConcept title="What Is Range Balance?">
+A **balanced** range contains a mix of:
+- **Value hands** — Hands that want action (AA, AK)
+- **Bluff/semi-bluff hands** — Hands with equity that balance out the value (A5s, suited connectors)
+
+Balance makes you harder to play against because opponents can't narrow your range easily.
+</KeyConcept>
+
+### Why A5s Makes Your Range Better
+
+You might wonder: "Why open A5s from the cutoff? It's not that strong."
+
+Here's why:
+1. **Blocks AA and 55** — Opponents have fewer premium holdings
+2. **Makes nut flushes** — When you hit, it's the nuts
+3. **Can make straights** — A-2-3-4-5 is possible
+4. **Balances your range** — Now "suited ace" on a flush board could be A5s or AKs
+
+<Exercise
+  question="Why is having some 'weaker' hands like suited connectors in your raising range actually good?"
+  type="text"
+  answer="balance"
+  acceptableAnswers={["balance", "Balance", "balances range", "makes range balanced", "harder to read"]}
+  hint="Think about what your range looks like to opponents..."
+  explanation="Balance! If you only raise premiums, opponents can easily put you on a narrow range and exploit you. Adding playable speculative hands makes your range wider and harder to play against."
+/>
+
+### Balance Matters More Against Good Players
+
+Against beginners who don't think about ranges, balance is less important—they're not exploiting you anyway. Against thinking players, having a balanced range prevents exploitation.
+
+---
+
+## RFI Decision Framework
+
+When the action folds to you, run through this mental checklist:
+
+<KeyConcept title="RFI Checklist">
+1. **What position am I in?** → Determines base range
+2. **What's my hand?** → Is it in my range for this position?
+3. **Who's behind me?** → Any 3-bettors or calling stations?
+4. **Stack sizes?** → Very short stacks change dynamics
+5. **What sizing?** → Standard or adjusted for conditions
+</KeyConcept>
+
+### Example: J♦T♦ from the Hijack
+
+1. **Position:** Hijack (20-25% range)
+2. **Hand:** JTs is in the HJ range ✓
+3. **Behind:** Standard players
+4. **Stacks:** All 100bb
+5. **Sizing:** 2.5bb (standard)
+
+**Decision:** Raise to 2.5bb.
+
+### Example: K♥9♥ from UTG
+
+1. **Position:** UTG (12-15% range)
+2. **Hand:** K9s is NOT in UTG range ✗
+3. **Behind:** Doesn't matter—hand too weak
+4. **Stacks:** Doesn't matter—hand too weak
+5. **Sizing:** Doesn't matter—folding
+
+**Decision:** Fold.
+
+---
+
+## Practice: Build Your Range
+
+<MultiExercise
+  title="RFI Practice Problems"
+  exercises={[
+    {
+      question: "UTG in 6-max with A♠J♦ (AJo). Raise or fold?",
+      answer: "Raise",
+      explanation: "Raise. AJo is in most UTG ranges—it's a strong broadway hand. Open to 2.5-3bb."
+    },
+    {
+      question: "UTG with 8♠7♠. Raise or fold?",
+      answer: "Fold",
+      explanation: "Fold. 87s is too speculative for UTG. You'll face overcards often and have bad relative position postflop."
+    },
+    {
+      question: "Button with K♦7♦. Raise or fold?",
+      answer: "Raise",
+      explanation: "Raise. K7s is in most button ranges. You have position, steal equity, and decent playability."
+    },
+    {
+      question: "Cutoff with 5♣5♦. Raise or fold?",
+      answer: "Raise",
+      explanation: "Raise. Small pairs are opens from the CO. Set-mining potential plus position makes this profitable."
+    },
+    {
+      question: "MP with Q♥J♣ (QJo). Raise or fold?",
+      answer: "Fold (or sometimes raise)",
+      explanation: "This is borderline. Many players fold QJo from MP due to domination concerns. Some include it. If you play it, be ready to fold to 3-bets."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: RFI Decision Making
+
+<Scenario
+  title="A Complete Orbit"
+  setup="You're playing 6-max online with 100bb stacks. Let's work through an entire orbit of RFI decisions. The action folds to you each time."
+  steps={[
+    {
+      question: "You're UTG with A♥K♥. What do you do?",
+      answer: "raise",
+      hint: "AKs is as premium as it gets for non-pairs...",
+      explanation: "Raise to 2.5bb. AKs is a premium hand that opens from any position. You're hoping to get 3-bet so you can 4-bet or call."
+    },
+    {
+      question: "You're in MP with 9♠8♠. What do you do?",
+      answer: "fold",
+      hint: "98s is a nice hand, but consider your position...",
+      explanation: "Fold. 98s is too speculative for MP. Save this hand for later positions where you have more fold equity and better position postflop."
+    },
+    {
+      question: "You're in the Hijack with A♦4♦. What do you do?",
+      answer: "raise",
+      hint: "A4s in late position with suited ace potential...",
+      explanation: "Raise to 2.5bb. A4s is in most HJ ranges. You have nut flush potential, can make the wheel straight, and have decent steal equity."
+    },
+    {
+      question: "You're on the Button with J♣8♣. What do you do?",
+      answer: "raise",
+      hint: "The button is the widest opening position...",
+      explanation: "Raise to 2.5bb. J8s is well within button opening range. You have great position, fold equity against the blinds, and playable postflop equity when called."
+    }
+  ]}
+/>
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Using the Same Range from Every Position
+
+UTG and button require completely different ranges. Playing 30% from UTG or 15% from the button both cost money.
+
+### Mistake 2: Sizing Tells
+
+Raising 2bb with speculative hands and 3bb with premiums is a massive leak. Good opponents will notice and 3-bet your small raises while folding to large ones.
+
+### Mistake 3: Ignoring Table Dynamics
+
+Your baseline ranges assume "average" opponents. Real tables require adjustment. Don't autopilot.
+
+### Mistake 4: Limping "Because the Hand Is Too Weak to Raise"
+
+If it's too weak to raise, it's too weak to play. Limping gives up all initiative for a small savings.
+
+### Mistake 5: Not Knowing Your Ranges
+
+"I think 76s is in my CO range... maybe?" This uncertainty costs chips. Study and memorize your ranges until they're automatic.
+
+<Exercise
+  question="You notice you're raising 3bb with AK and 2.5bb with suited connectors. What's the problem?"
+  type="text"
+  answer="sizing tell"
+  acceptableAnswers={["sizing tell", "Sizing tell", "tells", "opponents can read you", "predictable", "exploitable"]}
+  hint="Think about what information you're giving away..."
+  explanation="You have a sizing tell! Opponents who pay attention will 3-bet your small raises (knowing you're weaker) and fold to your large raises (knowing you're strong). Use consistent sizing."
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Raise or fold** — Limping is usually wrong
+2. **Position dictates range** — 15% from UTG, 45% from BTN
+3. **Use consistent sizing** — 2.5bb standard, avoid tells
+4. **Adjust for table dynamics** — Widen vs tight, tighten vs aggressive
+5. **Balance your range** — Include some speculative hands
+6. **Memorize your ranges** — Uncertainty costs chips
+</KeyConcept>
+
+You now have a solid foundation for preflop play. You know which hands to play (Module 2.1), where position matters (Module 2.2), and exactly which hands to open-raise from each position (this module). These skills alone will make you profitable at low stakes.
+
+---
+
+## Test Your Knowledge
+
+Ready to put your open-raising knowledge to the test?
+
+<QuizLink moduleId="2.3" />

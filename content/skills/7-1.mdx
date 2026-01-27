@@ -1,0 +1,457 @@
+---
+id: "7.1"
+title: "Player Profiling"
+category: "Table Dynamics"
+level: "Fundamental"
+prerequisites: ["5.2"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+Poker isn't played against cards—it's played against **people**.
+
+The same hand can be a clear fold against one opponent and a clear value bet against another. The difference? Knowing who you're playing against.
+
+<KeyConcept title="Why Player Profiling Matters">
+**The core truth:** Your strategy should change based on your opponent.
+
+- Against a player who never folds: value bet relentlessly, never bluff
+- Against a player who folds too much: bluff frequently, don't overvalue hands
+- Against a balanced player: play solid, don't try fancy exploits
+
+**Accurate profiling = exploitative edge.** The better you know your opponents, the more money you make.
+</KeyConcept>
+
+In Module 5.2, you learned to extract information from showdowns. Now we'll turn that information into actionable player profiles that guide every decision.
+
+---
+
+## The Player Type Framework
+
+Most players fall into recognizable categories. Knowing these archetypes lets you quickly adjust your strategy.
+
+<KeyConcept title="The Six Player Types">
+**1. TAG (Tight-Aggressive)**
+- VPIP: 15-22%, PFR: 13-20%
+- Plays few hands but plays them aggressively
+- Solid, winning style at most stakes
+- Hard to exploit, respect their raises
+
+**2. LAG (Loose-Aggressive)**
+- VPIP: 25-35%, PFR: 20-30%
+- Plays many hands, aggressive with wide range
+- Unpredictable and dangerous
+- Can be very good or very bad depending on skill
+
+**3. Calling Station**
+- VPIP: 30-50%, PFR: 5-15% (large VPIP-PFR gap)
+- Calls too much, rarely raises, never folds
+- Don't bluff them—value bet relentlessly
+- Your ATM machine
+
+**4. Nit**
+- VPIP: <12%, PFR: 8-12%
+- Plays only premium hands
+- When they bet big, they have it
+- Steal their blinds, fold to their aggression
+
+**5. Maniac**
+- VPIP: 40%+, PFR: 30%+
+- Raises constantly with any two cards
+- Highly aggressive, often reckless
+- Tighten up, let them hang themselves
+
+**6. Weak-Tight (Rock)**
+- VPIP: 15-20%, PFR: 8-14% (passive)
+- Plays tight but scared
+- Folds to aggression, rarely bluffs
+- Easy to push around
+</KeyConcept>
+
+<Exercise
+  question="A player enters 35% of pots but only raises 8% of the time. What type are they?"
+  type="text"
+  answer="Calling Station"
+  acceptableAnswers={["Calling Station", "calling station", "station", "Station"]}
+  hint="Look at the gap between VPIP and PFR"
+  explanation="Calling Station. The huge VPIP-PFR gap (35% - 8% = 27%) means they call way more than they raise. They're passive and call too much. Never bluff them; value bet thin."
+/>
+
+---
+
+## Quick Profiling Methods
+
+You don't need 1,000 hands to profile someone. Use these quick methods:
+
+### First Orbit Observations
+
+In your first 10-15 hands at a table, notice:
+- How many pots does each player enter?
+- Are they raising or limping?
+- Any showdowns yet? What did they show?
+- Who's chatting? (Often recreational players)
+- Stack sizes? (Short stacks often scared/recreational)
+
+### The VPIP-PFR Estimation
+
+Without software, estimate these stats:
+
+**VPIP (Voluntarily Put $ In Pot):**
+- Count how many hands they play in one orbit (9-10 hands)
+- 2 out of 10 = ~20% VPIP
+- 4 out of 10 = ~40% VPIP
+
+**PFR (Pre-Flop Raise):**
+- Count how often they raise when they enter
+- If they enter 4 times and raise 3 times = ~75% aggression (LAG/TAG)
+- If they enter 4 times and raise 1 time = ~25% aggression (passive)
+
+<FlashCards
+  title="Quick Profiling Indicators"
+  cards={[
+    { front: "Limps frequently", back: "Likely weak player (calling station or weak-tight). Exploit by raising wide." },
+    { front: "3-bets frequently", back: "LAG or aggressive TAG. Tighten up, consider 4-betting with strong hands." },
+    { front: "Never folds to c-bet", back: "Calling station. Double and triple barrel for value, don't bluff." },
+    { front: "Always folds to c-bet", back: "Weak-tight. C-bet aggressively with any two cards." },
+    { front: "Overbets the pot", back: "Often polarized (nuts or bluff) or bad player. Call down more." },
+    { front: "Min-bets or tiny bets", back: "Often weak/scared. Raise to exploit, or call with wide range." },
+    { front: "Short stack (30-50bb)", back: "Often recreational, scared money, or SNG player. Adjust ranges." },
+    { front: "Deep stack (200bb+)", back: "Likely experienced. Be careful, implied odds matter more." }
+  ]}
+/>
+
+<Exercise
+  question="You've watched a player for 15 hands. They've entered 2 pots (both limps) and folded to every raise. What's your quick profile?"
+  type="text"
+  answer="Weak-Tight or Nit"
+  acceptableAnswers={["Weak-Tight", "weak-tight", "Nit", "nit", "tight passive"]}
+  hint="Low VPIP, no raising, folds to aggression"
+  explanation="Weak-Tight or Nit. Very low VPIP (~13%), no aggression (limping not raising), folds to pressure. Attack their blinds relentlessly; they'll fold too much."
+/>
+
+---
+
+## Strategy Adjustments by Type
+
+Here's how to adjust your strategy against each player type:
+
+<Comparison
+  title="Adjustments vs Tight Players"
+  left={{
+    title: "vs TAG",
+    items: [
+      "Respect their raises (they have it)",
+      "3-bet bluff occasionally (they can fold)",
+      "Don't pay off big bets without strong hands",
+      "Steal their blinds at normal frequency",
+      "Avoid marginal spots with them"
+    ]
+  }}
+  right={{
+    title: "vs Nit",
+    items: [
+      "Steal their blinds constantly",
+      "Fold to their big bets (always strong)",
+      "Never pay them off with one pair",
+      "3-bet them with strong hands only",
+      "They print money for you via blind steals"
+    ]
+  }}
+/>
+
+<Comparison
+  title="Adjustments vs Loose Players"
+  left={{
+    title: "vs LAG",
+    items: [
+      "Widen calling range preflop",
+      "Don't over-bluff (they call/raise light)",
+      "Trap with strong hands",
+      "Let them hang themselves",
+      "Be prepared for wild swings"
+    ]
+  }}
+  right={{
+    title: "vs Calling Station",
+    items: [
+      "NEVER bluff (they won't fold)",
+      "Value bet thin (second pair can be good)",
+      "Bet all three streets for value",
+      "Size up with strong hands",
+      "They are your primary profit source"
+    ]
+  }}
+/>
+
+### vs Maniac
+
+**Key adjustments:**
+- Tighten starting hand requirements
+- Call down lighter (they bluff too much)
+- Let them build the pot, then trap
+- Don't try to out-aggress them
+- Be prepared for high variance
+
+### vs Weak-Tight
+
+**Key adjustments:**
+- C-bet almost every flop (they fold)
+- Steal their blinds relentlessly
+- Apply pressure in every pot
+- Rarely need to show down
+- Don't give them free cards
+
+<Exercise
+  question="You've identified villain as a calling station. You have top pair weak kicker on the river. Should you value bet or check?"
+  type="text"
+  answer="value bet"
+  acceptableAnswers={["value bet", "bet", "Value bet", "Bet"]}
+  hint="What does a calling station do?"
+  explanation="Value bet! Calling stations call with worse (second pair, ace-high, even worse). Your top pair is likely good, and they won't raise without a monster. Bet for value; they'll call with worse."
+/>
+
+---
+
+## Key Statistics Reference
+
+Here's a quick reference for interpreting player stats:
+
+### VPIP Ranges
+
+| VPIP | Classification | Player Type |
+|------|----------------|-------------|
+| <12% | Very Tight | Nit |
+| 12-18% | Tight | TAG or Weak-Tight |
+| 19-25% | Normal | TAG or competent LAG |
+| 26-35% | Loose | LAG or Station |
+| >35% | Very Loose | Maniac or Fish |
+
+### PFR and Gap
+
+| VPIP-PFR Gap | Meaning |
+|--------------|---------|
+| 0-4% | Very aggressive (raises almost always) |
+| 5-8% | Normal aggression |
+| 9-15% | Somewhat passive |
+| >15% | Very passive (calling station likely) |
+
+### Quick Profile Formula
+
+**VPIP under 15% + folds to 3-bets = Nit**
+**VPIP 15-25% + small gap = TAG**
+**VPIP 25%+ + small gap = LAG**
+**VPIP 25%+ + large gap = Calling Station**
+**VPIP 40%+ + constantly raising = Maniac**
+
+<Exercise
+  question="A player has 28% VPIP and 24% PFR. What type are they most likely?"
+  type="text"
+  answer="LAG"
+  acceptableAnswers={["LAG", "lag", "Loose-Aggressive"]}
+  hint="High VPIP with small gap means aggressive"
+  explanation="LAG (Loose-Aggressive). The 28% VPIP is loose, and the small 4% gap means they're raising most of the time they enter (aggressive). This is a LAG profile."
+/>
+
+---
+
+## Building Profiles Over Time
+
+Initial reads are tentative. Confidence builds with more data.
+
+<KeyConcept title="Information Hierarchy">
+**Most reliable → Least reliable:**
+
+1. **Showdown hands** — What they actually had
+2. **Betting actions** — How they played it
+3. **Timing tells** — How long they took
+4. **Chat behavior** — What they said
+5. **Appearance** — Age, clothing (live only, unreliable)
+
+Weight showdowns heavily. One showdown is worth 20 hands of observation without showdown.
+</KeyConcept>
+
+### Confidence Levels
+
+| Hands Observed | Confidence |
+|----------------|------------|
+| 5-15 hands | Tentative guess |
+| 15-30 hands | Reasonable read |
+| 30-50 hands | Confident profile |
+| 50+ hands | Strong profile |
+| 100+ hands | Very reliable |
+
+**Note:** One showdown can change everything. A player you thought was tight showing down 74s for a bluff should dramatically update your read.
+
+<Exercise
+  question="You've labeled a player as a nit based on 20 hands. They then show down a pure bluff with 63o. How should you update?"
+  type="text"
+  answer="Significantly update - they may be LAG or capable of bluffing"
+  acceptableAnswers={["update significantly", "revise read", "they can bluff", "not as tight", "LAG possible"]}
+  hint="One showdown is very valuable information"
+  explanation="Significantly update your read. A nit doesn't bluff with 63o. Either your initial read was wrong, or they're capable of plays you didn't expect. They're now 'possibly LAG' or 'capable of bluffs.'"
+/>
+
+---
+
+## Updating Profiles
+
+Players aren't static. Update your reads based on:
+
+### Dynamic Factors
+
+**Tilt:** A TAG on tilt becomes a LAG or Maniac
+**Winning/Losing:** Winners loosen up, losers tighten or tilt
+**Time:** Late-night players often looser/tired
+**Alcohol:** Live tells—drinking affects play
+**Boredom:** Long sessions → looser play
+
+### When to Update
+
+- After every showdown
+- When behavior contradicts profile
+- After significant wins/losses
+- When they change seats or return from break
+- When game dynamics shift
+
+### Avoiding Profile Lock-In
+
+**Common mistake:** "I labeled them a nit, so I'll always treat them as a nit."
+
+**Better approach:** "My current read is nit, but I'll update if I see contradictory evidence."
+
+Stay flexible. The best read is the current one, not the first one.
+
+<Exercise
+  question="A normally tight player just lost a big pot and is now raising every hand. What adjustment should you make?"
+  type="text"
+  answer="They're tilting - tighten up and call them down"
+  acceptableAnswers={["tilting", "tilt adjustment", "tighten up", "call down lighter", "they're steaming"]}
+  hint="What causes a tight player to suddenly raise everything?"
+  explanation="They're on tilt. Treat them as a temporary Maniac. Tighten your starting requirements, call down lighter, and let them spew chips to you. Their normal profile will return once they calm down."
+/>
+
+---
+
+## Common Profiling Mistakes
+
+### Mistake 1: Over-Generalizing from Small Samples
+
+Seeing one bluff doesn't make them a maniac. Seeing one fold doesn't make them a nit. Need 30+ hands for confident reads.
+
+### Mistake 2: Ignoring Contradictory Evidence
+
+If your "nit" shows down a bluff, don't ignore it because it doesn't fit your narrative. Update immediately.
+
+### Mistake 3: Stereotyping
+
+Age, gender, appearance, nationality—none of these reliably predict playing style. A 60-year-old woman can be a LAG; a young guy in a hoodie can be a nit.
+
+### Mistake 4: Confirmation Bias
+
+Don't remember the hands that confirm your read while forgetting the ones that contradict it. All data matters.
+
+### Mistake 5: Online ≠ Live Profiles
+
+Someone's online style may differ from their live style. Different environments, different plays. Profile them fresh in each context.
+
+---
+
+## Practice: Profile These Players
+
+<MultiExercise
+  title="Identify the Player Type"
+  exercises={[
+    {
+      question: "Player enters 40% of pots, raises 35%, and 3-bets frequently. Type?",
+      answer: "LAG or Maniac",
+      explanation: "With 40% VPIP and 35% PFR, they're very loose and aggressive. The small gap means they're raising most of the time. LAG or Maniac—expect high variance battles."
+    },
+    {
+      question: "Player enters 45% of pots but only raises 10%. They call three streets with third pair. Type?",
+      answer: "Calling Station",
+      explanation: "Classic Calling Station. Huge VPIP-PFR gap (35%), and calling three streets with third pair confirms they don't fold. Never bluff them; value bet thin."
+    },
+    {
+      question: "Player enters 10% of pots, all raises. When they bet big on river, they show the nuts. Type?",
+      answer: "Nit",
+      explanation: "Nit. Only 10% VPIP (ultra-tight), and their big bets are the nuts. Steal their blinds constantly, but fold to their aggression—they have it."
+    },
+    {
+      question: "Player enters 22% of pots, raises 18%. Solid, winning player at the table. Type?",
+      answer: "TAG",
+      explanation: "TAG (Tight-Aggressive). Normal VPIP with small gap = aggressive with their range. The 'solid, winning' description confirms good TAG play."
+    },
+    {
+      question: "Player enters 18% of pots but only raises 8%. They fold to most c-bets and raises. Type?",
+      answer: "Weak-Tight",
+      explanation: "Weak-Tight. Tight VPIP but passive (only 8% PFR), and folds to aggression. They play scared poker. Attack them relentlessly; they fold too much."
+    },
+    {
+      question: "How should you adjust against the Calling Station from question 2?",
+      answer: "Value bet relentlessly, never bluff, go for thin value",
+      explanation: "Against calling stations: bet for value with any made hand (even weak ones), never bluff (they won't fold), size up for maximum extraction. They're your profit center."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Adjusting to a New Table
+
+<Scenario
+  title="The Fresh Table"
+  setup="You just sat down at a new 6-max table. You know no one. Let's build profiles and adjust strategy over the first few orbits."
+  steps={[
+    {
+      question: "In the first orbit, Seat 1 limps twice, Seat 3 raises every pot, Seat 5 folds everything. Initial reads?",
+      answer: "Seat 1: passive/station, Seat 3: LAG/maniac, Seat 5: nit/tight",
+      hint: "Based on entry frequency and aggression",
+      explanation: "Tentative reads: Seat 1 is passive (limping), Seat 3 is aggressive (raising constantly), Seat 5 is tight (folding everything). These are early guesses—need more data."
+    },
+    {
+      question: "Orbit 2: Seat 3 shows down a bluff with 72o. Seat 1 calls three streets and shows bottom pair. How do you update?",
+      answer: "Seat 3: confirmed LAG/maniac, Seat 1: confirmed calling station",
+      hint: "Showdowns provide strong evidence",
+      explanation: "Seat 3 bluffing with 72o confirms maniac tendencies. Seat 1 calling three streets with bottom pair confirms calling station. Both reads are now much stronger."
+    },
+    {
+      question: "You have AQo on the button. Seat 3 (the maniac) raises, Seat 1 (calling station) calls. What's your play?",
+      answer: "3-bet for value",
+      hint: "Consider who you're playing against",
+      explanation: "3-bet for value! The maniac has a wide range, and the calling station will call with worse. AQo is ahead of both their ranges. Build the pot with position and a strong hand."
+    },
+    {
+      question: "Later, you have J9s. Seat 5 (the nit) raises for the first time in 30 hands. What's your play?",
+      answer: "Fold",
+      hint: "The nit raised for the first time in 30 hands",
+      explanation: "Easy fold. The nit's first raise in 30 hands means premium holdings (AA, KK, QQ, AK). J9s is crushed. Don't pay off nits when they finally show aggression."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Know the six types:** TAG, LAG, Calling Station, Nit, Maniac, Weak-Tight
+2. **Profile quickly:** Use VPIP/PFR estimation from first orbits
+3. **Adjust specifically:** Different types require opposite strategies
+4. **Value showdowns:** One showdown > 20 hands of observation
+5. **Stay flexible:** Update reads as new information arrives
+6. **Avoid stereotypes:** Profile based on actions, not appearance
+7. **Watch for dynamics:** Tilt, winning/losing, fatigue change profiles
+</KeyConcept>
+
+Player profiling is the bridge between poker theory and real-world profit. The same strategy that crushes a calling station will get destroyed by a LAG. Know your opponent, adjust your strategy, and extract maximum value.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your player profiling skills?
+
+<QuizLink moduleId="7.1" />

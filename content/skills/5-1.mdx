@@ -1,0 +1,503 @@
+---
+id: "5.1"
+title: "Board Texture Analysis"
+category: "Hand Reading"
+level: "Fundamental"
+prerequisites: ["2.1"]
+estimatedTime: "20 minutes"
+exercisesTotal: 11
+scenariosTotal: 1
+---
+
+## Introduction
+
+Before you can read hands, you must read boards.
+
+The **board texture** tells you everything: which hands are possible, who likely connected, what draws exist, and how to proceed. It's the foundation of all postflop decision-making.
+
+<KeyConcept title="Why Board Texture Matters">
+The board isn't just five random cards—it's a puzzle that determines:
+- What hands can exist (the nuts, possible flushes, straights)
+- How ranges interact (who hits this board?)
+- What draws are possible (flush draws, straight draws)
+- Your optimal strategy (bet size, frequency, check-raise candidates)
+
+**Read the board BEFORE you read hands.**
+</KeyConcept>
+
+A flop of K♠7♦2♣ plays completely differently than J♥T♥8♦. The first is dry and unconnected; the second is wet and dangerous. Your strategy must adapt to each.
+
+---
+
+## The Four Dimensions of Board Texture
+
+Every board can be analyzed across four key dimensions:
+
+<KeyConcept title="The Four Dimensions">
+1. **Connectedness:** How many straight possibilities exist?
+2. **Suitedness:** Rainbow, two-tone, or monotone?
+3. **Height:** Broadway-heavy (high cards) or low?
+4. **Pairing:** Is there a pair on board?
+
+Each dimension affects strategy independently. Master all four.
+</KeyConcept>
+
+### 1. Connectedness
+
+**Unconnected (dry):** Cards are far apart, few straight draws possible.
+- Examples: K♠7♦2♣, A♥9♦3♠, Q♣4♦2♥
+
+**Connected (wet):** Cards are close in rank, many straight draws.
+- Examples: J♥T♥8♦, 9♠8♣7♠, 7♦6♠5♣
+
+**Semi-connected:** Some connectivity but not extreme.
+- Examples: Q♠9♦4♥, K♥T♦5♣, J♣7♦3♠
+
+### 2. Suitedness
+
+**Rainbow:** Three different suits (no flush possible on flop).
+- Example: K♠7♦2♣
+
+**Two-tone:** Two cards of one suit (flush draw possible).
+- Example: K♠7♠2♣
+
+**Monotone:** All three cards same suit (flush possible).
+- Example: K♠7♠2♠
+
+### 3. Height
+
+**High/Broadway:** Contains cards T or higher.
+- Examples: K♥Q♦J♣, A♠K♦T♥
+
+**Medium:** Mix of high and low cards.
+- Examples: Q♠8♦4♥, J♣7♠3♦
+
+**Low:** All cards 8 or below.
+- Examples: 7♦6♠5♣, 8♣4♦2♥
+
+### 4. Pairing
+
+**Unpaired:** All different ranks.
+- Most common (94% of flops)
+
+**Paired:** Two cards of same rank.
+- Changes nut possibilities (full house possible)
+- Example: 9♣9♦4♥, K♠K♦7♣
+
+<Exercise
+  question="Categorize this board: J♥T♠8♥. Is it connected or unconnected?"
+  type="text"
+  answer="connected"
+  acceptableAnswers={["connected", "Connected", "wet"]}
+  hint="Look at how close the cards are in rank"
+  explanation="Connected (wet). J-T-8 are all within 3 ranks of each other. There are straight possibilities with Q9, 97, and even K9 or 76 for gutshots. This is a very connected board."
+/>
+
+<Exercise
+  question="Is A♠9♦3♣ a rainbow, two-tone, or monotone board?"
+  type="text"
+  answer="rainbow"
+  acceptableAnswers={["rainbow", "Rainbow"]}
+  hint="Count the suits"
+  explanation="Rainbow. All three cards have different suits (spade, diamond, club), so no flush draw is possible on the flop."
+/>
+
+---
+
+## Dry Boards
+
+Dry boards are your bread and butter for aggression.
+
+<KeyConcept title="Dry Board Characteristics">
+- **Unconnected cards** (gaps of 4+ between cards)
+- **Rainbow** (no flush draws)
+- **Few draws possible** (maybe one gutshot)
+- **Ranges miss often** (hard to connect)
+- **Strategy:** High c-bet frequency, small sizing
+</KeyConcept>
+
+### Classic Dry Board Examples
+
+**K♠7♦2♣**
+- Cards are 5, 5, and 5 apart (K to 7 to 2)
+- Rainbow (no flush draw)
+- Only gutshot possible: 543 (unlikely holding)
+- **Strategy:** C-bet 75%+, use 33% sizing
+
+**A♥8♦3♠**
+- Ace-high, unconnected
+- Rainbow
+- Very few draws
+- **Strategy:** C-bet 80%+, use 33% sizing
+
+**Q♣4♦2♥**
+- Queen-high, very disconnected
+- Rainbow
+- Almost no draws
+- **Strategy:** C-bet frequently, small sizing
+
+### Why Dry Boards Favor the Aggressor
+
+On dry boards:
+- Opponents miss ~70% of the time
+- Your c-bet represents strength credibly
+- Few draws mean few continuing hands
+- Small bets accomplish big bets' goals
+
+<Exercise
+  question="The flop is K♠7♦2♣. What percentage of the time should you approximately c-bet here as the preflop raiser?"
+  type="number"
+  answer={75}
+  acceptableRange={[70, 85]}
+  unit="%"
+  hint="This is a classic dry board"
+  explanation="Around 75-80%. Dry boards like K72 rainbow are perfect for high-frequency c-betting. Opponents miss often, and small bets take down the pot."
+/>
+
+---
+
+## Wet Boards
+
+Wet boards require caution and selectivity.
+
+<KeyConcept title="Wet Board Characteristics">
+- **Connected cards** (close in rank)
+- **Flush draws possible** (two-tone or monotone)
+- **Many straight draws** (open-ended, double gutters)
+- **Ranges connect frequently** (pairs, draws, made hands)
+- **Strategy:** Lower c-bet frequency, larger sizing when betting
+</KeyConcept>
+
+### Classic Wet Board Examples
+
+**J♥T♥8♦**
+- Extremely connected (J-T-8)
+- Two-tone (heart flush draw)
+- Straight draws: Q9, 97, K9, 76
+- Made straights possible: Q9
+- **Strategy:** C-bet 40%, use 75% sizing
+
+**9♠8♣7♠**
+- Extremely connected (9-8-7)
+- Two-tone (spade flush draw)
+- Straight already possible: JT, T6
+- Many straight draws: JT, T6, 65, J6
+- **Strategy:** C-bet 35%, use 75% sizing
+
+**Q♥J♦T♣**
+- Broadway connected
+- Rainbow (but so connected it doesn't matter)
+- Made straights: AK, K9
+- Every hand has some piece
+- **Strategy:** Very cautious, check many hands
+
+<FlashCards
+  title="Board Texture Quick Reference"
+  cards={[
+    { front: "K♠7♦2♣", back: "Dry, rainbow, unconnected. C-bet 75%+, size 33%." },
+    { front: "A♥8♦3♠", back: "Dry, rainbow, ace-high. C-bet 80%+, size 33%." },
+    { front: "J♥T♥8♦", back: "Wet, two-tone, connected. C-bet 40%, size 75%." },
+    { front: "9♠8♣7♠", back: "Wet, two-tone, connected. C-bet 35%, size 75%." },
+    { front: "Q♠8♠4♠", back: "Monotone. C-bet 30%, check many strong hands." },
+    { front: "9♣9♦4♥", back: "Paired, dry. C-bet 80%+, size 33%." },
+    { front: "7♦6♠5♣", back: "Low, connected. Favors caller. C-bet 35%." },
+    { front: "K♥Q♦J♣", back: "Broadway, connected. C-bet 50%, polarized sizing." }
+  ]}
+/>
+
+<Exercise
+  question="The flop is 9♠8♣7♠. Is this a high or low c-bet frequency board?"
+  type="text"
+  answer="low"
+  acceptableAnswers={["low", "Low", "LOW"]}
+  hint="Consider how connected and wet this board is"
+  explanation="Low frequency (around 35%). This is one of the wettest possible boards with straights, flush draws, and many pair + draw combinations. Check often and be selective."
+/>
+
+---
+
+## Special Board Types
+
+Some boards have unique characteristics requiring specific approaches:
+
+### Monotone Boards (All One Suit)
+
+**Example: Q♠8♠4♠**
+
+**Characteristics:**
+- Flush is ALREADY possible
+- Every hand with one spade has a draw
+- Changes everything about hand values
+
+**Strategy:**
+- C-bet infrequently (30%)
+- Check many strong hands without the flush draw
+- If you have the nut flush draw (A♠), c-bet for value
+- Be very cautious without a spade
+
+<Exercise
+  question="The flop is T♥6♥3♥ (monotone). You have A♠K♠. Should you c-bet or check?"
+  type="text"
+  answer="check"
+  acceptableAnswers={["check", "Check", "CHECK"]}
+  hint="You have no hearts at all"
+  explanation="Check. On a monotone board, any heart beats your ace-high. Without even a single heart, you have no flush draw, no blocker, and no made hand. Give up or check-fold."
+/>
+
+### Paired Boards
+
+**Example: 9♣9♦4♥**
+
+**Characteristics:**
+- Full house is possible (anyone with a 9)
+- Trips requires exactly one specific card
+- Neither player connects often
+
+**Strategy:**
+- High c-bet frequency (80%+)
+- Small sizing (33%)
+- Aggression wins because both players miss
+
+**Example: K♠K♦7♣**
+
+**Strategy:**
+- Similar to above, but be aware of Kx hands
+- Button/late position has more kings than blinds
+- Still high frequency, small sizing
+
+### Low Connected Boards
+
+**Example: 7♦6♠5♣**
+
+**Characteristics:**
+- Favors caller's range (suited connectors, small pairs)
+- Preflop raiser has fewer 76s, 65s, 54s
+- Straights already possible: 98, 84
+
+**Strategy:**
+- Reduced c-bet frequency (35-40%)
+- Caller has range advantage here
+- Check more even with overpairs
+
+<Exercise
+  question="The flop is 6♣5♦4♣. Who has range advantage: the preflop raiser (UTG) or the big blind caller?"
+  type="text"
+  answer="big blind"
+  acceptableAnswers={["big blind", "Big blind", "BB", "caller", "Caller"]}
+  hint="Think about which player's range contains more 87s, 76s, 54s..."
+  explanation="Big blind caller. The BB's calling range is loaded with hands that crush this board: 87, 76, 54, 33, 44, 55, 66. UTG's range has more big cards that completely miss here."
+/>
+
+---
+
+## Range-Board Interaction
+
+Understanding how different ranges connect with boards is essential:
+
+<Comparison
+  title="Who Hits Which Boards?"
+  left={{
+    title: "Preflop Raiser Favored",
+    items: [
+      "High card boards (A-K-x, K-Q-x)",
+      "Boards with broadway cards",
+      "Dry, unconnected boards",
+      "Paired high boards (K-K-x)",
+      "Boards matching their strong range"
+    ]
+  }}
+  right={{
+    title: "Caller Favored",
+    items: [
+      "Low connected boards (7-6-5)",
+      "Boards with small-medium cards",
+      "Wet, draw-heavy boards",
+      "Boards that hit calling ranges",
+      "Multi-way flops (more callers = wider ranges)"
+    ]
+  }}
+/>
+
+### Range Advantage vs. Nut Advantage
+
+**Range advantage:** One player's range connects more frequently overall.
+
+**Nut advantage:** One player's range has more of the strongest possible hands.
+
+Example on J♥T♥8♦:
+- **Range advantage:** Possibly caller (more JT, T8, suited connectors)
+- **Nut advantage:** Probably raiser (more QQ, Q9s combos)
+
+These concepts help you choose between small frequent bets (range advantage) and large polarized bets (nut advantage).
+
+<Exercise
+  question="On a K♠Q♦J♣ flop, does the preflop raiser or the big blind caller have range advantage?"
+  type="text"
+  answer="preflop raiser"
+  acceptableAnswers={["preflop raiser", "raiser", "Raiser", "Preflop raiser"]}
+  hint="Who has more AK, KQ, QJ, KJ in their range?"
+  explanation="Preflop raiser has range advantage. Their range contains more AK, KQ, KJ, QJ, AA-TT than the big blind's calling range. Broadway boards favor raisers."
+/>
+
+---
+
+## Identifying Draws
+
+Instantly recognizing draw possibilities is a crucial skill:
+
+### Flush Draws
+
+**Two suited cards = flush draw possible**
+- Count: 9 cards of that suit remain
+- ~35% to complete by river
+
+**Spotting flush draws:**
+- Two hearts? Heart flush draw possible
+- Rainbow? No flush draw on flop
+
+### Straight Draws
+
+**Connected cards = straight draws**
+
+**Open-ended straight draws (OESD):**
+- 8 outs, ~32% by river
+- Need cards on both ends to complete
+
+**Gutshot straight draws:**
+- 4 outs, ~17% by river
+- Need one specific middle card
+
+**Common patterns:**
+- **Three in a row (T-9-8):** Many OESDs (QJ, J7, 76)
+- **Two in a row with gap (J-9-x):** Gutshots and OESDs
+- **All spread out (K-7-2):** Maybe one gutshot at most
+
+<Exercise
+  question="On a board of J♣9♦6♥, what hands have an open-ended straight draw?"
+  type="text"
+  answer="T8 and Q8"
+  acceptableAnswers={["T8 and Q8", "QT and T8", "T8, Q8", "QT, T8", "T8"]
+}
+  hint="An OESD needs cards on both ends to complete"
+  explanation="T8 has an OESD (needs Q or 7). QT has a gutshot plus overcards (needs only K). 87 has a gutshot (needs T only). The clearest OESD is T8."
+/>
+
+---
+
+## Applying Board Texture to Strategy
+
+Here's how to use board texture analysis in real decisions:
+
+### High C-Bet Frequency Boards
+- K♠7♦2♣ (dry rainbow)
+- A♥9♦3♠ (dry rainbow)
+- 9♣9♦4♥ (paired)
+- Q♣4♦2♥ (dry rainbow)
+
+**Strategy:** Bet 70-80%, small sizing (33%)
+
+### Low C-Bet Frequency Boards
+- J♥T♥8♦ (wet two-tone)
+- 9♠8♣7♠ (wet two-tone)
+- 7♦6♠5♣ (low connected)
+- Q♠8♠4♠ (monotone)
+
+**Strategy:** Bet 30-45%, larger sizing (66-75%)
+
+### Check-Raise Favorable Boards
+- Low connected (big blind can check-raise sets/two pair)
+- Wet boards (many semi-bluff candidates)
+- When you're out of position with range disadvantage
+
+---
+
+## Practice: Categorize These Boards
+
+<MultiExercise
+  title="Board Texture Recognition"
+  exercises={[
+    {
+      question: "K♥8♦2♠ — Dry or wet? C-bet frequency?",
+      answer: "Dry, high frequency",
+      explanation: "Dry (unconnected, rainbow). C-bet 75%+, small sizing. Classic high-frequency board."
+    },
+    {
+      question: "T♥9♥7♣ — Dry or wet? C-bet frequency?",
+      answer: "Wet, low frequency",
+      explanation: "Wet (connected, two-tone). C-bet 40%, large sizing. Many draws and connecting hands."
+    },
+    {
+      question: "A♣A♦5♥ — Special texture? Strategy?",
+      answer: "Paired (aces), high frequency",
+      explanation: "Paired aces. Very high c-bet frequency (85%+) because trips are rare and your range has more aces. Small sizing."
+    },
+    {
+      question: "5♦4♠3♦ — Who has range advantage?",
+      answer: "Caller (big blind)",
+      explanation: "Caller has advantage. The big blind's range has tons of 62, 76, 54, 33, 44, 55. Preflop raiser's range mostly misses this low connected board."
+    },
+    {
+      question: "K♠J♠7♠ — What's the critical feature?",
+      answer: "Monotone",
+      explanation: "Monotone (all spades). Flush is possible on the flop. Check many hands, even strong ones without a spade. Only bet with spade in your hand or air as bluff."
+    }
+  ]}
+/>
+
+---
+
+## Scenario: Board Texture Decision Making
+
+<Scenario
+  title="Reading the Board"
+  setup="You raise A♥K♦ from the cutoff. The big blind calls. The flop comes J♥7♥4♣. The pot is $6.50."
+  steps={[
+    {
+      question: "Analyze this board: Is it dry, semi-wet, or wet?",
+      answer: "semi-wet",
+      hint: "Consider both connectedness and flush possibilities",
+      explanation: "Semi-wet. It's not highly connected (J-7-4 have gaps), but there's a heart flush draw. The two-tone nature makes it wetter than a rainbow J74."
+    },
+    {
+      question: "Do you have range advantage on this board?",
+      answer: "slight advantage",
+      hint: "Think about who has more jacks and overpairs",
+      explanation: "Slight advantage. You have more overpairs (QQ, KK, AA) and premium jacks (AJ, KJ). But the big blind has 77, 44, J7s, 74s, and suited connectors that connect."
+    },
+    {
+      question: "You have two overcards and a backdoor flush draw. Should you c-bet?",
+      answer: "yes",
+      hint: "Consider your equity, position, and board texture",
+      explanation: "Yes, c-bet. You have two overcards (6 outs), backdoor nut flush draw, and some range advantage. Use medium sizing (50%) given the semi-wet texture."
+    },
+    {
+      question: "What sizing would you use: 33%, 50%, or 75%?",
+      answer: "50%",
+      hint: "Match sizing to board texture",
+      explanation: "50% pot is ideal. The board is semi-wet, so small sizing gives draws too good a price. Large sizing isn't necessary since it's not extremely connected. 50% balances these factors."
+    }
+  ]}
+/>
+
+---
+
+## Summary
+
+<KeyConcept title="Key Takeaways">
+1. **Analyze four dimensions:** Connectedness, suitedness, height, pairing
+2. **Dry boards:** High c-bet frequency (70%+), small sizing (33%)
+3. **Wet boards:** Low c-bet frequency (35-45%), large sizing (66-75%)
+4. **Special boards:** Monotone requires extreme caution; paired boards favor aggression
+5. **Range advantage:** High cards favor raiser; low connected favors caller
+6. **Read the board first** — before trying to read hands
+</KeyConcept>
+
+Board texture is the foundation of all postflop strategy. Before you ask "what does my opponent have?", ask "what does this board allow them to have?" Master texture analysis, and hand reading becomes dramatically easier.
+
+---
+
+## Test Your Knowledge
+
+Ready to prove your board texture skills?
+
+<QuizLink moduleId="5.1" />

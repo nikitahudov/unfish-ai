@@ -45,3 +45,36 @@ export interface CoachState {
   isLoading: boolean;
   error: string | null;
 }
+
+// Quiz types
+export interface QuizQuestion {
+  id: string;
+  topic: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  type: 'conceptual' | 'calculation' | 'scenario' | 'true-false';
+  question: string;
+  options?: string[];
+  correctAnswer?: string;
+}
+
+export interface QuizSessionState {
+  isActive: boolean;
+  topic: string | null;
+  difficulty: 'easy' | 'medium' | 'hard';
+  questionsAsked: number;
+  correctAnswers: number;
+  streak: number;
+  history: {
+    question: string;
+    userAnswer: string;
+    wasCorrect: boolean;
+  }[];
+}
+
+export interface QuizTopic {
+  id: string;
+  name: string;
+  skillId?: string;
+  description: string;
+  icon: string;
+}

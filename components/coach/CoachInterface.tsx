@@ -6,6 +6,7 @@ import { CoachInput } from './CoachInput';
 import { ModeSelector } from './ModeSelector';
 import { QuickActions } from './QuickActions';
 import { ProgressSummary } from './ProgressSummary';
+import { AnalyzePanel } from './AnalyzePanel';
 import { useCoachStore } from '@/lib/coachStore';
 import { sendMessageToCoach } from '@/lib/coach/coachApi';
 import { buildCoachContext, getDaysSinceLastActivity } from '@/lib/coach/contextBuilder';
@@ -15,6 +16,7 @@ export function CoachInterface() {
   const [mode, setMode] = useState<CoachMode>('chat');
   const [isLoading, setIsLoading] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [showHandForm, setShowHandForm] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const initializingRef = useRef(false);
@@ -113,6 +115,12 @@ export function CoachInterface() {
   const handleSend = async (content: string, switchToMode?: CoachMode) => {
     if (!currentConversationId) return;
 
+    // Check for special form flag
+    if (content === '__SHOW_FORM__') {
+      setShowHandForm(true);
+      return;
+    }
+
     // Switch mode if specified
     if (switchToMode && switchToMode !== mode) {
       setMode(switchToMode);
@@ -168,6 +176,17 @@ export function CoachInterface() {
   const handleModeChange = (newMode: CoachMode) => {
     setMode(newMode);
     setShowQuickActions(true);
+    setShowHandForm(false);
+  };
+
+  const handleHandSubmit = (message: string, _handSummary?: string) => {
+    setShowHandForm(false);
+    // Send the hand for analysis
+    handleSend(message);
+  };
+
+  const handleFormCancel = () => {
+    setShowHandForm(false);
   };
 
   return (
@@ -203,39 +222,50 @@ export function CoachInterface() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {conversation?.messages.map((message) => (
-          <CoachMessage key={message.id} message={message} />
-        ))}
+        {showHandForm ? (
+          <AnalyzePanel
+            onSubmitHand={handleHandSubmit}
+            onCancel={handleFormCancel}
+          />
+        ) : (
+          <>
+            {conversation?.messages.map((message) => (
+              <CoachMessage key={message.id} message={message} />
+            ))}
 
-        {isLoading && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-slate-700 text-slate-100 rounded-2xl rounded-bl-md px-4 py-3">
-              <div className="flex items-center gap-2 text-amber-400 text-sm">
-                Coach is thinking...
+            {isLoading && (
+              <div className="flex justify-start mb-4">
+                <div className="bg-slate-700 text-slate-100 rounded-2xl rounded-bl-md px-4 py-3">
+                  <div className="flex items-center gap-2 text-amber-400 text-sm">
+                    Coach is thinking...
+                  </div>
+                  <div className="flex gap-1 mt-2">
+                    <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-1 mt-2">
-                <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
+            )}
+          </>
         )}
 
         <div ref={messagesEndRef} />
       </div>
 
       {/* Quick Actions */}
-      {showQuickActions && !isLoading && (
+      {showQuickActions && !isLoading && !showHandForm && (
         <div className="px-4">
           <QuickActions onAction={handleSend} currentMode={mode} />
         </div>
       )}
 
       {/* Input */}
-      <div className="p-4 border-t border-slate-700">
-        <CoachInput onSend={handleSend} isLoading={isLoading} mode={mode} />
-      </div>
+      {!showHandForm && (
+        <div className="p-4 border-t border-slate-700">
+          <CoachInput onSend={handleSend} isLoading={isLoading} mode={mode} />
+        </div>
+      )}
     </div>
   );
 }

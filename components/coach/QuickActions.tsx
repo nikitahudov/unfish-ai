@@ -46,9 +46,18 @@ export function QuickActions({ onAction, currentMode }: QuickActionsProps) {
   }
 
   if (currentMode === 'analyze') {
+    // Special flag to show the hand input form
+    suggestions.push({
+      label: '📝 Enter a hand',
+      message: '__SHOW_FORM__',
+    });
     suggestions.push({
       label: 'Example hand',
       message: 'Can you show me an example of how to describe a hand for analysis?',
+    });
+    suggestions.push({
+      label: 'Common mistakes',
+      message: 'What are common mistakes you see in hands you analyze?',
     });
     suggestions.push({
       label: 'Hand format',

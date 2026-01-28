@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CoachMessage } from './CoachMessage';
 import { CoachInput } from './CoachInput';
 import { ModeSelector } from './ModeSelector';
+import { QuickActions } from './QuickActions';
+import { ProgressSummary } from './ProgressSummary';
 import { useCoachStore } from '@/lib/coachStore';
 import { sendMessageToCoach } from '@/lib/coach/coachApi';
 import { buildCoachContext, getDaysSinceLastActivity } from '@/lib/coach/contextBuilder';
@@ -12,6 +14,7 @@ import type { CoachMode } from '@/types/coach';
 export function CoachInterface() {
   const [mode, setMode] = useState<CoachMode>('chat');
   const [isLoading, setIsLoading] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const initializingRef = useRef(false);
@@ -39,20 +42,28 @@ export function CoachInterface() {
     let welcomePrompt = "Generate a brief, friendly welcome message for the student. ";
 
     if (daysSinceActive !== null && daysSinceActive >= 3) {
-      welcomePrompt += `They haven't been active for ${daysSinceActive} days, so welcome them back warmly. `;
+      welcomePrompt += `They haven't been active for ${daysSinceActive} days, so welcome them back warmly and encourage them to continue. `;
+    } else if (daysSinceActive === 1) {
+      welcomePrompt += "They were active yesterday, acknowledge their consistency. ";
     }
 
     if (context.completedSkills.length === 0) {
-      welcomePrompt += "They're just starting out, so be encouraging about their journey. ";
+      welcomePrompt += "They're just starting out, so be encouraging about beginning their poker journey. Suggest they start with the first skill (Pot Odds). ";
+    } else if (context.completedSkills.length < 5) {
+      welcomePrompt += `They've completed ${context.completedSkills.length} skills - encourage their early progress. `;
     } else {
-      welcomePrompt += `Briefly acknowledge their progress (${context.completedSkills.length} skills completed). `;
+      welcomePrompt += `They've completed ${context.completedSkills.length} skills - acknowledge their dedication. `;
     }
 
     if (context.weakAreas.length > 0) {
-      welcomePrompt += `You might suggest working on ${context.weakAreas[0].skillName}. `;
+      welcomePrompt += `Mention that you notice ${context.weakAreas[0].skillName} might need some work (scored ${context.weakAreas[0].score}%). `;
     }
 
-    welcomePrompt += "Keep it to 2-3 sentences. Ask what they'd like to work on.";
+    if (context.stats.currentStreak > 2) {
+      welcomePrompt += `Celebrate their ${context.stats.currentStreak}-day study streak! `;
+    }
+
+    welcomePrompt += "Keep it to 2-4 sentences. End by asking what they'd like to work on today. Use markdown formatting for emphasis.";
 
     // Add a temporary user message to get the welcome (won't be shown)
     const response = await sendMessageToCoach(
@@ -93,17 +104,31 @@ export function CoachInterface() {
     }
   }, [conversation, isLoading, sendWelcomeMessage]);
 
-  const handleSend = async (content: string) => {
+  // Hide quick actions after first message - deriving UI state from conversation length
+  useEffect(() => {
+    // eslint-disable-next-line
+    setShowQuickActions(!(conversation && conversation.messages.length > 2));
+  }, [conversation]);
+
+  const handleSend = async (content: string, switchToMode?: CoachMode) => {
     if (!currentConversationId) return;
+
+    // Switch mode if specified
+    if (switchToMode && switchToMode !== mode) {
+      setMode(switchToMode);
+    }
+
+    const activeMode = switchToMode || mode;
 
     // Add user message
     addMessage(currentConversationId, {
       role: 'user',
       content,
-      mode,
+      mode: activeMode,
     });
 
     setIsLoading(true);
+    setShowQuickActions(false);
 
     // Get updated conversation with new message
     const updatedConversation = useCoachStore.getState().getCurrentConversation();
@@ -114,19 +139,19 @@ export function CoachInterface() {
     }
 
     // Send to API
-    const response = await sendMessageToCoach(updatedConversation.messages, mode);
+    const response = await sendMessageToCoach(updatedConversation.messages, activeMode);
 
     if (response.error) {
       addMessage(currentConversationId, {
         role: 'assistant',
         content: response.error,
-        mode,
+        mode: activeMode,
       });
     } else if (response.message) {
       addMessage(currentConversationId, {
         role: 'assistant',
         content: response.message,
-        mode,
+        mode: activeMode,
       });
     }
 
@@ -136,7 +161,13 @@ export function CoachInterface() {
   const handleNewConversation = () => {
     hasInitializedRef.current = false;
     initializingRef.current = false;
+    setShowQuickActions(true);
     startNewConversation();
+  };
+
+  const handleModeChange = (newMode: CoachMode) => {
+    setMode(newMode);
+    setShowQuickActions(true);
   };
 
   return (
@@ -160,9 +191,14 @@ export function CoachInterface() {
         </button>
       </div>
 
+      {/* Progress Summary - Collapsible */}
+      <div className="p-4 border-b border-slate-700">
+        <ProgressSummary />
+      </div>
+
       {/* Mode Selector */}
       <div className="p-4 border-b border-slate-700">
-        <ModeSelector currentMode={mode} onModeChange={setMode} />
+        <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
       </div>
 
       {/* Messages */}
@@ -188,6 +224,13 @@ export function CoachInterface() {
 
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Quick Actions */}
+      {showQuickActions && !isLoading && (
+        <div className="px-4">
+          <QuickActions onAction={handleSend} currentMode={mode} />
+        </div>
+      )}
 
       {/* Input */}
       <div className="p-4 border-t border-slate-700">

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { CoachMode } from '@/types/coach';
 
 interface CoachInputProps {
-  onSend: (message: string) => void;
+  onSend: (message: string, mode?: CoachMode) => void;
   isLoading: boolean;
   mode: CoachMode;
 }

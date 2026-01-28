@@ -7,7 +7,11 @@ import { ModeSelector } from './ModeSelector';
 import { QuickActions } from './QuickActions';
 import { ProgressSummary } from './ProgressSummary';
 import { AnalyzePanel } from './AnalyzePanel';
+import { QuizPanel } from './QuizPanel';
+import { QuizSessionHeader } from './QuizSessionHeader';
+import { QuizSummaryModal } from './QuizSummaryModal';
 import { useCoachStore } from '@/lib/coachStore';
+import { useQuizSessionStore, QuizSessionSummary } from '@/lib/quizSessionStore';
 import { sendMessageToCoach } from '@/lib/coach/coachApi';
 import { buildCoachContext, getDaysSinceLastActivity } from '@/lib/coach/contextBuilder';
 import type { CoachMode } from '@/types/coach';
@@ -17,6 +21,9 @@ export function CoachInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [showHandForm, setShowHandForm] = useState(false);
+  const [showQuizPanel, setShowQuizPanel] = useState(false);
+  const [showQuizSummary, setShowQuizSummary] = useState(false);
+  const [quizSummary, setQuizSummary] = useState<QuizSessionSummary | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const initializingRef = useRef(false);
@@ -27,6 +34,8 @@ export function CoachInterface() {
     addMessage,
     getCurrentConversation,
   } = useCoachStore();
+
+  const { isActive: quizIsActive, endSession, resetSession } = useQuizSessionStore();
 
   const conversation = getCurrentConversation();
 
@@ -115,9 +124,14 @@ export function CoachInterface() {
   const handleSend = async (content: string, switchToMode?: CoachMode) => {
     if (!currentConversationId) return;
 
-    // Check for special form flag
+    // Check for special form flags
     if (content === '__SHOW_FORM__') {
       setShowHandForm(true);
+      return;
+    }
+
+    if (content === '__SHOW_QUIZ_PANEL__') {
+      setShowQuizPanel(true);
       return;
     }
 
@@ -137,6 +151,8 @@ export function CoachInterface() {
 
     setIsLoading(true);
     setShowQuickActions(false);
+    setShowHandForm(false);
+    setShowQuizPanel(false);
 
     // Get updated conversation with new message
     const updatedConversation = useCoachStore.getState().getCurrentConversation();
@@ -161,6 +177,23 @@ export function CoachInterface() {
         content: response.message,
         mode: activeMode,
       });
+
+      // Track quiz answers if in quiz mode
+      if (activeMode === 'quiz' && quizIsActive) {
+        // Simple heuristic: check if response contains correct/incorrect indicators
+        const wasCorrect = response.message.toLowerCase().includes('✅') ||
+                         response.message.toLowerCase().includes('correct!');
+        const wasWrong = response.message.toLowerCase().includes('❌') ||
+                        response.message.toLowerCase().includes('not quite');
+
+        if (wasCorrect || wasWrong) {
+          useQuizSessionStore.getState().recordAnswer(
+            content, // user's answer
+            content,
+            wasCorrect
+          );
+        }
+      }
     }
 
     setIsLoading(false);
@@ -170,6 +203,9 @@ export function CoachInterface() {
     hasInitializedRef.current = false;
     initializingRef.current = false;
     setShowQuickActions(true);
+    setShowHandForm(false);
+    setShowQuizPanel(false);
+    resetSession();
     startNewConversation();
   };
 
@@ -177,6 +213,13 @@ export function CoachInterface() {
     setMode(newMode);
     setShowQuickActions(true);
     setShowHandForm(false);
+
+    // Show quiz panel when switching to quiz mode (if no active quiz)
+    if (newMode === 'quiz' && !quizIsActive) {
+      setShowQuizPanel(true);
+    } else {
+      setShowQuizPanel(false);
+    }
   };
 
   const handleHandSubmit = (message: string, _handSummary?: string) => {
@@ -187,6 +230,30 @@ export function CoachInterface() {
 
   const handleFormCancel = () => {
     setShowHandForm(false);
+  };
+
+  const handleQuizStart = (prompt: string) => {
+    setShowQuizPanel(false);
+    handleSend(prompt, 'quiz');
+  };
+
+  const handleEndQuiz = () => {
+    const summary = endSession();
+    setQuizSummary(summary);
+    setShowQuizSummary(true);
+  };
+
+  const handleCloseQuizSummary = () => {
+    setShowQuizSummary(false);
+    setQuizSummary(null);
+    setShowQuizPanel(true);
+  };
+
+  const handleRestartQuiz = () => {
+    setShowQuizSummary(false);
+    setQuizSummary(null);
+    resetSession();
+    setShowQuizPanel(true);
   };
 
   return (
@@ -210,10 +277,17 @@ export function CoachInterface() {
         </button>
       </div>
 
-      {/* Progress Summary - Collapsible */}
-      <div className="p-4 border-b border-slate-700">
-        <ProgressSummary />
-      </div>
+      {/* Quiz Session Header (if quiz is active) */}
+      {quizIsActive && mode === 'quiz' && (
+        <QuizSessionHeader onEndQuiz={handleEndQuiz} />
+      )}
+
+      {/* Progress Summary - Collapsible (hide during active quiz) */}
+      {!quizIsActive && (
+        <div className="p-4 border-b border-slate-700">
+          <ProgressSummary />
+        </div>
+      )}
 
       {/* Mode Selector */}
       <div className="p-4 border-b border-slate-700">
@@ -226,6 +300,11 @@ export function CoachInterface() {
           <AnalyzePanel
             onSubmitHand={handleHandSubmit}
             onCancel={handleFormCancel}
+          />
+        ) : showQuizPanel && !quizIsActive ? (
+          <QuizPanel
+            onStartQuiz={handleQuizStart}
+            onCustomQuiz={() => setShowQuizPanel(false)}
           />
         ) : (
           <>
@@ -254,17 +333,26 @@ export function CoachInterface() {
       </div>
 
       {/* Quick Actions */}
-      {showQuickActions && !isLoading && !showHandForm && (
+      {showQuickActions && !isLoading && !showHandForm && !showQuizPanel && (
         <div className="px-4">
           <QuickActions onAction={handleSend} currentMode={mode} />
         </div>
       )}
 
       {/* Input */}
-      {!showHandForm && (
+      {!showHandForm && !showQuizPanel && (
         <div className="p-4 border-t border-slate-700">
           <CoachInput onSend={handleSend} isLoading={isLoading} mode={mode} />
         </div>
+      )}
+
+      {/* Quiz Summary Modal */}
+      {showQuizSummary && quizSummary && (
+        <QuizSummaryModal
+          summary={quizSummary}
+          onClose={handleCloseQuizSummary}
+          onRestart={handleRestartQuiz}
+        />
       )}
     </div>
   );

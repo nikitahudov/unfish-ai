@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { UserMenuSidebar } from '@/components/auth/UserMenuSidebar';
 
 // Navigation items configuration
 const navItems = [
@@ -91,6 +92,7 @@ export const Navigation = () => {
       <aside
         className={`
           fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-slate-800
+          flex flex-col
           transform transition-transform duration-300 ease-in-out z-50
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           md:translate-x-0
@@ -110,11 +112,11 @@ export const Navigation = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || 
+            const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
-            
+
             return (
               <Link
                 key={item.id}
@@ -139,14 +141,14 @@ export const Navigation = () => {
         </nav>
 
         {/* Progress Summary */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-800">
           <div className="bg-slate-800/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-slate-400">Overall Progress</span>
               <span className="text-amber-400 font-medium">0%</span>
             </div>
             <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all"
                 style={{ width: '0%' }}
               />
@@ -156,6 +158,9 @@ export const Navigation = () => {
             </div>
           </div>
         </div>
+
+        {/* User Menu */}
+        <UserMenuSidebar />
       </aside>
     </>
   );

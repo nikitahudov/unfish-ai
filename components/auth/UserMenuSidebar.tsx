@@ -9,7 +9,7 @@ export function UserMenuSidebar() {
 
   if (isLoading) {
     return (
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 border-b border-slate-700">
         <div className="h-10 bg-slate-700 rounded-lg animate-pulse" />
       </div>
     );
@@ -17,7 +17,7 @@ export function UserMenuSidebar() {
 
   if (!isAuthenticated) {
     return (
-      <div className="p-4 border-t border-slate-700 space-y-2">
+      <div className="p-4 border-b border-slate-700 space-y-2">
         <Link
           href="/login"
           className="block w-full py-2 px-4 text-center text-sm bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors"
@@ -39,7 +39,7 @@ export function UserMenuSidebar() {
   const avatarUrl = user?.profile?.avatar_url;
 
   return (
-    <div className="p-4 border-t border-slate-700">
+    <div className="p-4 border-b border-slate-700">
       {/* User Info */}
       <div className="flex items-center gap-3 mb-3">
         {avatarUrl ? (

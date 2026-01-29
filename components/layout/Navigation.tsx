@@ -111,6 +111,9 @@ export const Navigation = () => {
           </Link>
         </div>
 
+        {/* Auth Section */}
+        <UserMenuSidebar />
+
         {/* Navigation Links */}
         <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
           {navItems.map((item) => {
@@ -159,8 +162,6 @@ export const Navigation = () => {
           </div>
         </div>
 
-        {/* User Menu */}
-        <UserMenuSidebar />
       </aside>
     </>
   );

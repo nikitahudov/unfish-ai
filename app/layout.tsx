@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth/AuthContext";
 import { Navigation } from "@/components/layout/Navigation";
 
 const inter = Inter({
@@ -28,12 +29,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-slate-950 text-white min-h-screen`}
       >
-        <div className="flex min-h-screen">
-          <Navigation />
-          <main className="flex-1 ml-0 md:ml-64">
-            {children}
-          </main>
-        </div>
+        <AuthProvider>
+          <div className="flex min-h-screen">
+            <Navigation />
+            <main className="flex-1 ml-0 md:ml-64">
+              {children}
+            </main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -5,31 +5,51 @@ import type { NextRequest } from 'next/server';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
+  const tokenHash = requestUrl.searchParams.get('token_hash');
   const type = requestUrl.searchParams.get('type');
   const next = requestUrl.searchParams.get('next') || '/wiki';
 
-  if (code) {
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+  // Handle token_hash verification (email confirmation links)
+  if (tokenHash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: type as 'signup' | 'email' | 'recovery' | 'invite',
+    });
 
     if (error) {
-      console.error('Auth callback error:', error);
-      // Redirect to login with error
+      console.error('Token verification error:', error);
       return NextResponse.redirect(
         new URL(`/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
       );
     }
 
-    // Handle password recovery
     if (type === 'recovery') {
       return NextResponse.redirect(new URL('/update-password', requestUrl.origin));
     }
 
-    // Successful authentication - redirect to intended destination
     return NextResponse.redirect(new URL(next, requestUrl.origin));
   }
 
-  // No code present - redirect to login
+  // Handle code exchange (OAuth and PKCE flows)
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      console.error('Auth callback error:', error);
+      return NextResponse.redirect(
+        new URL(`/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
+      );
+    }
+
+    if (type === 'recovery') {
+      return NextResponse.redirect(new URL('/update-password', requestUrl.origin));
+    }
+
+    return NextResponse.redirect(new URL(next, requestUrl.origin));
+  }
+
+  // No code or token present - redirect to login
   return NextResponse.redirect(new URL('/login', requestUrl.origin));
 }

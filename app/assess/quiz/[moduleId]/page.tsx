@@ -5,7 +5,10 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { QuizEngine } from '@/components/quiz/QuizEngine';
 import { getQuizById, hasQuiz } from '@/data/quizRegistry';
+import { getSkillById } from '@/data/skills';
 import { useProgressStore } from '@/lib/progressStore';
+import { useAuth } from '@/lib/auth/AuthContext';
+import { useData } from '@/lib/hooks';
 import type { QuizResults } from '@/types/quiz';
 
 export default function QuizPage() {
@@ -13,6 +16,8 @@ export default function QuizPage() {
   const router = useRouter();
   const moduleId = params.moduleId as string;
   const addQuizAttempt = useProgressStore((state) => state.addQuizAttempt);
+  const { isAuthenticated } = useAuth();
+  const { submitQuiz } = useData();
 
   // Check if quiz exists
   if (!hasQuiz(moduleId)) {
@@ -54,7 +59,7 @@ export default function QuizPage() {
       };
     });
 
-    // Save to progress store
+    // Save to localStorage progress store
     addQuizAttempt(moduleId, {
       score: results.percentage,
       weightedScore: results.weightedScore,
@@ -63,6 +68,26 @@ export default function QuizPage() {
       mode: 'standard', // Default to standard mode
       sectionScores,
     });
+
+    // Also save to Supabase if authenticated
+    if (isAuthenticated) {
+      const skill = getSkillById(moduleId);
+      const answers = Object.entries(results.sectionResults).map(([sectionId, result]) => ({
+        questionId: sectionId,
+        selectedAnswer: String(result.correct),
+        isCorrect: result.percentage >= 70,
+      }));
+
+      submitQuiz({
+        skillId: moduleId,
+        score: results.totalCorrect,
+        maxScore: results.totalQuestions,
+        answers,
+        timeTakenSeconds: results.timeSpent,
+      }, skill?.name).catch((error) => {
+        console.error('Failed to save quiz to Supabase:', error);
+      });
+    }
   };
 
   const handleExit = () => {

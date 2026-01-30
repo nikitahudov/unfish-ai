@@ -3,13 +3,29 @@
 import React, { useState, useEffect } from 'react';
 import { skillsData, getAllSkills } from '@/data/skills';
 import { useProgressStore } from '@/lib/progressStore';
+import { useAuth } from '@/lib/auth/AuthContext';
+import { useProgress } from '@/lib/hooks/useProgress';
+import { useStats } from '@/lib/hooks/useStats';
+import { useActivity } from '@/lib/hooks/useActivity';
+import { useQuizzes } from '@/lib/hooks/useQuizzes';
+import { UserStatsCard } from '@/components/stats/UserStatsCard';
+import { RecentActivity } from '@/components/stats/RecentActivity';
 
 export default function ProgressPage() {
   const [mounted, setMounted] = useState(false);
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // LocalStorage store (fallback for guests)
   const storeStats = useProgressStore((state) => state.stats);
-  const skills = useProgressStore((state) => state.skills);
+  const localSkills = useProgressStore((state) => state.skills);
   const quizAttempts = useProgressStore((state) => state.quizAttempts);
   const contentProgress = useProgressStore((state) => state.contentProgress);
+
+  // Supabase hooks (for authenticated users)
+  const { stats: progressStats, skillsByStatus } = useProgress();
+  const { stats: userStats, progressPercentage, formattedStudyTime } = useStats();
+  const { activities } = useActivity(10);
+  const { stats: quizStats } = useQuizzes();
 
   useEffect(() => {
     setMounted(true);
@@ -17,8 +33,11 @@ export default function ProgressPage() {
 
   const allSkills = getAllSkills();
 
-  // Calculate content stats
-  const contentStats = Object.entries(contentProgress).reduce((acc, [skillId, progress]) => {
+  // Use Supabase data when authenticated, localStorage otherwise
+  const useSupabaseData = isAuthenticated && !authLoading;
+
+  // Calculate content stats from localStorage (guest fallback)
+  const localContentStats = Object.entries(contentProgress).reduce((acc, [, progress]) => {
     acc.totalViewed++;
     acc.totalTimeSeconds += progress.timeSpentSeconds;
     acc.totalExercisesCompleted += progress.exercisesCompleted;
@@ -44,13 +63,38 @@ export default function ProgressPage() {
     return `${minutes}m`;
   };
 
-  // Calculate completed skills
-  const skillsCompleted = Object.values(skills).filter((s) => s.status === 'completed').length;
+  // Unified stats (Supabase or localStorage)
+  const skillsCompleted = useSupabaseData
+    ? (userStats?.skills_completed || 0)
+    : Object.values(localSkills).filter((s) => s.status === 'completed').length;
+
+  const stats = {
+    skillsCompleted,
+    totalSkills: allSkills.length,
+    quizzesCompleted: useSupabaseData
+      ? (userStats?.quizzes_passed || 0)
+      : storeStats.totalQuizzesPassed,
+    averageScore: useSupabaseData
+      ? (userStats?.average_quiz_score || 0)
+      : storeStats.averageScore,
+    studyHours: useSupabaseData
+      ? Math.round((userStats?.total_study_time_seconds || 0) / 3600)
+      : Math.round(storeStats.totalStudyTime / 3600),
+    currentStreak: useSupabaseData
+      ? (userStats?.current_streak || 0)
+      : storeStats.currentStreak,
+    longestStreak: useSupabaseData
+      ? (userStats?.longest_streak || 0)
+      : storeStats.longestStreak,
+    handsPlayed: 0,
+  };
 
   // Calculate category progress
   const categories = Object.entries(skillsData).map(([name, data]) => {
     const categorySkillIds = data.skills.map((s) => s.id);
-    const completed = categorySkillIds.filter((id) => skills[id]?.status === 'completed').length;
+    const completed = useSupabaseData
+      ? categorySkillIds.filter((id) => skillsByStatus.completed.includes(id)).length
+      : categorySkillIds.filter((id) => localSkills[id]?.status === 'completed').length;
     return {
       name,
       icon: data.icon,
@@ -61,45 +105,40 @@ export default function ProgressPage() {
     };
   });
 
-  // Calculate stats
-  const stats = {
-    skillsCompleted,
-    totalSkills: allSkills.length,
-    quizzesCompleted: storeStats.totalQuizzesPassed,
-    averageScore: storeStats.averageScore,
-    studyHours: Math.round(storeStats.totalStudyTime / 3600), // Convert seconds to hours
-    currentStreak: storeStats.currentStreak,
-    longestStreak: storeStats.longestStreak,
-    handsPlayed: 0, // Not implemented yet
-  };
-
   // Phase breakdown
   const fundamentalSkills = allSkills.filter((s) => s.level === 'Fundamental');
   const intermediateSkills = allSkills.filter((s) => s.level === 'Intermediate');
   const advancedSkills = allSkills.filter((s) => s.level === 'Advanced');
 
+  const isPhaseSkillCompleted = (skillId: string) => {
+    if (useSupabaseData) {
+      return skillsByStatus.completed.includes(skillId);
+    }
+    return localSkills[skillId]?.status === 'completed';
+  };
+
   const phases = [
     {
       name: 'Fundamentals',
-      completed: fundamentalSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      completed: fundamentalSkills.filter((s) => isPhaseSkillCompleted(s.id)).length,
       total: fundamentalSkills.length,
       color: '#10B981',
     },
     {
       name: 'Intermediate',
-      completed: intermediateSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      completed: intermediateSkills.filter((s) => isPhaseSkillCompleted(s.id)).length,
       total: intermediateSkills.length,
       color: '#EAB308',
     },
     {
       name: 'Advanced',
-      completed: advancedSkills.filter((s) => skills[s.id]?.status === 'completed').length,
+      completed: advancedSkills.filter((s) => isPhaseSkillCompleted(s.id)).length,
       total: advancedSkills.length,
       color: '#F43F5E',
     },
   ];
 
-  // Get recent attempts for activity feed
+  // Get recent attempts from localStorage for guest users
   const recentAttempts = Object.entries(quizAttempts)
     .flatMap(([moduleId, attempts]) =>
       attempts.map((attempt) => ({
@@ -110,35 +149,53 @@ export default function ProgressPage() {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
 
+  // Content stats (Supabase or localStorage)
+  const contentStats = useSupabaseData ? {
+    totalViewed: progressStats?.viewedSkills || 0,
+    fullyCompleted: progressStats?.completedSkills || 0,
+    totalTimeSeconds: progressStats?.totalTimeSeconds || 0,
+    totalExercisesCompleted: localContentStats.totalExercisesCompleted, // Exercises not tracked in Supabase yet
+    totalExercises: localContentStats.totalExercises,
+  } : localContentStats;
+
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-          📈 Your Progress
+          Your Progress
         </h1>
         <p className="text-slate-400 text-lg">Track your journey to poker mastery</p>
       </div>
 
-      {/* Overall Progress Card */}
-      <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-2xl p-6 border border-amber-500/30 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Overall Mastery</h2>
-          <span className="text-3xl font-bold text-amber-400">
-            {Math.round((stats.skillsCompleted / stats.totalSkills) * 100)}%
-          </span>
+      {/* Supabase-backed Stats Card for authenticated users */}
+      {useSupabaseData && (
+        <div className="mb-8">
+          <UserStatsCard />
         </div>
-        <div className="h-4 bg-slate-700 rounded-full overflow-hidden mb-4">
-          <div
-            className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
-            style={{ width: `${(stats.skillsCompleted / stats.totalSkills) * 100}%` }}
-          />
+      )}
+
+      {/* Overall Progress Card (shown for guests or as supplement) */}
+      {!useSupabaseData && (
+        <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-2xl p-6 border border-amber-500/30 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-white">Overall Mastery</h2>
+            <span className="text-3xl font-bold text-amber-400">
+              {Math.round((stats.skillsCompleted / stats.totalSkills) * 100)}%
+            </span>
+          </div>
+          <div className="h-4 bg-slate-700 rounded-full overflow-hidden mb-4">
+            <div
+              className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
+              style={{ width: `${(stats.skillsCompleted / stats.totalSkills) * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-sm text-slate-400">
+            <span>{stats.skillsCompleted} skills completed</span>
+            <span>{stats.totalSkills - stats.skillsCompleted} remaining</span>
+          </div>
         </div>
-        <div className="flex justify-between text-sm text-slate-400">
-          <span>{stats.skillsCompleted} skills completed</span>
-          <span>{stats.totalSkills - stats.skillsCompleted} remaining</span>
-        </div>
-      </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -147,22 +204,24 @@ export default function ProgressPage() {
           <div className="text-slate-400 text-sm">Quizzes Passed</div>
         </div>
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <div className="text-3xl font-bold text-blue-400">{stats.averageScore}%</div>
+          <div className="text-3xl font-bold text-blue-400">{Math.round(stats.averageScore)}%</div>
           <div className="text-slate-400 text-sm">Average Score</div>
         </div>
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <div className="text-3xl font-bold text-purple-400">{stats.studyHours}</div>
-          <div className="text-slate-400 text-sm">Study Hours</div>
+          <div className="text-3xl font-bold text-purple-400">
+            {useSupabaseData ? formattedStudyTime : `${stats.studyHours}h`}
+          </div>
+          <div className="text-slate-400 text-sm">Study Time</div>
         </div>
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
           <div className="text-3xl font-bold text-amber-400">{stats.currentStreak}</div>
-          <div className="text-slate-400 text-sm">Day Streak 🔥</div>
+          <div className="text-slate-400 text-sm">Day Streak</div>
         </div>
       </div>
 
       {/* Learning Progress */}
       <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 mb-8">
-        <h2 className="text-xl font-semibold text-white mb-4">📚 Learning Progress</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">Learning Progress</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-slate-700/50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">{contentStats.totalViewed}</div>
@@ -215,15 +274,15 @@ export default function ProgressPage() {
 
         {/* Milestones */}
         <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <h2 className="text-xl font-bold text-white mb-4">🏆 Milestones</h2>
+          <h2 className="text-xl font-bold text-white mb-4">Milestones</h2>
           <div className="space-y-3">
             {[
-              { name: 'First Quiz', icon: '🎯', requirement: 'Complete your first quiz', done: false },
-              { name: 'Foundation Builder', icon: '🧱', requirement: 'Complete 5 fundamental skills', done: false },
-              { name: 'Week Warrior', icon: '📅', requirement: '7 day study streak', done: false },
+              { name: 'First Quiz', icon: '🎯', requirement: 'Complete your first quiz', done: stats.quizzesCompleted > 0 },
+              { name: 'Foundation Builder', icon: '🧱', requirement: 'Complete 5 fundamental skills', done: phases[0].completed >= 5 },
+              { name: 'Week Warrior', icon: '📅', requirement: '7 day study streak', done: stats.longestStreak >= 7 },
               { name: 'Math Master', icon: '🔢', requirement: 'Complete all Math skills', done: false },
-              { name: 'Phase 1 Graduate', icon: '🎓', requirement: 'Complete all fundamentals', done: false },
-              { name: 'Poker Scholar', icon: '📚', requirement: 'Complete 50 skills', done: false },
+              { name: 'Phase 1 Graduate', icon: '🎓', requirement: 'Complete all fundamentals', done: phases[0].completed >= phases[0].total },
+              { name: 'Poker Scholar', icon: '📚', requirement: 'Complete 50 skills', done: stats.skillsCompleted >= 50 },
             ].map((milestone) => (
               <div
                 key={milestone.name}
@@ -287,10 +346,17 @@ export default function ProgressPage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      {mounted && recentAttempts.length > 0 && (
+      {/* Recent Activity - Supabase version for authenticated users */}
+      {useSupabaseData && (
+        <div className="mt-8">
+          <RecentActivity />
+        </div>
+      )}
+
+      {/* Recent Activity - localStorage fallback for guests */}
+      {!useSupabaseData && mounted && recentAttempts.length > 0 && (
         <div className="mt-8 bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-          <h2 className="text-xl font-bold text-white mb-4">📚 Recent Activity</h2>
+          <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
           <div className="space-y-3">
             {recentAttempts.map((attempt) => {
               const attemptDate = new Date(attempt.date);
@@ -340,7 +406,7 @@ export default function ProgressPage() {
 
       {/* Hands Played Tracker */}
       <div className="mt-8 bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-        <h2 className="text-xl font-bold text-white mb-4">🃏 Hands Played</h2>
+        <h2 className="text-xl font-bold text-white mb-4">Hands Played</h2>
         <div className="flex items-center gap-8">
           <div>
             <div className="text-4xl font-bold text-amber-400">{stats.handsPlayed.toLocaleString()}</div>

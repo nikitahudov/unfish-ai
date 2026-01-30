@@ -52,7 +52,15 @@ export async function updateSession(request: NextRequest) {
       const destination = redirectUrl.pathname === '/' ? '/wiki' : redirectUrl.pathname;
       redirectUrl.pathname = destination;
 
-      return { supabaseResponse: NextResponse.redirect(redirectUrl), user: null };
+      const redirectResponse = NextResponse.redirect(redirectUrl);
+
+      // Copy session cookies from the exchange onto the redirect response.
+      // Without this the browser never receives the session tokens.
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+      });
+
+      return { supabaseResponse: redirectResponse, user: null };
     }
   }
 

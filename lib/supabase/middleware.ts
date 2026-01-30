@@ -41,16 +41,11 @@ export async function updateSession(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Clean auth params from the URL and redirect
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.searchParams.delete('code');
-      redirectUrl.searchParams.delete('error');
-      redirectUrl.searchParams.delete('error_code');
-      redirectUrl.searchParams.delete('error_description');
-
-      // Send to /wiki if landing on root, otherwise keep the current path
-      const destination = redirectUrl.pathname === '/' ? '/wiki' : redirectUrl.pathname;
-      redirectUrl.pathname = destination;
+      // Build redirect using the public app URL, not the request origin
+      // (which may be 0.0.0.0 when the server binds to all interfaces).
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+      const destination = request.nextUrl.pathname === '/' ? '/wiki' : request.nextUrl.pathname;
+      const redirectUrl = new URL(destination, baseUrl);
 
       const redirectResponse = NextResponse.redirect(redirectUrl);
 

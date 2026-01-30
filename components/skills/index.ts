@@ -1,0 +1,1 @@
+export { SkillProgressBadge } from './SkillProgressBadge';

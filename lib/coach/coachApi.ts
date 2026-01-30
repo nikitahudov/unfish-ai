@@ -1,10 +1,14 @@
 import type { Message, CoachMode } from '@/types/coach';
-import { buildCoachContext } from './contextBuilder';
+import { buildCoachContextAsync } from './contextBuilder';
 import { buildSystemPrompt } from './promptBuilder';
 
 interface CoachResponse {
   message: string;
   error?: string;
+  usage?: {
+    inputTokens: number;
+    outputTokens: number;
+  };
 }
 
 export async function sendMessageToCoach(
@@ -12,7 +16,8 @@ export async function sendMessageToCoach(
   mode: CoachMode
 ): Promise<CoachResponse> {
   try {
-    const context = buildCoachContext();
+    // Build context from Supabase (async)
+    const context = await buildCoachContextAsync();
     const systemPrompt = buildSystemPrompt(context, mode);
 
     // Convert messages to API format
@@ -33,11 +38,18 @@ export async function sendMessageToCoach(
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get response from coach');
+      const errorData = await response.json();
+      return {
+        message: '',
+        error: errorData.error || 'Failed to get response from coach',
+      };
     }
 
     const data = await response.json();
-    return { message: data.message };
+    return {
+      message: data.message,
+      usage: data.usage,
+    };
   } catch (error) {
     console.error('Coach API error:', error);
     return {

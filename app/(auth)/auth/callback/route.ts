@@ -11,12 +11,21 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
 
-  // Handle token_hash verification (email confirmation links)
+  // Handle token_hash from email confirmation links
   if (tokenHash && type) {
-    const { error } = await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type: type as 'signup' | 'email' | 'recovery' | 'invite',
-    });
+    // PKCE token hashes (prefixed with pkce_) must be exchanged as auth codes.
+    // Regular token hashes are verified as OTPs.
+    const isPkce = tokenHash.startsWith('pkce_');
+
+    let error;
+    if (isPkce) {
+      ({ error } = await supabase.auth.exchangeCodeForSession(tokenHash));
+    } else {
+      ({ error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type as 'signup' | 'email' | 'recovery' | 'invite',
+      }));
+    }
 
     if (error) {
       console.error('Token verification error:', error);

@@ -139,7 +139,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       if (error) {
+        console.error('Signup error:', error);
         return { success: false, error: error.message };
+      }
+
+      // Supabase may return a fake user with no identities when signup
+      // is silently blocked (e.g. redirect URL not whitelisted, or
+      // duplicate email with email confirmation still pending).
+      if (data.user && data.user.identities?.length === 0) {
+        return {
+          success: false,
+          error: 'An account with this email may already exist. Try signing in instead.',
+        };
       }
 
       // Check if email confirmation is required
@@ -152,7 +163,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       return { success: true, data };
-    } catch {
+    } catch (err) {
+      console.error('Signup exception:', err);
       return { success: false, error: 'An unexpected error occurred' };
     }
   }, [supabase]);

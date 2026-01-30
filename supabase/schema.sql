@@ -163,6 +163,9 @@ ALTER TABLE activity_log ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own profile" ON user_profiles
   FOR SELECT USING (auth.uid() = id);
 
+CREATE POLICY "Users can insert own profile" ON user_profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
 CREATE POLICY "Users can update own profile" ON user_profiles
   FOR UPDATE USING (auth.uid() = id);
 
@@ -200,6 +203,9 @@ CREATE POLICY "Users can delete own conversations" ON coach_conversations
 CREATE POLICY "Users can view own stats" ON user_stats
   FOR SELECT USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can insert own stats" ON user_stats
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
 CREATE POLICY "Users can update own stats" ON user_stats
   FOR UPDATE USING (auth.uid() = user_id);
 
@@ -216,17 +222,20 @@ CREATE POLICY "Users can insert own activity" ON activity_log
 
 -- Auto-create profile and stats on user signup
 CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
-  INSERT INTO user_profiles (id, email)
-  VALUES (NEW.id, NEW.email);
+  INSERT INTO public.user_profiles (id, email)
+  VALUES (NEW.id, COALESCE(NEW.email, ''));
 
-  INSERT INTO user_stats (user_id)
+  INSERT INTO public.user_stats (user_id)
   VALUES (NEW.id);
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql;
 
 -- Drop trigger if exists, then create
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;

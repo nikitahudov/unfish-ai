@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserMenuSidebar } from '@/components/auth/UserMenuSidebar';
+import { useAuth } from '@/lib/auth/AuthContext';
+import { useStats } from '@/lib/hooks/useStats';
 
 // Navigation items configuration
 const navItems = [
@@ -47,6 +49,10 @@ const navItems = [
 export const Navigation = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const { stats, progressPercentage } = useStats();
+
+  const skillsCompleted = stats?.skills_completed || 0;
 
   return (
     <>
@@ -148,16 +154,16 @@ export const Navigation = () => {
           <div className="bg-slate-800/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-slate-400">Overall Progress</span>
-              <span className="text-amber-400 font-medium">0%</span>
+              <span className="text-amber-400 font-medium">{progressPercentage}%</span>
             </div>
             <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all"
-                style={{ width: '0%' }}
+                style={{ width: `${progressPercentage}%` }}
               />
             </div>
             <div className="mt-2 text-xs text-slate-500">
-              0 of 96 skills completed
+              {isAuthenticated ? `${skillsCompleted} of 96 skills completed` : 'Sign in to track progress'}
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { skillsData, type Skill, type SkillCategory } from '@/data/skills';
 import { SkillModal } from './SkillModal';
+import { SkillProgressBadge } from '@/components/skills/SkillProgressBadge';
 
 interface SkillsWheelProps {
   onSkillSelect?: (skill: Skill, category: string) => void;
@@ -221,13 +222,16 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                             </span>
                           </div>
                         </div>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${getLevelColor(
-                            skill.level
-                          )}`}
-                        >
-                          {skill.level}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <SkillProgressBadge skillId={skill.id} />
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${getLevelColor(
+                              skill.level
+                            )}`}
+                          >
+                            {skill.level}
+                          </span>
+                        </div>
                       </div>
                     </button>
                   ))}
@@ -265,13 +269,14 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
               <ul className="space-y-1">
                 {skillsData[category].skills.map((skill) => (
                   <li key={skill.id} className="flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full ${getLevelDotColor(skill.level)}`}></span>
+                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getLevelDotColor(skill.level)}`}></span>
                     <button
                       onClick={() => handleSkillClick(skill)}
-                      className="text-slate-300 text-xs hover:text-amber-400 transition-colors text-left"
+                      className="text-slate-300 text-xs hover:text-amber-400 transition-colors text-left flex-1"
                     >
                       {skill.name}
                     </button>
+                    <SkillProgressBadge skillId={skill.id} />
                   </li>
                 ))}
               </ul>

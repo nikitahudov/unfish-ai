@@ -51,18 +51,26 @@ export function useQuizzes() {
 
   // Submit a quiz
   const submitQuiz = useCallback(async (submission: QuizSubmission): Promise<QuizAttempt> => {
+    console.log('[useQuizzes.submitQuiz] START', { skillId: submission.skillId, isAuthenticated });
     if (!isAuthenticated) throw new Error('Not authenticated');
 
     setSubmitting(true);
     try {
+      console.log('[useQuizzes.submitQuiz] calling quizService.submit...');
       const attempt = await quizService.submit(submission);
+      console.log('[useQuizzes.submitQuiz] service returned:', attempt?.id);
 
       // Optimistically update local state
       mutate(prev => prev ? [attempt, ...prev] : [attempt]);
+      console.log('[useQuizzes.submitQuiz] mutate done');
 
       return attempt;
+    } catch (err) {
+      console.error('[useQuizzes.submitQuiz] ERROR:', err);
+      throw err;
     } finally {
       setSubmitting(false);
+      console.log('[useQuizzes.submitQuiz] END');
     }
   }, [isAuthenticated, mutate]);
 

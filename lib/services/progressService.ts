@@ -59,11 +59,16 @@ export const progressService = {
     const supabase = createClient();
 
     // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    console.log('[progressService.upsert] User:', user?.id, 'AuthError:', authError?.message);
+
     if (!user) throw new Error('Not authenticated');
 
     // Check if record exists
     const existing = await this.getBySkillId(skillId);
+    console.log('[progressService.upsert] Existing record for', skillId, ':', existing?.id || 'none');
+
     const now = new Date().toISOString();
 
     if (existing) {
@@ -84,6 +89,8 @@ export const progressService = {
         updateData.time_spent_seconds = existing.time_spent_seconds + updates.time_spent_seconds;
       }
 
+      console.log('[progressService.upsert] Updating:', JSON.stringify(updateData));
+
       const { data, error } = await supabase
         .from('skill_progress')
         .update(updateData)
@@ -92,30 +99,36 @@ export const progressService = {
         .single();
 
       if (error) {
-        console.error('Error updating progress:', error);
+        console.error('[progressService.upsert] Update error:', error.message, error.details, error.hint);
         throw error;
       }
 
+      console.log('[progressService.upsert] Updated successfully:', data?.id);
       return data;
     } else {
       // Create new record
+      const insertData = {
+        user_id: user.id,
+        skill_id: skillId,
+        ...updates,
+        first_viewed_at: now,
+        last_viewed_at: now,
+      };
+
+      console.log('[progressService.upsert] Inserting:', JSON.stringify(insertData));
+
       const { data, error } = await supabase
         .from('skill_progress')
-        .insert({
-          user_id: user.id,
-          skill_id: skillId,
-          ...updates,
-          first_viewed_at: now,
-          last_viewed_at: now,
-        })
+        .insert(insertData)
         .select()
         .single();
 
       if (error) {
-        console.error('Error creating progress:', error);
+        console.error('[progressService.upsert] Insert error:', error.message, error.details, error.hint);
         throw error;
       }
 
+      console.log('[progressService.upsert] Inserted successfully:', data?.id);
       return data;
     }
   },

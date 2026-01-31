@@ -31,24 +31,29 @@ export const statsService = {
   async update(updates: Partial<UserStats>): Promise<UserStats> {
     const supabase = createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log('[statsService.update] User:', user?.id, 'AuthError:', authError?.message);
     if (!user) throw new Error('Not authenticated');
+
+    const updatePayload = {
+      ...updates,
+      updated_at: new Date().toISOString(),
+    };
+    console.log('[statsService.update] Payload:', JSON.stringify(updatePayload));
 
     const { data, error } = await supabase
       .from('user_stats')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq('user_id', user.id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating user stats:', error);
+      console.error('[statsService.update] Error:', error.message, error.details, error.hint);
       throw error;
     }
 
+    console.log('[statsService.update] Success');
     return data;
   },
 

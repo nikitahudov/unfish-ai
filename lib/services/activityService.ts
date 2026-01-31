@@ -29,25 +29,29 @@ export const activityService = {
   ): Promise<ActivityLog> {
     const supabase = createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log('[activityService.log] User:', user?.id, 'Type:', type, 'AuthError:', authError?.message);
     if (!user) throw new Error('Not authenticated');
+
+    const insertData = {
+      user_id: user.id,
+      activity_type: type,
+      reference_id: referenceId,
+      metadata: metadata || {},
+    };
 
     const { data, error } = await supabase
       .from('activity_log')
-      .insert({
-        user_id: user.id,
-        activity_type: type,
-        reference_id: referenceId,
-        metadata: metadata || {},
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (error) {
-      console.error('Error logging activity:', error);
+      console.error('[activityService.log] Insert error:', error.message, error.details, error.hint);
       throw error;
     }
 
+    console.log('[activityService.log] Logged successfully:', data?.id);
     return data;
   },
 

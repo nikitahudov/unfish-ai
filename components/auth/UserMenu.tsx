@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { Avatar } from '@/components/ui/Avatar';
 
 export function UserMenu() {
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
@@ -47,7 +48,6 @@ export function UserMenu() {
   }
 
   const displayName = user?.profile?.display_name || user?.email?.split('@')[0] || 'User';
-  const initials = displayName.slice(0, 2).toUpperCase();
   const avatarUrl = user?.profile?.avatar_url;
 
   return (
@@ -57,17 +57,11 @@ export function UserMenu() {
         className="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-700 transition-colors"
       >
         {/* Avatar */}
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={displayName}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-            {initials}
-          </div>
-        )}
+        <Avatar
+          src={avatarUrl}
+          name={displayName}
+          size="sm"
+        />
 
         {/* Name (hidden on mobile) */}
         <span className="hidden md:block text-sm text-slate-300 max-w-[120px] truncate">
@@ -90,10 +84,15 @@ export function UserMenu() {
         <div className="absolute right-0 mt-2 w-56 bg-slate-800 rounded-xl border border-slate-700 shadow-xl py-2 z-50">
           {/* User Info */}
           <div className="px-4 py-3 border-b border-slate-700">
-            <p className="text-sm font-medium text-white truncate">{displayName}</p>
-            <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+            <div className="flex items-center gap-3">
+              <Avatar src={avatarUrl} name={displayName} size="md" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">{displayName}</p>
+                <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+              </div>
+            </div>
             {user?.profile?.subscription_tier && user.profile.subscription_tier !== 'free' && (
-              <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-amber-500/20 text-amber-400 rounded">
+              <span className="inline-block mt-2 px-2 py-0.5 text-xs bg-amber-500/20 text-amber-400 rounded">
                 {user.profile.subscription_tier}
               </span>
             )}

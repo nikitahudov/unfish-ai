@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { RequireAuth } from '@/components/auth';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { AvatarUpload } from '@/components/settings/AvatarUpload';
 
 export default function ProfileSettingsPage() {
   return (
@@ -57,6 +58,10 @@ function ProfileSettings() {
     setMessage(null);
   };
 
+  const handleAvatarSuccess = () => {
+    setMessage({ type: 'success', text: 'Profile picture updated!' });
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-slate-800 rounded-xl border border-slate-700 p-6">
@@ -72,32 +77,24 @@ function ProfileSettings() {
           </div>
         )}
 
-        {/* Avatar Section */}
-        <div className="flex items-center gap-6 mb-8 pb-6 border-b border-slate-700">
-          <div className="relative">
-            {user?.profile?.avatar_url ? (
-              <img
-                src={user.profile.avatar_url}
-                alt="Avatar"
-                className="w-20 h-20 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                {(user?.profile?.display_name || user?.email || 'U')[0].toUpperCase()}
-              </div>
-            )}
-          </div>
-          <div>
-            <h3 className="text-lg font-medium text-white">
-              {user?.profile?.display_name || user?.email?.split('@')[0]}
-            </h3>
-            <p className="text-sm text-slate-400">{user?.email}</p>
-            <p className="text-xs text-slate-500 mt-1">
-              Member since {user?.profile?.created_at
-                ? new Date(user.profile.created_at).toLocaleDateString()
-                : 'recently'}
-            </p>
-          </div>
+        {/* Avatar Upload Section */}
+        <div className="mb-8 pb-6 border-b border-slate-700">
+          <label className="block text-sm font-medium text-slate-300 mb-4">
+            Profile Picture
+          </label>
+          <AvatarUpload onSuccess={handleAvatarSuccess} />
+        </div>
+
+        {/* User Info */}
+        <div className="mb-8 pb-6 border-b border-slate-700">
+          <p className="text-sm text-slate-400">
+            {user?.email}
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            Member since {user?.profile?.created_at
+              ? new Date(user.profile.created_at).toLocaleDateString()
+              : 'recently'}
+          </p>
         </div>
 
         {/* Profile Form */}

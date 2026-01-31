@@ -104,32 +104,40 @@ export const quizService = {
     const supabase = createClient();
 
     // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    console.log('[quizService.submit] User:', user?.id, 'AuthError:', authError?.message);
+
     if (!user) throw new Error('Not authenticated');
 
     const percentage = Math.round((submission.score / submission.maxScore) * 100);
     const passed = percentage >= 70; // 70% passing threshold
 
+    const insertData = {
+      user_id: user.id,
+      skill_id: submission.skillId,
+      score: submission.score,
+      max_score: submission.maxScore,
+      percentage,
+      passed,
+      time_taken_seconds: submission.timeTakenSeconds,
+      answers: submission.answers,
+    };
+
+    console.log('[quizService.submit] Inserting:', JSON.stringify(insertData));
+
     const { data, error } = await supabase
       .from('quiz_attempts')
-      .insert({
-        user_id: user.id,
-        skill_id: submission.skillId,
-        score: submission.score,
-        max_score: submission.maxScore,
-        percentage,
-        passed,
-        time_taken_seconds: submission.timeTakenSeconds,
-        answers: submission.answers,
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (error) {
-      console.error('Error submitting quiz:', error);
+      console.error('[quizService.submit] Insert error:', error.message, error.details, error.hint);
       throw error;
     }
 
+    console.log('[quizService.submit] Inserted successfully:', data?.id, 'Score:', percentage, 'Passed:', passed);
     return data;
   },
 

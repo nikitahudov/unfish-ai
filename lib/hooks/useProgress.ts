@@ -44,6 +44,8 @@ export function useProgress() {
 
     setUpdating(skillId);
     try {
+      // Yield to event loop to avoid Supabase auth lock contention
+      await new Promise(resolve => setTimeout(resolve, 0));
       const updated = await progressService.markViewed(skillId, user.id);
 
       // Optimistically update local state
@@ -68,6 +70,8 @@ export function useProgress() {
 
     setUpdating(skillId);
     try {
+      // Yield to event loop to avoid Supabase auth lock contention
+      await new Promise(resolve => setTimeout(resolve, 0));
       const updated = await progressService.markCompleted(skillId, user.id);
 
       mutate(prev => {
@@ -94,6 +98,7 @@ export function useProgress() {
 
     setUpdating(skillId);
     try {
+      await new Promise(resolve => setTimeout(resolve, 0));
       const updated = await progressService.upsert(skillId, updates, user.id);
 
       mutate(prev => {

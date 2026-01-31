@@ -17,7 +17,7 @@ export default function TestDataPage() {
 }
 
 function TestDataContent() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const {
     progress,
     isLoading: progressLoading,
@@ -51,11 +51,12 @@ function TestDataContent() {
 
   const testMarkViewed = async () => {
     addLog('Testing markViewed("1.1")...');
+    addLog(`  isAuthenticated=${isAuthenticated}, userId=${user?.id}`);
     try {
       await markViewed('1.1');
-      addLog('markViewed succeeded');
+      addLog('markViewed returned (check console for [progressService] logs)');
       await refetchProgress();
-      addLog('Refetched progress');
+      addLog(`Refetched progress: ${progress?.length || 0} items`);
     } catch (error) {
       addLog(`ERROR: ${error instanceof Error ? error.message : String(error)}`);
     }

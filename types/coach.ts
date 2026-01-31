@@ -15,6 +15,11 @@ export interface Conversation {
   lastMessageAt: string;
 }
 
+export interface CoachPreferences {
+  personality: 'encouraging' | 'balanced' | 'strict';
+  quizDifficulty: 'easier' | 'adaptive' | 'harder';
+}
+
 export interface CoachContextData {
   currentPhase: 'Fundamental' | 'Intermediate' | 'Advanced';
   completedSkills: string[];
@@ -37,6 +42,7 @@ export interface CoachContextData {
     currentStreak: number;
     lastActiveDate: string | null;
   };
+  preferences: CoachPreferences;
 }
 
 export interface CoachState {

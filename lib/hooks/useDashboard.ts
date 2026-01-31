@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth/AuthContext';
 import { dataService } from '@/lib/services/dataService';
 import { useAsyncData } from './useAsyncData';
+import type { UserPreferences } from '@/types/database';
 
 export function useDashboard() {
   const { isAuthenticated } = useAuth();
@@ -32,7 +33,7 @@ export function useDashboard() {
 
 // Hook for coach context data
 export function useCoachContext() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const {
     data,
@@ -45,6 +46,9 @@ export function useCoachContext() {
     { enabled: isAuthenticated }
   );
 
+  // Get preferences from user profile
+  const userPrefs = (user?.profile?.preferences as UserPreferences) || {};
+
   return {
     completedSkills: data?.completedSkills || [],
     inProgressSkills: data?.inProgressSkills || [],
@@ -52,6 +56,10 @@ export function useCoachContext() {
     strongAreas: data?.strongAreas || [],
     stats: data?.stats,
     recentActivity: data?.recentActivity || [],
+    preferences: {
+      personality: userPrefs.coachPersonality || 'balanced',
+      quizDifficulty: userPrefs.quizDifficulty || 'adaptive',
+    },
     isLoading,
     error,
     refetch,

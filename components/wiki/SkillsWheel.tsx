@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { skillsData, type Skill, type SkillCategory } from '@/data/skills';
 import { SkillModal } from './SkillModal';
 import { SkillProgressBadge } from '@/components/skills/SkillProgressBadge';
+import { useAuth } from '@/lib/auth/AuthContext';
+import { useProgress } from '@/lib/hooks/useProgress';
+import { useQuizzes } from '@/lib/hooks/useQuizzes';
 
 interface SkillsWheelProps {
   onSkillSelect?: (skill: Skill, category: string) => void;
@@ -42,6 +45,15 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Lift data fetching to parent level (single query for all skills)
+  const { isAuthenticated } = useAuth();
+  const { progress } = useProgress();
+  const { attempts: quizAttempts } = useQuizzes();
+
+  // Prevent hydration mismatch: badges only render after client mount
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const handleSkillClick = (skill: Skill) => {
     setSelectedSkill(skill);
@@ -223,7 +235,13 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <SkillProgressBadge skillId={skill.id} />
+                          {mounted && isAuthenticated && (
+                            <SkillProgressBadge
+                              skillId={skill.id}
+                              progress={progress || undefined}
+                              quizAttempts={quizAttempts || undefined}
+                            />
+                          )}
                           <span
                             className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${getLevelColor(
                               skill.level
@@ -276,7 +294,13 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
                     >
                       {skill.name}
                     </button>
-                    <SkillProgressBadge skillId={skill.id} />
+                    {mounted && isAuthenticated && (
+                      <SkillProgressBadge
+                        skillId={skill.id}
+                        progress={progress || undefined}
+                        quizAttempts={quizAttempts || undefined}
+                      />
+                    )}
                   </li>
                 ))}
               </ul>

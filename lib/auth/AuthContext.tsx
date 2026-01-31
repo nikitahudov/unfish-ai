@@ -195,6 +195,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Sign out
   const signOut = useCallback(async (): Promise<void> => {
+    // Clear app localStorage data to prevent stale data on next login
+    const appKeys = [
+      '24p-academy-progress',
+      '24p-coach-conversations',
+    ];
+    appKeys.forEach(key => {
+      try { localStorage.removeItem(key); } catch {}
+    });
+
     await supabase.auth.signOut();
   }, [supabase]);
 

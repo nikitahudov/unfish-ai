@@ -1,10 +1,9 @@
 // ============================================
 // PROGRESS STORE
-// Zustand store for managing user progress with localStorage persistence
+// Zustand store for managing user progress (in-memory only, no localStorage)
 // ============================================
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { ProgressState, QuizAttempt, SkillProgress, UserStats } from '@/types/progress';
 
 // Default initial stats
@@ -55,9 +54,7 @@ const calculateStreak = (lastStudyDate: string | null, currentStreak: number, lo
   }
 };
 
-export const useProgressStore = create<ProgressState>()(
-  persist(
-    (set, get) => ({
+export const useProgressStore = create<ProgressState>()((set, get) => ({
       quizAttempts: {},
       skills: {},
       stats: defaultStats,
@@ -272,9 +269,4 @@ export const useProgressStore = create<ProgressState>()(
         }
         return 'in_progress';
       },
-    }),
-    {
-      name: '24p-academy-progress',
-    }
-  )
-);
+}));

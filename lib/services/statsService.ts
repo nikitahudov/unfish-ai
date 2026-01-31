@@ -8,13 +8,13 @@ export const statsService = {
   async get(): Promise<UserStats | null> {
     const supabase = createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return null;
 
     const { data, error } = await supabase
       .from('user_stats')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', session.user.id)
       .single();
 
     if (error && error.code !== 'PGRST116') {
@@ -31,8 +31,9 @@ export const statsService = {
   async update(updates: Partial<UserStats>): Promise<UserStats> {
     const supabase = createClient();
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    console.log('[statsService.update] User:', user?.id, 'AuthError:', authError?.message);
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    console.log('[statsService.update] User:', user?.id);
     if (!user) throw new Error('Not authenticated');
 
     const updatePayload = {
@@ -142,8 +143,8 @@ export const statsService = {
    */
   async recordQuizCompletion(score: number, passed: boolean): Promise<UserStats> {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw new Error('Not authenticated');
 
     // Get current stats
     const current = await this.get();

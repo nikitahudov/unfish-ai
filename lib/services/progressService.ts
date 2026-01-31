@@ -58,10 +58,11 @@ export const progressService = {
   async upsert(skillId: string, updates: ProgressUpdate): Promise<SkillProgress> {
     const supabase = createClient();
 
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get current user from session (getSession reads from memory, no lock contention)
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
 
-    console.log('[progressService.upsert] User:', user?.id, 'AuthError:', authError?.message);
+    console.log('[progressService.upsert] User:', user?.id);
 
     if (!user) throw new Error('Not authenticated');
 

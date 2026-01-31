@@ -29,8 +29,9 @@ export const activityService = {
   ): Promise<ActivityLog> {
     const supabase = createClient();
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    console.log('[activityService.log] User:', user?.id, 'Type:', type, 'AuthError:', authError?.message);
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    console.log('[activityService.log] User:', user?.id, 'Type:', type);
     if (!user) throw new Error('Not authenticated');
 
     const insertData = {

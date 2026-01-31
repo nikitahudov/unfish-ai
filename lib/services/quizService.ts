@@ -103,10 +103,11 @@ export const quizService = {
   async submit(submission: QuizSubmission): Promise<QuizAttempt> {
     const supabase = createClient();
 
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get current user from session (getSession reads from memory, no lock contention)
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
 
-    console.log('[quizService.submit] User:', user?.id, 'AuthError:', authError?.message);
+    console.log('[quizService.submit] User:', user?.id);
 
     if (!user) throw new Error('Not authenticated');
 

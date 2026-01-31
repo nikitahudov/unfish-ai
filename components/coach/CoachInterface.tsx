@@ -10,11 +10,12 @@ import { AnalyzePanel } from './AnalyzePanel';
 import { QuizPanel } from './QuizPanel';
 import { QuizSessionHeader } from './QuizSessionHeader';
 import { QuizSummaryModal } from './QuizSummaryModal';
-import { useCoachStore } from '@/lib/coachStore';
+import { useCoachConversations } from '@/lib/hooks/useCoachConversations';
 import { useQuizSessionStore, QuizSessionSummary } from '@/lib/quizSessionStore';
 import { sendMessageToCoach } from '@/lib/coach/coachApi';
 import { buildCoachContext, getDaysSinceLastActivity } from '@/lib/coach/contextBuilder';
-import type { CoachMode } from '@/types/coach';
+import { activityService } from '@/lib/services';
+import type { CoachMode, Message } from '@/types/coach';
 
 export function CoachInterface() {
   const [mode, setMode] = useState<CoachMode>('chat');
@@ -30,14 +31,13 @@ export function CoachInterface() {
 
   const {
     currentConversationId,
+    currentConversation,
+    messages,
     startNewConversation,
     addMessage,
-    getCurrentConversation,
-  } = useCoachStore();
+  } = useCoachConversations();
 
   const { isActive: quizIsActive, endSession, resetSession } = useQuizSessionStore();
-
-  const conversation = getCurrentConversation();
 
   // Define sendWelcomeMessage before it's used in useEffect
   const sendWelcomeMessage = useCallback(async () => {
@@ -83,7 +83,7 @@ export function CoachInterface() {
     );
 
     if (response.message) {
-      addMessage(currentConversationId, {
+      await addMessage({
         role: 'assistant',
         content: response.message,
         mode,
@@ -98,28 +98,28 @@ export function CoachInterface() {
   // Initialize conversation if none exists
   useEffect(() => {
     if (!currentConversationId) {
-      startNewConversation();
+      startNewConversation({ mode });
     }
-  }, [currentConversationId, startNewConversation]);
+  }, [currentConversationId, startNewConversation, mode]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversation?.messages]);
+  }, [messages]);
 
   // Send welcome message on first load - async fetch and state update is a legitimate pattern for initialization
   useEffect(() => {
-    if (conversation && conversation.messages.length === 0 && !hasInitializedRef.current && !isLoading) {
+    if (currentConversation && messages.length === 0 && !hasInitializedRef.current && !isLoading) {
       // eslint-disable-next-line
       sendWelcomeMessage();
     }
-  }, [conversation, isLoading, sendWelcomeMessage]);
+  }, [currentConversation, messages, isLoading, sendWelcomeMessage]);
 
   // Hide quick actions after first message - deriving UI state from conversation length
   useEffect(() => {
     // eslint-disable-next-line
-    setShowQuickActions(!(conversation && conversation.messages.length > 2));
-  }, [conversation]);
+    setShowQuickActions(!(currentConversation && messages.length > 2));
+  }, [currentConversation, messages]);
 
   const handleSend = async (content: string, switchToMode?: CoachMode) => {
     if (!currentConversationId) return;
@@ -142,8 +142,8 @@ export function CoachInterface() {
 
     const activeMode = switchToMode || mode;
 
-    // Add user message
-    addMessage(currentConversationId, {
+    // Add user message to Supabase
+    await addMessage({
       role: 'user',
       content,
       mode: activeMode,
@@ -154,29 +154,30 @@ export function CoachInterface() {
     setShowHandForm(false);
     setShowQuizPanel(false);
 
-    // Get updated conversation with new message
-    const updatedConversation = useCoachStore.getState().getCurrentConversation();
-
-    if (!updatedConversation) {
-      setIsLoading(false);
-      return;
-    }
+    // Build messages array for API (current messages + the one we just added)
+    const allMessages: Message[] = [
+      ...messages,
+      { id: 'temp', role: 'user', content, mode: activeMode, timestamp: new Date().toISOString() },
+    ];
 
     // Send to API
-    const response = await sendMessageToCoach(updatedConversation.messages, activeMode);
+    const response = await sendMessageToCoach(allMessages, activeMode);
 
     if (response.error) {
-      addMessage(currentConversationId, {
+      await addMessage({
         role: 'assistant',
         content: response.error,
         mode: activeMode,
       });
     } else if (response.message) {
-      addMessage(currentConversationId, {
+      await addMessage({
         role: 'assistant',
         content: response.message,
         mode: activeMode,
       });
+
+      // Log activity
+      activityService.logCoachMessage(currentConversationId).catch(console.error);
 
       // Track quiz answers if in quiz mode
       if (activeMode === 'quiz' && quizIsActive) {
@@ -199,14 +200,14 @@ export function CoachInterface() {
     setIsLoading(false);
   };
 
-  const handleNewConversation = () => {
+  const handleNewConversation = async () => {
     hasInitializedRef.current = false;
     initializingRef.current = false;
     setShowQuickActions(true);
     setShowHandForm(false);
     setShowQuizPanel(false);
     resetSession();
-    startNewConversation();
+    await startNewConversation({ mode });
   };
 
   const handleModeChange = (newMode: CoachMode) => {
@@ -308,7 +309,7 @@ export function CoachInterface() {
           />
         ) : (
           <>
-            {conversation?.messages.map((message) => (
+            {messages.map((message) => (
               <CoachMessage key={message.id} message={message} />
             ))}
 

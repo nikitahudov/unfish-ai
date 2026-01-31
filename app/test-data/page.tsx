@@ -64,8 +64,12 @@ function TestDataContent() {
 
   const testMarkCompleted = async () => {
     addLog('Testing markCompleted("1.1")...');
+    addLog(`  isAuthenticated=${isAuthenticated}`);
     try {
-      await markCompleted('1.1');
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('TIMEOUT after 10s')), 10000)
+      );
+      await Promise.race([markCompleted('1.1'), timeoutPromise]);
       addLog('markCompleted succeeded');
       await refetchProgress();
       addLog('Refetched progress');
@@ -76,21 +80,80 @@ function TestDataContent() {
 
   const testQuizSubmit = async () => {
     addLog('Testing submitQuiz...');
+    addLog(`  isAuthenticated=${isAuthenticated}`);
     try {
-      const result = await submitQuiz({
-        skillId: '1.1',
-        score: 8,
-        maxScore: 10,
-        answers: [
-          { questionId: 'q1', selectedAnswer: 'A', isCorrect: true },
-          { questionId: 'q2', selectedAnswer: 'B', isCorrect: true },
-        ],
-      });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('TIMEOUT after 10s')), 10000)
+      );
+      const result = await Promise.race([
+        submitQuiz({
+          skillId: '1.1',
+          score: 8,
+          maxScore: 10,
+          answers: [
+            { questionId: 'q1', selectedAnswer: 'A', isCorrect: true },
+            { questionId: 'q2', selectedAnswer: 'B', isCorrect: true },
+          ],
+        }),
+        timeoutPromise,
+      ]);
       addLog(`submitQuiz succeeded: ${JSON.stringify(result)}`);
       await refetchQuizzes();
       addLog('Refetched quizzes');
     } catch (error) {
       addLog(`ERROR: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
+  // Direct service call test - bypasses hooks entirely
+  const testDirectServiceCall = async () => {
+    addLog('Testing DIRECT service calls (no hooks)...');
+
+    // Test 1: Direct markViewed
+    try {
+      const { progressService } = await import('@/lib/services');
+      addLog('  [1/3] Calling progressService.markViewed("1.2")...');
+      const t1 = Date.now();
+      const result = await Promise.race([
+        progressService.markViewed('1.2'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT 10s')), 10000)),
+      ]) as Awaited<ReturnType<typeof progressService.markViewed>>;
+      addLog(`  [1/3] Direct markViewed SUCCESS (${Date.now() - t1}ms): ${result.id}`);
+    } catch (error) {
+      addLog(`  [1/3] Direct markViewed ERROR: ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    // Test 2: Direct markCompleted (this is the one that hangs via hook)
+    try {
+      const { progressService } = await import('@/lib/services');
+      addLog('  [2/3] Calling progressService.markCompleted("1.2")...');
+      const t2 = Date.now();
+      const result = await Promise.race([
+        progressService.markCompleted('1.2'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT 10s')), 10000)),
+      ]) as Awaited<ReturnType<typeof progressService.markCompleted>>;
+      addLog(`  [2/3] Direct markCompleted SUCCESS (${Date.now() - t2}ms): ${result.id}`);
+    } catch (error) {
+      addLog(`  [2/3] Direct markCompleted ERROR: ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    // Test 3: Direct quiz submit
+    try {
+      const { quizService } = await import('@/lib/services');
+      addLog('  [3/3] Calling quizService.submit("1.2")...');
+      const t3 = Date.now();
+      const result = await Promise.race([
+        quizService.submit({
+          skillId: '1.2',
+          score: 7,
+          maxScore: 10,
+          answers: [{ questionId: 'q1', selectedAnswer: 'A', isCorrect: true }],
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT 10s')), 10000)),
+      ]) as Awaited<ReturnType<typeof quizService.submit>>;
+      addLog(`  [3/3] Direct submit SUCCESS (${Date.now() - t3}ms): ${result.id}, ${result.percentage}%`);
+    } catch (error) {
+      addLog(`  [3/3] Direct submit ERROR: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -200,6 +263,12 @@ function TestDataContent() {
           className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium"
         >
           Test: Submit Quiz (1.1)
+        </button>
+        <button
+          onClick={testDirectServiceCall}
+          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium"
+        >
+          Test Direct Service Calls (no hooks)
         </button>
         <button
           onClick={refreshAll}

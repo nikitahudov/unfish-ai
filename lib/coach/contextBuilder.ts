@@ -1,10 +1,18 @@
 import { createClient } from '@/lib/supabase/client';
 import { getAllSkills, getSkillById } from '@/data/skills';
-import type { CoachContextData } from '@/types/coach';
+import type { CoachContextData, CoachPreferences } from '@/types/coach';
+import type { UserPreferences } from '@/types/database';
 
 function getSkillName(skillId: string): string {
   const skill = getSkillById(skillId);
   return skill?.name || skillId;
+}
+
+function getDefaultPreferences(): CoachPreferences {
+  return {
+    personality: 'balanced',
+    quizDifficulty: 'adaptive',
+  };
 }
 
 function getEmptyContext(): CoachContextData {
@@ -24,6 +32,7 @@ function getEmptyContext(): CoachContextData {
       currentStreak: 0,
       lastActiveDate: null,
     },
+    preferences: getDefaultPreferences(),
   };
 }
 
@@ -42,18 +51,27 @@ export async function buildCoachContextAsync(): Promise<CoachContextData> {
 
   try {
     // Fetch all data in parallel
-    const [progressResult, quizResult, statsResult, activityResult] = await Promise.all([
+    const [progressResult, quizResult, statsResult, activityResult, profileResult] = await Promise.all([
       supabase.from('skill_progress').select('*').eq('user_id', user.id),
       supabase.from('quiz_attempts').select('*').eq('user_id', user.id),
       supabase.from('user_stats').select('*').eq('user_id', user.id).single(),
       supabase.from('activity_log').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+      supabase.from('user_profiles').select('preferences').eq('id', user.id).single(),
     ]);
 
     const progress = progressResult.data || [];
     const quizzes = quizResult.data || [];
     const stats = statsResult.data;
     const activities = activityResult.data || [];
+    const profile = profileResult.data;
     const allSkills = getAllSkills();
+
+    // Extract preferences with defaults
+    const userPrefs = (profile?.preferences as UserPreferences) || {};
+    const preferences: CoachPreferences = {
+      personality: userPrefs.coachPersonality || 'balanced',
+      quizDifficulty: userPrefs.quizDifficulty || 'adaptive',
+    };
 
     // Categorize skills by status
     const completedSkillIds = new Set(
@@ -137,6 +155,7 @@ export async function buildCoachContextAsync(): Promise<CoachContextData> {
         currentStreak: stats?.current_streak || 0,
         lastActiveDate: activities[0]?.created_at || null,
       },
+      preferences,
     };
   } catch (error) {
     console.error('Error building coach context:', error);

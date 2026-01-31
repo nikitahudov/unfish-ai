@@ -2,6 +2,7 @@ import { progressService } from './progressService';
 import { quizService, QuizSubmission } from './quizService';
 import { statsService } from './statsService';
 import { activityService } from './activityService';
+import type { SkillProgress, QuizAttempt } from '@/types/database';
 
 /**
  * Unified data service that coordinates between different services
@@ -14,12 +15,16 @@ export const dataService = {
   /**
    * Record viewing content (updates progress, stats, and activity)
    */
-  async recordContentView(skillId: string, skillName?: string, userId?: string): Promise<void> {
+  async recordContentView(skillId: string, skillName?: string, userId?: string): Promise<SkillProgress> {
     try {
-      await progressService.markViewed(skillId, userId);
-      await statsService.increment('skills_viewed', 1, userId);
-      await statsService.updateStreak(userId);
-      await activityService.logContentViewed(skillId, skillName, userId);
+      const result = await progressService.markViewed(skillId, userId);
+      // Update stats and activity in background - don't block on these
+      Promise.all([
+        statsService.increment('skills_viewed', 1, userId),
+        statsService.updateStreak(userId),
+        activityService.logContentViewed(skillId, skillName, userId),
+      ]).catch(err => console.error('Error updating stats/activity for view:', err));
+      return result;
     } catch (error) {
       console.error('Error recording content view:', error);
       throw error;
@@ -29,12 +34,16 @@ export const dataService = {
   /**
    * Record completing content (updates progress, stats, and activity)
    */
-  async recordContentCompletion(skillId: string, skillName?: string, userId?: string): Promise<void> {
+  async recordContentCompletion(skillId: string, skillName?: string, userId?: string): Promise<SkillProgress> {
     try {
-      await progressService.markCompleted(skillId, userId);
-      await statsService.increment('skills_completed', 1, userId);
-      await statsService.updateStreak(userId);
-      await activityService.logContentCompleted(skillId, skillName, userId);
+      const result = await progressService.markCompleted(skillId, userId);
+      // Update stats and activity in background - don't block on these
+      Promise.all([
+        statsService.increment('skills_completed', 1, userId),
+        statsService.updateStreak(userId),
+        activityService.logContentCompleted(skillId, skillName, userId),
+      ]).catch(err => console.error('Error updating stats/activity for completion:', err));
+      return result;
     } catch (error) {
       console.error('Error recording content completion:', error);
       throw error;
@@ -50,14 +59,14 @@ export const dataService = {
   }> {
     try {
       const attempt = await quizService.submit(submission, userId);
-      await statsService.recordQuizCompletion(attempt.percentage, attempt.passed, userId);
-      await statsService.updateStreak(userId);
-
-      if (attempt.passed) {
-        await activityService.logQuizPassed(submission.skillId, attempt.percentage, skillName, userId);
-      } else {
-        await activityService.logQuizAttempted(submission.skillId, attempt.percentage, skillName, userId);
-      }
+      // Update stats and activity in background - don't block on these
+      Promise.all([
+        statsService.recordQuizCompletion(attempt.percentage, attempt.passed, userId),
+        statsService.updateStreak(userId),
+        attempt.passed
+          ? activityService.logQuizPassed(submission.skillId, attempt.percentage, skillName, userId)
+          : activityService.logQuizAttempted(submission.skillId, attempt.percentage, skillName, userId),
+      ]).catch(err => console.error('Error updating stats/activity for quiz:', err));
 
       return { attempt, passed: attempt.passed };
     } catch (error) {

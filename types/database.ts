@@ -291,8 +291,10 @@ export type CoachConversation = Database['public']['Tables']['coach_conversation
 export type UserStats = Database['public']['Tables']['user_stats']['Row'];
 export type ActivityLog = Database['public']['Tables']['activity_log']['Row'];
 
-export type UserPreferences = {
-  theme: 'dark' | 'light';
-  emailNotifications: boolean;
-  coachPersonality: 'supportive' | 'direct' | 'socratic';
-};
+export interface UserPreferences {
+  theme?: 'dark' | 'light';
+  emailNotifications?: boolean;
+  streakReminders?: boolean;
+  coachPersonality?: 'encouraging' | 'balanced' | 'strict';
+  quizDifficulty?: 'easier' | 'adaptive' | 'harder';
+}

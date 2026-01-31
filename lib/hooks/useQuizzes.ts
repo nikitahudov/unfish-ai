@@ -55,6 +55,8 @@ export function useQuizzes() {
 
     setSubmitting(true);
     try {
+      // Yield to event loop to avoid Supabase auth lock contention
+      await new Promise(resolve => setTimeout(resolve, 0));
       const attempt = await quizService.submit(submission, user.id);
 
       // Optimistically update local state

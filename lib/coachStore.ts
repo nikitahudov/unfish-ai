@@ -1,70 +1,49 @@
-import { create } from 'zustand';
-import type { Message, Conversation } from '@/types/coach';
+'use client';
 
-interface CoachStore {
-  conversations: Conversation[];
-  currentConversationId: string | null;
+import { create } from 'zustand';
+import type { Message } from '@/types/coach';
+
+// This store is now just for local UI state during a session
+// Actual data persistence is handled by useCoachConversations hook
+
+interface LocalCoachState {
+  // Temporary messages before they're saved to Supabase
+  pendingMessages: Message[];
+  isWaitingForResponse: boolean;
 
   // Actions
-  startNewConversation: () => string;
-  addMessage: (conversationId: string, message: Omit<Message, 'id' | 'timestamp'>) => void;
-  getCurrentConversation: () => Conversation | null;
-  clearConversations: () => void;
-  setCurrentConversation: (id: string | null) => void;
+  addPendingMessage: (message: Omit<Message, 'id' | 'timestamp'>) => Message;
+  clearPendingMessages: () => void;
+  setWaitingForResponse: (waiting: boolean) => void;
 }
 
-// No localStorage persistence - conversations stored in Supabase for authenticated users
-export const useCoachStore = create<CoachStore>()((set, get) => ({
-  conversations: [],
-  currentConversationId: null,
+export const useLocalCoachStore = create<LocalCoachState>()((set) => ({
+  pendingMessages: [],
+  isWaitingForResponse: false,
 
-  startNewConversation: () => {
-    const id = `conv_${Date.now()}`;
-    const newConversation: Conversation = {
-      id,
-      messages: [],
-      startedAt: new Date().toISOString(),
-      lastMessageAt: new Date().toISOString(),
-    };
-
-    set(state => ({
-      conversations: [newConversation, ...state.conversations],
-      currentConversationId: id,
-    }));
-
-    return id;
-  },
-
-  addMessage: (conversationId, message) => {
-    const fullMessage: Message = {
+  addPendingMessage: (message) => {
+    const newMessage: Message = {
       ...message,
-      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `pending-${crypto.randomUUID()}`,
       timestamp: new Date().toISOString(),
     };
 
     set(state => ({
-      conversations: state.conversations.map(conv =>
-        conv.id === conversationId
-          ? {
-              ...conv,
-              messages: [...conv.messages, fullMessage],
-              lastMessageAt: fullMessage.timestamp,
-            }
-          : conv
-      ),
+      pendingMessages: [...state.pendingMessages, newMessage],
     }));
+
+    return newMessage;
   },
 
-  getCurrentConversation: () => {
-    const { conversations, currentConversationId } = get();
-    return conversations.find(c => c.id === currentConversationId) || null;
+  clearPendingMessages: () => {
+    set({ pendingMessages: [] });
   },
 
-  setCurrentConversation: (id) => {
-    set({ currentConversationId: id });
-  },
-
-  clearConversations: () => {
-    set({ conversations: [], currentConversationId: null });
+  setWaitingForResponse: (waiting) => {
+    set({ isWaitingForResponse: waiting });
   },
 }));
+
+// Keep the old export name for backward compatibility during migration
+// Components should gradually migrate to useCoachConversations
+export const useCoachStore = useLocalCoachStore;

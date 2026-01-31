@@ -11,3 +11,5 @@ export { useStats } from './useStats';
 export { useActivity, useWeeklyActivity } from './useActivity';
 export { useDashboard, useCoachContext } from './useDashboard';
 export { useData } from './useData';
+export { useCoachConversations, useConversationList } from './useCoachConversations';
+export { useCoach } from './useCoach';

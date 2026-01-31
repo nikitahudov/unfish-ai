@@ -7,7 +7,7 @@ import { useAsyncData } from './useAsyncData';
 import type { SkillProgress } from '@/types/database';
 
 export function useProgress() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [updating, setUpdating] = useState<string | null>(null);
 
   // Fetch all progress
@@ -40,17 +40,11 @@ export function useProgress() {
 
   // Mark skill as viewed
   const markViewed = useCallback(async (skillId: string): Promise<void> => {
-    console.log('[useProgress.markViewed] START', { skillId, isAuthenticated });
-    if (!isAuthenticated) {
-      console.log('[useProgress.markViewed] SKIP - not authenticated');
-      return;
-    }
+    if (!isAuthenticated || !user?.id) return;
 
     setUpdating(skillId);
     try {
-      console.log('[useProgress.markViewed] calling progressService.markViewed...');
-      const updated = await progressService.markViewed(skillId);
-      console.log('[useProgress.markViewed] service returned:', updated?.id);
+      const updated = await progressService.markViewed(skillId, user.id);
 
       // Optimistically update local state
       mutate(prev => {
@@ -63,29 +57,18 @@ export function useProgress() {
         }
         return [...prev, updated];
       });
-      console.log('[useProgress.markViewed] mutate done');
-    } catch (err) {
-      console.error('[useProgress.markViewed] ERROR:', err);
-      throw err;
     } finally {
       setUpdating(null);
-      console.log('[useProgress.markViewed] END');
     }
-  }, [isAuthenticated, mutate]);
+  }, [isAuthenticated, user?.id, mutate]);
 
   // Mark skill as completed
   const markCompleted = useCallback(async (skillId: string): Promise<void> => {
-    console.log('[useProgress.markCompleted] START', { skillId, isAuthenticated });
-    if (!isAuthenticated) {
-      console.log('[useProgress.markCompleted] SKIP - not authenticated');
-      return;
-    }
+    if (!isAuthenticated || !user?.id) return;
 
     setUpdating(skillId);
     try {
-      console.log('[useProgress.markCompleted] calling progressService.markCompleted...');
-      const updated = await progressService.markCompleted(skillId);
-      console.log('[useProgress.markCompleted] service returned:', updated?.id);
+      const updated = await progressService.markCompleted(skillId, user.id);
 
       mutate(prev => {
         if (!prev) return [updated];
@@ -97,26 +80,21 @@ export function useProgress() {
         }
         return [...prev, updated];
       });
-      console.log('[useProgress.markCompleted] mutate done');
-    } catch (err) {
-      console.error('[useProgress.markCompleted] ERROR:', err);
-      throw err;
     } finally {
       setUpdating(null);
-      console.log('[useProgress.markCompleted] END');
     }
-  }, [isAuthenticated, mutate]);
+  }, [isAuthenticated, user?.id, mutate]);
 
   // Update progress
   const updateProgress = useCallback(async (
     skillId: string,
     updates: ProgressUpdate
   ): Promise<void> => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
     setUpdating(skillId);
     try {
-      const updated = await progressService.upsert(skillId, updates);
+      const updated = await progressService.upsert(skillId, updates, user.id);
 
       mutate(prev => {
         if (!prev) return [updated];
@@ -131,7 +109,7 @@ export function useProgress() {
     } finally {
       setUpdating(null);
     }
-  }, [isAuthenticated, mutate]);
+  }, [isAuthenticated, user?.id, mutate]);
 
   // Get completion stats
   const stats = {

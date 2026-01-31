@@ -100,25 +100,22 @@ export const quizService = {
   /**
    * Submit a quiz attempt
    */
-  async submit(submission: QuizSubmission): Promise<QuizAttempt> {
-    console.log('[quizService.submit] ENTER', submission.skillId);
+  async submit(submission: QuizSubmission, userId?: string): Promise<QuizAttempt> {
     const supabase = createClient();
-    console.log('[quizService.submit] client created');
 
-    // Get current user from session (getSession reads from memory, no lock contention)
-    const { data: { session } } = await supabase.auth.getSession();
-    console.log('[quizService.submit] getSession returned');
-    const user = session?.user;
-
-    console.log('[quizService.submit] User:', user?.id);
-
-    if (!user) throw new Error('Not authenticated');
+    // Use provided userId or fall back to session lookup
+    let uid = userId;
+    if (!uid) {
+      const { data: { session } } = await supabase.auth.getSession();
+      uid = session?.user?.id;
+    }
+    if (!uid) throw new Error('Not authenticated');
 
     const percentage = Math.round((submission.score / submission.maxScore) * 100);
     const passed = percentage >= 70; // 70% passing threshold
 
     const insertData = {
-      user_id: user.id,
+      user_id: uid,
       skill_id: submission.skillId,
       score: submission.score,
       max_score: submission.maxScore,
@@ -127,8 +124,6 @@ export const quizService = {
       time_taken_seconds: submission.timeTakenSeconds,
       answers: submission.answers,
     };
-
-    console.log('[quizService.submit] Inserting:', JSON.stringify(insertData));
 
     const { data, error } = await supabase
       .from('quiz_attempts')
@@ -141,7 +136,6 @@ export const quizService = {
       throw error;
     }
 
-    console.log('[quizService.submit] Inserted successfully:', data?.id, 'Score:', percentage, 'Passed:', passed);
     return data;
   },
 

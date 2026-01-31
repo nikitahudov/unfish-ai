@@ -5,23 +5,21 @@ import { activityService } from './activityService';
 
 /**
  * Unified data service that coordinates between different services
- * and handles complex operations that span multiple tables
+ * and handles complex operations that span multiple tables.
+ *
+ * Write methods accept an optional userId parameter to avoid calling
+ * supabase.auth.getSession() which can deadlock in React hook contexts.
  */
 export const dataService = {
   /**
    * Record viewing content (updates progress, stats, and activity)
    */
-  async recordContentView(skillId: string, skillName?: string): Promise<void> {
+  async recordContentView(skillId: string, skillName?: string, userId?: string): Promise<void> {
     try {
-      // Update progress
-      await progressService.markViewed(skillId);
-
-      // Update stats
-      await statsService.increment('skills_viewed');
-      await statsService.updateStreak();
-
-      // Log activity
-      await activityService.logContentViewed(skillId, skillName);
+      await progressService.markViewed(skillId, userId);
+      await statsService.increment('skills_viewed', 1, userId);
+      await statsService.updateStreak(userId);
+      await activityService.logContentViewed(skillId, skillName, userId);
     } catch (error) {
       console.error('Error recording content view:', error);
       throw error;
@@ -31,17 +29,12 @@ export const dataService = {
   /**
    * Record completing content (updates progress, stats, and activity)
    */
-  async recordContentCompletion(skillId: string, skillName?: string): Promise<void> {
+  async recordContentCompletion(skillId: string, skillName?: string, userId?: string): Promise<void> {
     try {
-      // Update progress
-      await progressService.markCompleted(skillId);
-
-      // Update stats
-      await statsService.increment('skills_completed');
-      await statsService.updateStreak();
-
-      // Log activity
-      await activityService.logContentCompleted(skillId, skillName);
+      await progressService.markCompleted(skillId, userId);
+      await statsService.increment('skills_completed', 1, userId);
+      await statsService.updateStreak(userId);
+      await activityService.logContentCompleted(skillId, skillName, userId);
     } catch (error) {
       console.error('Error recording content completion:', error);
       throw error;
@@ -51,23 +44,19 @@ export const dataService = {
   /**
    * Submit a quiz (updates quiz attempts, progress, stats, and activity)
    */
-  async submitQuiz(submission: QuizSubmission, skillName?: string): Promise<{
+  async submitQuiz(submission: QuizSubmission, skillName?: string, userId?: string): Promise<{
     attempt: Awaited<ReturnType<typeof quizService.submit>>;
     passed: boolean;
   }> {
     try {
-      // Submit quiz
-      const attempt = await quizService.submit(submission);
+      const attempt = await quizService.submit(submission, userId);
+      await statsService.recordQuizCompletion(attempt.percentage, attempt.passed, userId);
+      await statsService.updateStreak(userId);
 
-      // Update stats
-      await statsService.recordQuizCompletion(attempt.percentage, attempt.passed);
-      await statsService.updateStreak();
-
-      // Log activity
       if (attempt.passed) {
-        await activityService.logQuizPassed(submission.skillId, attempt.percentage, skillName);
+        await activityService.logQuizPassed(submission.skillId, attempt.percentage, skillName, userId);
       } else {
-        await activityService.logQuizAttempted(submission.skillId, attempt.percentage, skillName);
+        await activityService.logQuizAttempted(submission.skillId, attempt.percentage, skillName, userId);
       }
 
       return { attempt, passed: attempt.passed };
@@ -80,10 +69,10 @@ export const dataService = {
   /**
    * Add study time (updates progress and stats)
    */
-  async addStudyTime(skillId: string, seconds: number): Promise<void> {
+  async addStudyTime(skillId: string, seconds: number, userId?: string): Promise<void> {
     try {
-      await progressService.addTimeSpent(skillId, seconds);
-      await statsService.increment('total_study_time_seconds', seconds);
+      await progressService.addTimeSpent(skillId, seconds, userId);
+      await statsService.increment('total_study_time_seconds', seconds, userId);
     } catch (error) {
       console.error('Error adding study time:', error);
       throw error;
@@ -172,10 +161,10 @@ export const dataService = {
   /**
    * Record login (updates streak and logs activity)
    */
-  async recordLogin(): Promise<void> {
+  async recordLogin(userId?: string): Promise<void> {
     try {
-      await statsService.updateStreak();
-      await activityService.logLogin();
+      await statsService.updateStreak(userId);
+      await activityService.logLogin(userId);
     } catch (error) {
       console.error('Error recording login:', error);
       // Don't throw - login recording shouldn't break the app

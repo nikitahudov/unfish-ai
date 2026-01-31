@@ -1,25 +1,37 @@
 'use client';
 
 import React from 'react';
-import { useAuth } from '@/lib/auth/AuthContext';
-import { useProgress, useSkillQuizzes } from '@/lib/hooks';
+import type { SkillProgress, QuizAttempt } from '@/types/database';
 
 interface SkillProgressBadgeProps {
   skillId: string;
   showScore?: boolean;
+  /** All progress records (from parent useProgress hook) */
+  progress?: SkillProgress[];
+  /** All quiz attempts (from parent useQuizzes hook) */
+  quizAttempts?: QuizAttempt[];
 }
 
-export function SkillProgressBadge({ skillId, showScore = false }: SkillProgressBadgeProps) {
-  const { isAuthenticated } = useAuth();
-  const { isSkillCompleted, isSkillViewed } = useProgress();
-  const { isPassed, bestScore } = useSkillQuizzes(skillId);
+export function SkillProgressBadge({
+  skillId,
+  showScore = false,
+  progress,
+  quizAttempts,
+}: SkillProgressBadgeProps) {
+  // Derive status from passed-in data
+  const skillProgress = progress?.find(p => p.skill_id === skillId);
+  const completed = skillProgress?.content_completed || false;
+  const viewed = skillProgress?.content_viewed || false;
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const completed = isSkillCompleted(skillId);
-  const viewed = isSkillViewed(skillId);
+  // Find best quiz attempt for this skill
+  const skillQuizAttempts = quizAttempts?.filter(a => a.skill_id === skillId) || [];
+  const bestAttempt = skillQuizAttempts.length > 0
+    ? skillQuizAttempts.reduce((best, current) =>
+        current.percentage > best.percentage ? current : best
+      )
+    : undefined;
+  const isPassed = bestAttempt?.passed || false;
+  const bestScore = bestAttempt?.percentage;
 
   if (completed && isPassed) {
     return (

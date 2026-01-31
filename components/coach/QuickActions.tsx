@@ -2,8 +2,9 @@
 
 import React from 'react';
 import type { CoachMode } from '@/types/coach';
-import { buildCoachContext } from '@/lib/coach/contextBuilder';
+import { useCoachContext } from '@/lib/hooks';
 import { useQuizSessionStore } from '@/lib/quizSessionStore';
+import { getSkillById } from '@/data/skills';
 
 interface QuickActionsProps {
   onAction: (message: string, mode?: CoachMode) => void;
@@ -11,22 +12,24 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ onAction, currentMode }: QuickActionsProps) {
-  const context = buildCoachContext();
+  const { weakAreas, inProgressSkills } = useCoachContext();
 
   // Generate contextual suggestions
   const suggestions: { label: string; message: string; mode?: CoachMode }[] = [];
 
   if (currentMode === 'chat') {
     // Suggest based on weak areas
-    if (context.weakAreas.length > 0) {
+    if (weakAreas.length > 0) {
+      const weakSkill = getSkillById(weakAreas[0].skillId);
+      const weakSkillName = weakSkill?.name || weakAreas[0].skillId;
       suggestions.push({
-        label: `Review ${context.weakAreas[0].skillName}`,
-        message: `Can you help me understand ${context.weakAreas[0].skillName} better? I scored ${context.weakAreas[0].score}% on the quiz.`,
+        label: `Review ${weakSkillName}`,
+        message: `Can you help me understand ${weakSkillName} better? I scored ${weakAreas[0].score}% on the quiz.`,
       });
     }
 
     // Suggest next skill if in progress
-    if (context.inProgressSkills.length > 0) {
+    if (inProgressSkills.length > 0) {
       suggestions.push({
         label: 'Continue learning',
         message: 'What should I focus on next in my studies?',
@@ -49,7 +52,7 @@ export function QuickActions({ onAction, currentMode }: QuickActionsProps) {
   if (currentMode === 'analyze') {
     // Special flag to show the hand input form
     suggestions.push({
-      label: '📝 Enter a hand',
+      label: 'Enter a hand',
       message: '__SHOW_FORM__',
     });
     suggestions.push({
@@ -73,33 +76,34 @@ export function QuickActions({ onAction, currentMode }: QuickActionsProps) {
     if (quizState.isActive) {
       // Options during active quiz
       suggestions.push({
-        label: '💡 Hint please',
+        label: 'Hint please',
         message: 'Can you give me a hint for this question?',
       });
       suggestions.push({
-        label: '📖 Explain more',
+        label: 'Explain more',
         message: 'Can you explain this concept in more detail?',
       });
       suggestions.push({
-        label: '⏭️ Skip question',
+        label: 'Skip question',
         message: "I don't know this one, can you tell me the answer and move on?",
       });
     } else {
       // Options when no quiz is active
-      if (context.weakAreas.length > 0) {
+      if (weakAreas.length > 0) {
+        const quizWeakSkill = getSkillById(weakAreas[0].skillId);
         suggestions.push({
-          label: `🎯 Quiz: ${context.weakAreas[0].skillName}`,
+          label: `Quiz: ${quizWeakSkill?.name || weakAreas[0].skillId}`,
           message: '__SHOW_QUIZ_PANEL__',
         });
       }
 
       suggestions.push({
-        label: '📝 Start a quiz',
+        label: 'Start a quiz',
         message: '__SHOW_QUIZ_PANEL__',
       });
 
       suggestions.push({
-        label: '🎲 Quick random quiz',
+        label: 'Quick random quiz',
         message: "Give me 5 quick questions on random topics from what I've learned",
       });
     }

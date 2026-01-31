@@ -1,11 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { buildCoachContext } from '@/lib/coach/contextBuilder';
+import { useCoachContext } from '@/lib/hooks';
+import { getSkillById } from '@/data/skills';
 
 export function ProgressSummary() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const context = buildCoachContext();
+  const { completedSkills, weakAreas, strongAreas, stats, isLoading } = useCoachContext();
+
+  if (isLoading) {
+    return (
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-4 animate-pulse">
+        <div className="h-4 bg-slate-700 rounded w-1/3" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-slate-800/50 rounded-lg border border-slate-700">
@@ -18,7 +27,7 @@ export function ProgressSummary() {
           <div>
             <span className="text-sm font-medium text-white">Your Progress</span>
             <span className="text-xs text-slate-400 ml-2">
-              {context.completedSkills.length} skills mastered
+              {completedSkills.length} skills mastered
             </span>
           </div>
         </div>
@@ -33,54 +42,60 @@ export function ProgressSummary() {
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="bg-slate-700/50 rounded-lg p-2">
               <div className="text-lg font-bold text-amber-400">
-                {context.stats.quizzesPassed}
+                {stats?.quizzes_passed ?? 0}
               </div>
               <div className="text-xs text-slate-400">Quizzes Passed</div>
             </div>
             <div className="bg-slate-700/50 rounded-lg p-2">
               <div className="text-lg font-bold text-emerald-400">
-                {context.stats.averageScore}%
+                {Math.round(stats?.average_quiz_score ?? 0)}%
               </div>
               <div className="text-xs text-slate-400">Avg Score</div>
             </div>
             <div className="bg-slate-700/50 rounded-lg p-2">
               <div className="text-lg font-bold text-blue-400">
-                {Math.round((context.stats.totalStudyTimeMinutes / 60) * 10) / 10}h
+                {stats?.total_study_time_seconds ? Math.round((stats.total_study_time_seconds / 3600) * 10) / 10 : 0}h
               </div>
               <div className="text-xs text-slate-400">Study Time</div>
             </div>
           </div>
 
           {/* Weak Areas */}
-          {context.weakAreas.length > 0 && (
+          {weakAreas.length > 0 && (
             <div>
               <div className="text-xs font-medium text-slate-400 mb-1">Needs Practice:</div>
               <div className="flex flex-wrap gap-1">
-                {context.weakAreas.slice(0, 3).map((area) => (
-                  <span
-                    key={area.skillId}
-                    className="px-2 py-0.5 text-xs bg-rose-500/20 text-rose-400 rounded"
-                  >
-                    {area.skillName} ({area.score}%)
-                  </span>
-                ))}
+                {weakAreas.slice(0, 3).map((area) => {
+                  const skill = getSkillById(area.skillId);
+                  return (
+                    <span
+                      key={area.skillId}
+                      className="px-2 py-0.5 text-xs bg-rose-500/20 text-rose-400 rounded"
+                    >
+                      {skill?.name || area.skillId} ({area.score}%)
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {/* Strong Areas */}
-          {context.strongAreas.length > 0 && (
+          {strongAreas.length > 0 && (
             <div>
               <div className="text-xs font-medium text-slate-400 mb-1">Mastered:</div>
               <div className="flex flex-wrap gap-1">
-                {context.strongAreas.slice(0, 3).map((area) => (
-                  <span
-                    key={area.skillId}
-                    className="px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-400 rounded"
-                  >
-                    {area.skillName} ✓
-                  </span>
-                ))}
+                {strongAreas.slice(0, 3).map((area) => {
+                  const skill = getSkillById(area.skillId);
+                  return (
+                    <span
+                      key={area.skillId}
+                      className="px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-400 rounded"
+                    >
+                      {skill?.name || area.skillId} &#x2713;
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}

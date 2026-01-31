@@ -14,7 +14,7 @@ import type { QuizSubmission } from '@/lib/services';
  * Use this when you need to perform operations that affect multiple data stores
  */
 export function useData() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const progress = useProgress();
   const quizzes = useQuizzes();
   const stats = useStats();
@@ -22,10 +22,10 @@ export function useData() {
 
   // Record content view (coordinates progress, stats, activity)
   const recordContentView = useCallback(async (skillId: string, skillName?: string) => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
     try {
-      await dataService.recordContentView(skillId, skillName);
+      await dataService.recordContentView(skillId, skillName, user.id);
 
       // Refresh relevant data
       await Promise.all([
@@ -37,14 +37,14 @@ export function useData() {
       console.error('Error recording content view:', error);
       throw error;
     }
-  }, [isAuthenticated, progress, stats, activity]);
+  }, [isAuthenticated, user?.id, progress, stats, activity]);
 
   // Record content completion
   const recordContentCompletion = useCallback(async (skillId: string, skillName?: string) => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
     try {
-      await dataService.recordContentCompletion(skillId, skillName);
+      await dataService.recordContentCompletion(skillId, skillName, user.id);
 
       await Promise.all([
         progress.refetch(),
@@ -55,14 +55,14 @@ export function useData() {
       console.error('Error recording content completion:', error);
       throw error;
     }
-  }, [isAuthenticated, progress, stats, activity]);
+  }, [isAuthenticated, user?.id, progress, stats, activity]);
 
   // Submit quiz (coordinates quiz, stats, activity)
   const submitQuiz = useCallback(async (submission: QuizSubmission, skillName?: string) => {
-    if (!isAuthenticated) throw new Error('Not authenticated');
+    if (!isAuthenticated || !user?.id) throw new Error('Not authenticated');
 
     try {
-      const result = await dataService.submitQuiz(submission, skillName);
+      const result = await dataService.submitQuiz(submission, skillName, user.id);
 
       await Promise.all([
         quizzes.refetch(),
@@ -75,14 +75,14 @@ export function useData() {
       console.error('Error submitting quiz:', error);
       throw error;
     }
-  }, [isAuthenticated, quizzes, stats, activity]);
+  }, [isAuthenticated, user?.id, quizzes, stats, activity]);
 
   // Add study time
   const addStudyTime = useCallback(async (skillId: string, seconds: number) => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
     try {
-      await dataService.addStudyTime(skillId, seconds);
+      await dataService.addStudyTime(skillId, seconds, user.id);
 
       await Promise.all([
         progress.refetch(),
@@ -92,20 +92,20 @@ export function useData() {
       console.error('Error adding study time:', error);
       throw error;
     }
-  }, [isAuthenticated, progress, stats]);
+  }, [isAuthenticated, user?.id, progress, stats]);
 
   // Record login
   const recordLogin = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
     try {
-      await dataService.recordLogin();
+      await dataService.recordLogin(user.id);
       await stats.refetch();
     } catch (error) {
       // Don't throw - login recording shouldn't break the app
       console.error('Error recording login:', error);
     }
-  }, [isAuthenticated, stats]);
+  }, [isAuthenticated, user?.id, stats]);
 
   // Refresh all data
   const refreshAll = useCallback(async () => {

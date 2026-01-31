@@ -53,25 +53,22 @@ export const progressService = {
   },
 
   /**
-   * Create or update progress for a skill
+   * Create or update progress for a skill.
+   * userId is required for inserts. If omitted, falls back to getSession().
    */
-  async upsert(skillId: string, updates: ProgressUpdate): Promise<SkillProgress> {
-    console.log('[progressService.upsert] ENTER', skillId, JSON.stringify(updates));
+  async upsert(skillId: string, updates: ProgressUpdate, userId?: string): Promise<SkillProgress> {
     const supabase = createClient();
-    console.log('[progressService.upsert] client created');
 
-    // Get current user from session (getSession reads from memory, no lock contention)
-    const { data: { session } } = await supabase.auth.getSession();
-    console.log('[progressService.upsert] getSession returned');
-    const user = session?.user;
-
-    console.log('[progressService.upsert] User:', user?.id);
-
-    if (!user) throw new Error('Not authenticated');
+    // Use provided userId or fall back to session lookup
+    let uid = userId;
+    if (!uid) {
+      const { data: { session } } = await supabase.auth.getSession();
+      uid = session?.user?.id;
+    }
+    if (!uid) throw new Error('Not authenticated');
 
     // Check if record exists
     const existing = await this.getBySkillId(skillId);
-    console.log('[progressService.upsert] Existing record for', skillId, ':', existing?.id || 'none');
 
     const now = new Date().toISOString();
 
@@ -93,8 +90,6 @@ export const progressService = {
         updateData.time_spent_seconds = existing.time_spent_seconds + updates.time_spent_seconds;
       }
 
-      console.log('[progressService.upsert] Updating:', JSON.stringify(updateData));
-
       const { data, error } = await supabase
         .from('skill_progress')
         .update(updateData)
@@ -107,19 +102,16 @@ export const progressService = {
         throw error;
       }
 
-      console.log('[progressService.upsert] Updated successfully:', data?.id);
       return data;
     } else {
       // Create new record
       const insertData = {
-        user_id: user.id,
+        user_id: uid,
         skill_id: skillId,
         ...updates,
         first_viewed_at: now,
         last_viewed_at: now,
       };
-
-      console.log('[progressService.upsert] Inserting:', JSON.stringify(insertData));
 
       const { data, error } = await supabase
         .from('skill_progress')
@@ -132,7 +124,6 @@ export const progressService = {
         throw error;
       }
 
-      console.log('[progressService.upsert] Inserted successfully:', data?.id);
       return data;
     }
   },
@@ -140,31 +131,25 @@ export const progressService = {
   /**
    * Mark content as viewed
    */
-  async markViewed(skillId: string): Promise<SkillProgress> {
-    console.log('[progressService.markViewed] ENTER', skillId);
-    const result = await this.upsert(skillId, { content_viewed: true });
-    console.log('[progressService.markViewed] EXIT', result?.id);
-    return result;
+  async markViewed(skillId: string, userId?: string): Promise<SkillProgress> {
+    return this.upsert(skillId, { content_viewed: true }, userId);
   },
 
   /**
    * Mark content as completed
    */
-  async markCompleted(skillId: string): Promise<SkillProgress> {
-    console.log('[progressService.markCompleted] ENTER', skillId);
-    const result = await this.upsert(skillId, {
+  async markCompleted(skillId: string, userId?: string): Promise<SkillProgress> {
+    return this.upsert(skillId, {
       content_viewed: true,
       content_completed: true,
-    });
-    console.log('[progressService.markCompleted] EXIT', result?.id);
-    return result;
+    }, userId);
   },
 
   /**
    * Add time spent on a skill
    */
-  async addTimeSpent(skillId: string, seconds: number): Promise<SkillProgress> {
-    return this.upsert(skillId, { time_spent_seconds: seconds });
+  async addTimeSpent(skillId: string, seconds: number, userId?: string): Promise<SkillProgress> {
+    return this.upsert(skillId, { time_spent_seconds: seconds }, userId);
   },
 
   /**

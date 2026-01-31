@@ -25,17 +25,20 @@ export const activityService = {
   async log(
     type: ActivityType,
     referenceId?: string,
-    metadata?: ActivityMetadata
+    metadata?: ActivityMetadata,
+    userId?: string
   ): Promise<ActivityLog> {
     const supabase = createClient();
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    console.log('[activityService.log] User:', user?.id, 'Type:', type);
-    if (!user) throw new Error('Not authenticated');
+    let uid = userId;
+    if (!uid) {
+      const { data: { session } } = await supabase.auth.getSession();
+      uid = session?.user?.id;
+    }
+    if (!uid) throw new Error('Not authenticated');
 
     const insertData = {
-      user_id: user.id,
+      user_id: uid,
       activity_type: type,
       reference_id: referenceId,
       metadata: metadata || {},
@@ -184,27 +187,27 @@ export const activityService = {
 
   // Convenience methods for common activities
 
-  async logContentViewed(skillId: string, skillName?: string): Promise<ActivityLog> {
-    return this.log('content_viewed', skillId, { skillId, skillName });
+  async logContentViewed(skillId: string, skillName?: string, userId?: string): Promise<ActivityLog> {
+    return this.log('content_viewed', skillId, { skillId, skillName }, userId);
   },
 
-  async logContentCompleted(skillId: string, skillName?: string): Promise<ActivityLog> {
-    return this.log('content_completed', skillId, { skillId, skillName });
+  async logContentCompleted(skillId: string, skillName?: string, userId?: string): Promise<ActivityLog> {
+    return this.log('content_completed', skillId, { skillId, skillName }, userId);
   },
 
-  async logQuizAttempted(skillId: string, score: number, skillName?: string): Promise<ActivityLog> {
-    return this.log('quiz_attempted', skillId, { skillId, skillName, score });
+  async logQuizAttempted(skillId: string, score: number, skillName?: string, userId?: string): Promise<ActivityLog> {
+    return this.log('quiz_attempted', skillId, { skillId, skillName, score }, userId);
   },
 
-  async logQuizPassed(skillId: string, score: number, skillName?: string): Promise<ActivityLog> {
-    return this.log('quiz_passed', skillId, { skillId, skillName, score });
+  async logQuizPassed(skillId: string, score: number, skillName?: string, userId?: string): Promise<ActivityLog> {
+    return this.log('quiz_passed', skillId, { skillId, skillName, score }, userId);
   },
 
-  async logCoachMessage(conversationId: string): Promise<ActivityLog> {
-    return this.log('coach_message', conversationId, { conversationId });
+  async logCoachMessage(conversationId: string, userId?: string): Promise<ActivityLog> {
+    return this.log('coach_message', conversationId, { conversationId }, userId);
   },
 
-  async logLogin(): Promise<ActivityLog> {
-    return this.log('login');
+  async logLogin(userId?: string): Promise<ActivityLog> {
+    return this.log('login', undefined, undefined, userId);
   },
 };

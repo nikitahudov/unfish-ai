@@ -3,18 +3,23 @@ import type { UserStats } from '@/types/database';
 
 export const statsService = {
   /**
-   * Get current user's stats
+   * Get current user's stats.
+   * userId can be provided to avoid calling getSession().
    */
-  async get(): Promise<UserStats | null> {
+  async get(userId?: string): Promise<UserStats | null> {
     const supabase = createClient();
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return null;
+    let uid = userId;
+    if (!uid) {
+      const { data: { session } } = await supabase.auth.getSession();
+      uid = session?.user?.id;
+    }
+    if (!uid) return null;
 
     const { data, error } = await supabase
       .from('user_stats')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', uid)
       .single();
 
     if (error && error.code !== 'PGRST116') {
@@ -28,24 +33,25 @@ export const statsService = {
   /**
    * Update user stats
    */
-  async update(updates: Partial<UserStats>): Promise<UserStats> {
+  async update(updates: Partial<UserStats>, userId?: string): Promise<UserStats> {
     const supabase = createClient();
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    console.log('[statsService.update] User:', user?.id);
-    if (!user) throw new Error('Not authenticated');
+    let uid = userId;
+    if (!uid) {
+      const { data: { session } } = await supabase.auth.getSession();
+      uid = session?.user?.id;
+    }
+    if (!uid) throw new Error('Not authenticated');
 
     const updatePayload = {
       ...updates,
       updated_at: new Date().toISOString(),
     };
-    console.log('[statsService.update] Payload:', JSON.stringify(updatePayload));
 
     const { data, error } = await supabase
       .from('user_stats')
       .update(updatePayload)
-      .eq('user_id', user.id)
+      .eq('user_id', uid)
       .select()
       .single();
 
@@ -54,7 +60,6 @@ export const statsService = {
       throw error;
     }
 
-    console.log('[statsService.update] Success');
     return data;
   },
 
@@ -66,21 +71,22 @@ export const statsService = {
       'total_study_time_seconds' | 'skills_viewed' | 'skills_completed' |
       'quizzes_attempted' | 'quizzes_passed' | 'coach_conversations_count' | 'coach_messages_sent'
     >,
-    amount: number = 1
+    amount: number = 1,
+    userId?: string
   ): Promise<UserStats> {
-    const current = await this.get();
+    const current = await this.get(userId);
     if (!current) throw new Error('Stats not found');
 
     const newValue = (current[field] as number) + amount;
 
-    return this.update({ [field]: newValue });
+    return this.update({ [field]: newValue }, userId);
   },
 
   /**
    * Update streak based on activity
    */
-  async updateStreak(): Promise<UserStats> {
-    const current = await this.get();
+  async updateStreak(userId?: string): Promise<UserStats> {
+    const current = await this.get(userId);
     if (!current) throw new Error('Stats not found');
 
     const today = new Date().toISOString().split('T')[0];
@@ -115,14 +121,14 @@ export const statsService = {
       current_streak: newStreak,
       longest_streak: longestStreak,
       last_activity_date: today,
-    });
+    }, userId);
   },
 
   /**
    * Update average quiz score
    */
-  async updateAverageScore(newScore: number): Promise<UserStats> {
-    const current = await this.get();
+  async updateAverageScore(newScore: number, userId?: string): Promise<UserStats> {
+    const current = await this.get(userId);
     if (!current) throw new Error('Stats not found');
 
     const totalAttempts = current.quizzes_attempted;
@@ -135,19 +141,15 @@ export const statsService = {
 
     return this.update({
       average_quiz_score: Math.round(newAverage * 100) / 100,
-    });
+    }, userId);
   },
 
   /**
    * Record a quiz completion (updates multiple stats)
    */
-  async recordQuizCompletion(score: number, passed: boolean): Promise<UserStats> {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) throw new Error('Not authenticated');
-
+  async recordQuizCompletion(score: number, passed: boolean, userId?: string): Promise<UserStats> {
     // Get current stats
-    const current = await this.get();
+    const current = await this.get(userId);
     if (!current) throw new Error('Stats not found');
 
     const newAttempts = current.quizzes_attempted + 1;
@@ -160,18 +162,18 @@ export const statsService = {
       quizzes_attempted: newAttempts,
       quizzes_passed: newPassed,
       average_quiz_score: Math.round(newAverage * 100) / 100,
-    });
+    }, userId);
   },
 
   /**
    * Get a summary of user progress
    */
-  async getSummary(): Promise<{
+  async getSummary(userId?: string): Promise<{
     stats: UserStats | null;
     level: 'beginner' | 'intermediate' | 'advanced';
     progressPercentage: number;
   }> {
-    const stats = await this.get();
+    const stats = await this.get(userId);
 
     if (!stats) {
       return {

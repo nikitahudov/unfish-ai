@@ -7,7 +7,7 @@ import { useAsyncData } from './useAsyncData';
 import type { UserStats } from '@/types/database';
 
 export function useStats() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const {
     data: stats,
@@ -16,18 +16,18 @@ export function useStats() {
     refetch,
     mutate,
   } = useAsyncData<UserStats | null>(
-    () => statsService.get(),
-    [isAuthenticated],
+    () => statsService.get(user?.id),
+    [isAuthenticated, user?.id],
     { enabled: isAuthenticated }
   );
 
   // Update streak
   const updateStreak = useCallback(async (): Promise<void> => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user?.id) return;
 
-    const updated = await statsService.updateStreak();
+    const updated = await statsService.updateStreak(user.id);
     mutate(updated);
-  }, [isAuthenticated, mutate]);
+  }, [isAuthenticated, user?.id, mutate]);
 
   // Increment a stat
   const incrementStat = useCallback(async (
@@ -35,7 +35,7 @@ export function useStats() {
            'quizzes_attempted' | 'quizzes_passed' | 'coach_conversations_count' | 'coach_messages_sent',
     amount: number = 1
   ): Promise<void> => {
-    if (!isAuthenticated || !stats) return;
+    if (!isAuthenticated || !user?.id || !stats) return;
 
     // Optimistic update
     mutate({
@@ -44,14 +44,14 @@ export function useStats() {
     });
 
     try {
-      const updated = await statsService.increment(field, amount);
+      const updated = await statsService.increment(field, amount, user.id);
       mutate(updated);
     } catch (error) {
       // Revert on error
       refetch();
       throw error;
     }
-  }, [isAuthenticated, stats, mutate, refetch]);
+  }, [isAuthenticated, user?.id, stats, mutate, refetch]);
 
   // Computed values
   const level = stats ? (

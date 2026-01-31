@@ -3,11 +3,11 @@
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { RequireAuth } from '@/components/auth';
 import { QuizEngine } from '@/components/quiz/QuizEngine';
 import { getQuizById, hasQuiz } from '@/data/quizRegistry';
 import { getSkillById } from '@/data/skills';
 import { useProgressStore } from '@/lib/progressStore';
-import { useAuth } from '@/lib/auth/AuthContext';
 import { useData } from '@/lib/hooks';
 import type { QuizResults } from '@/types/quiz';
 
@@ -16,7 +16,6 @@ export default function QuizPage() {
   const router = useRouter();
   const moduleId = params.moduleId as string;
   const addQuizAttempt = useProgressStore((state) => state.addQuizAttempt);
-  const { isAuthenticated } = useAuth();
   const { submitQuiz } = useData();
 
   // Check if quiz exists
@@ -69,25 +68,23 @@ export default function QuizPage() {
       sectionScores,
     });
 
-    // Also save to Supabase if authenticated
-    if (isAuthenticated) {
-      const skill = getSkillById(moduleId);
-      const answers = Object.entries(results.sectionResults).map(([sectionId, result]) => ({
-        questionId: sectionId,
-        selectedAnswer: String(result.correct),
-        isCorrect: result.percentage >= 70,
-      }));
+    // Also save to Supabase (user is always authenticated behind RequireAuth)
+    const skill = getSkillById(moduleId);
+    const answers = Object.entries(results.sectionResults).map(([sectionId, result]) => ({
+      questionId: sectionId,
+      selectedAnswer: String(result.correct),
+      isCorrect: result.percentage >= 70,
+    }));
 
-      submitQuiz({
-        skillId: moduleId,
-        score: results.totalCorrect,
-        maxScore: results.totalQuestions,
-        answers,
-        timeTakenSeconds: results.timeSpent,
-      }, skill?.name).catch((error) => {
-        console.error('Failed to save quiz to Supabase:', error);
-      });
-    }
+    submitQuiz({
+      skillId: moduleId,
+      score: results.totalCorrect,
+      maxScore: results.totalQuestions,
+      answers,
+      timeTakenSeconds: results.timeSpent,
+    }, skill?.name).catch((error) => {
+      console.error('Failed to save quiz to Supabase:', error);
+    });
   };
 
   const handleExit = () => {
@@ -95,12 +92,14 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="p-6 md:p-8">
-      <QuizEngine
-        quizData={quizData}
-        onComplete={handleComplete}
-        onExit={handleExit}
-      />
-    </div>
+    <RequireAuth feature="Quizzes">
+      <div className="p-6 md:p-8">
+        <QuizEngine
+          quizData={quizData}
+          onComplete={handleComplete}
+          onExit={handleExit}
+        />
+      </div>
+    </RequireAuth>
   );
 }

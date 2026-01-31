@@ -1,12 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/lib/auth/AuthContext';
 import { useCoachContext } from '@/lib/hooks';
 import { getSkillById } from '@/data/skills';
 
 export function ProgressSummary() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { isAuthenticated } = useAuth();
   const { completedSkills, weakAreas, strongAreas, stats, isLoading } = useCoachContext();
+
+  // Don't show for guests
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (isLoading) {
     return (

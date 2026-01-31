@@ -350,6 +350,8 @@ export const SkillsWheel: React.FC<SkillsWheelProps> = ({ onSkillSelect }) => {
           skill={selectedSkill}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          progress={progress || undefined}
+          quizAttempts={quizAttempts || undefined}
         />
       )}
     </div>

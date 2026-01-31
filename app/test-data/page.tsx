@@ -108,6 +108,26 @@ function TestDataContent() {
     }
   };
 
+  const testServerWrite = async () => {
+    addLog('Testing server-side writes (bypasses browser client)...');
+    try {
+      const res = await fetch('/api/debug/test-write', { method: 'POST' });
+      const data = await res.json();
+      addLog(`Server write results:`);
+      for (const [table, result] of Object.entries(data)) {
+        if (table === 'userId') continue;
+        const r = result as Record<string, unknown>;
+        if (r.success) {
+          addLog(`  ${table}: SUCCESS`);
+        } else {
+          addLog(`  ${table}: FAILED - ${r.error} (code: ${r.code})`);
+        }
+      }
+    } catch (error) {
+      addLog(`ERROR: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
   const refreshAll = async () => {
     addLog('Refreshing all data...');
     await Promise.all([refetchProgress(), refetchQuizzes(), refetchStats(), refetchActivity()]);
@@ -150,6 +170,12 @@ function TestDataContent() {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-3 mb-6">
+        <button
+          onClick={testServerWrite}
+          className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-sm font-medium"
+        >
+          Test Server-Side Writes (RLS check)
+        </button>
         <button
           onClick={testCreateUserData}
           className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium"

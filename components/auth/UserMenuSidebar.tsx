@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { Avatar } from '@/components/ui/Avatar';
 
 export function UserMenuSidebar() {
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
@@ -35,24 +36,13 @@ export function UserMenuSidebar() {
   }
 
   const displayName = user?.profile?.display_name || user?.email?.split('@')[0] || 'User';
-  const initials = displayName.slice(0, 2).toUpperCase();
   const avatarUrl = user?.profile?.avatar_url;
 
   return (
     <div className="p-4 border-b border-slate-700">
       {/* User Info */}
       <div className="flex items-center gap-3 mb-3">
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={displayName}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-white font-medium">
-            {initials}
-          </div>
-        )}
+        <Avatar src={avatarUrl} name={displayName} size="md" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-white truncate">{displayName}</p>
           <p className="text-xs text-slate-400 truncate">{user?.email}</p>

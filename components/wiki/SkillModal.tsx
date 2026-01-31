@@ -2,21 +2,20 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { useProgressStore } from '@/lib/progressStore';
 import { hasQuiz } from '@/data/quizRegistry';
 import { getAllSkills } from '@/data/skills';
 import type { Skill } from '@/data/skills';
+import type { SkillProgress, QuizAttempt } from '@/types/database';
 
 interface SkillModalProps {
   skill: Skill | null;
   isOpen: boolean;
   onClose: () => void;
+  progress?: SkillProgress[];
+  quizAttempts?: QuizAttempt[];
 }
 
-export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
-  // Get progress data - MUST be called unconditionally (Rules of Hooks)
-  const { contentProgress, skills: quizProgress, getContentStatus } = useProgressStore();
-
+export function SkillModal({ skill, isOpen, onClose, progress, quizAttempts }: SkillModalProps) {
   // Close on escape key and manage body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -41,17 +40,29 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
     return null;
   }
 
-  // Get skill-specific progress data
-  const content = contentProgress[skill.id];
-  const quiz = quizProgress[skill.id];
+  // Derive content status from Supabase progress data
+  const skillProgress = progress?.find(p => p.skill_id === skill.id);
 
-  // Get content status
-  const contentStatus = getContentStatus(skill.id);
+  const getContentStatus = (): 'not_started' | 'in_progress' | 'completed' => {
+    if (!skillProgress) return 'not_started';
+    if (skillProgress.content_completed) return 'completed';
+    if (skillProgress.content_viewed) return 'in_progress';
+    return 'not_started';
+  };
 
-  // Get quiz status
-  const getQuizStatus = () => {
-    if (!quiz || quiz.attempts === 0) return 'not_started';
-    if (quiz.status === 'completed') return 'passed';
+  const contentStatus = getContentStatus();
+
+  // Derive quiz status from Supabase quiz attempts
+  const skillQuizAttempts = quizAttempts?.filter(a => a.skill_id === skill.id) || [];
+  const bestAttempt = skillQuizAttempts.length > 0
+    ? skillQuizAttempts.reduce((best, current) =>
+        current.percentage > best.percentage ? current : best
+      )
+    : undefined;
+
+  const getQuizStatus = (): 'not_started' | 'in_progress' | 'passed' => {
+    if (skillQuizAttempts.length === 0) return 'not_started';
+    if (skillQuizAttempts.some(a => a.passed)) return 'passed';
     return 'in_progress';
   };
 
@@ -150,9 +161,9 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
                       <span className="inline-block px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded mb-1">
                         In Progress
                       </span>
-                      {content && (
+                      {skillProgress && (
                         <p className="text-slate-400 text-xs">
-                          {content.exercisesCompleted}/{content.exercisesTotal} exercises
+                          {skillProgress.exercises_completed}/{skillProgress.exercises_total} exercises
                         </p>
                       )}
                     </div>
@@ -194,9 +205,9 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
                         <span className="inline-block px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded mb-1">
                           In Progress
                         </span>
-                        {quiz && (
+                        {bestAttempt && (
                           <p className="text-slate-400 text-xs">
-                            Best: {quiz.bestScore}%
+                            Best: {bestAttempt.percentage}%
                           </p>
                         )}
                       </div>
@@ -206,9 +217,9 @@ export function SkillModal({ skill, isOpen, onClose }: SkillModalProps) {
                         <span className="inline-block px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded mb-1">
                           Passed ✓
                         </span>
-                        {quiz && (
+                        {bestAttempt && (
                           <p className="text-slate-400 text-xs">
-                            Best: {quiz.bestScore}%
+                            Best: {bestAttempt.percentage}%
                           </p>
                         )}
                       </div>

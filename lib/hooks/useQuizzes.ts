@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { quizService, QuizSubmission } from '@/lib/services';
+import { quizService, dataService, QuizSubmission } from '@/lib/services';
 import { useAsyncData } from './useAsyncData';
 import type { QuizAttempt } from '@/types/database';
 
@@ -49,7 +49,7 @@ export function useQuizzes() {
     return best?.percentage;
   }, [getBestAttempt]);
 
-  // Submit a quiz
+  // Submit a quiz (also updates stats and activity via dataService)
   const submitQuiz = useCallback(async (submission: QuizSubmission): Promise<QuizAttempt> => {
     if (!isAuthenticated || !user?.id) throw new Error('Not authenticated');
 
@@ -57,7 +57,7 @@ export function useQuizzes() {
     try {
       // Yield to event loop to avoid Supabase auth lock contention
       await new Promise(resolve => setTimeout(resolve, 0));
-      const attempt = await quizService.submit(submission, user.id);
+      const { attempt } = await dataService.submitQuiz(submission, undefined, user.id);
 
       // Optimistically update local state
       mutate(prev => prev ? [attempt, ...prev] : [attempt]);

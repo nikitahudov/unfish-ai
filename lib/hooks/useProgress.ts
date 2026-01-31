@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { progressService, ProgressUpdate } from '@/lib/services';
+import { progressService, dataService, ProgressUpdate } from '@/lib/services';
 import { useAsyncData } from './useAsyncData';
 import type { SkillProgress } from '@/types/database';
 
@@ -38,7 +38,7 @@ export function useProgress() {
     return progress?.some(p => p.skill_id === skillId && p.content_viewed) || false;
   }, [progress]);
 
-  // Mark skill as viewed
+  // Mark skill as viewed (also updates stats and activity via dataService)
   const markViewed = useCallback(async (skillId: string): Promise<void> => {
     if (!isAuthenticated || !user?.id) return;
 
@@ -46,7 +46,7 @@ export function useProgress() {
     try {
       // Yield to event loop to avoid Supabase auth lock contention
       await new Promise(resolve => setTimeout(resolve, 0));
-      const updated = await progressService.markViewed(skillId, user.id);
+      const updated = await dataService.recordContentView(skillId, undefined, user.id);
 
       // Optimistically update local state
       mutate(prev => {
@@ -64,7 +64,7 @@ export function useProgress() {
     }
   }, [isAuthenticated, user?.id, mutate]);
 
-  // Mark skill as completed
+  // Mark skill as completed (also updates stats and activity via dataService)
   const markCompleted = useCallback(async (skillId: string): Promise<void> => {
     if (!isAuthenticated || !user?.id) return;
 
@@ -72,7 +72,7 @@ export function useProgress() {
     try {
       // Yield to event loop to avoid Supabase auth lock contention
       await new Promise(resolve => setTimeout(resolve, 0));
-      const updated = await progressService.markCompleted(skillId, user.id);
+      const updated = await dataService.recordContentCompletion(skillId, undefined, user.id);
 
       mutate(prev => {
         if (!prev) return [updated];

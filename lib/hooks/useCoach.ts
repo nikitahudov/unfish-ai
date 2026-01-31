@@ -22,6 +22,7 @@ export function useCoach() {
     selectConversation,
     deleteConversation,
     archiveConversation,
+    updateConversation,
     refetch,
   } = useCoachConversations();
 
@@ -169,6 +170,7 @@ export function useCoach() {
     switchConversation,
     deleteConversation,
     archiveConversation,
+    updateConversation,
     changeMode,
     refetch,
   };

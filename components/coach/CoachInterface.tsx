@@ -34,6 +34,7 @@ export function CoachInterface() {
     switchConversation,
     deleteConversation,
     archiveConversation,
+    updateConversation,
     changeMode,
     refetch,
   } = useCoach();
@@ -209,6 +210,10 @@ export function CoachInterface() {
     }
   };
 
+  const handleRenameConversation = (conversationId: string, title: string) => {
+    updateConversation(conversationId, { title });
+  };
+
   const handleSelectConversation = (conversationId: string) => {
     switchConversation(conversationId);
     resetSession();
@@ -229,6 +234,7 @@ export function CoachInterface() {
           onNew={handleNewConversation}
           onDelete={deleteConversation}
           onArchive={archiveConversation}
+          onRename={handleRenameConversation}
         />
       )}
 

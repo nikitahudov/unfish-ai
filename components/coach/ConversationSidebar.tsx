@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import type { CoachConversation } from '@/types/database';
 
@@ -12,6 +12,7 @@ interface ConversationSidebarProps {
   onNew: () => void;
   onDelete: (conversationId: string) => void;
   onArchive: (conversationId: string) => void;
+  onRename: (conversationId: string, title: string) => void;
 }
 
 export function ConversationSidebar({
@@ -22,8 +23,20 @@ export function ConversationSidebar({
   onNew,
   onDelete,
   onArchive,
+  onRename,
 }: ConversationSidebarProps) {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus the input when entering edit mode
+  useEffect(() => {
+    if (editingId && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select();
+    }
+  }, [editingId]);
 
   const getModeIcon = (mode: string) => {
     switch (mode) {
@@ -38,6 +51,25 @@ export function ConversationSidebar({
     if (conv.title) return conv.title;
     if (conv.message_count === 0) return 'New conversation';
     return 'Untitled conversation';
+  };
+
+  const startRenaming = (conv: CoachConversation) => {
+    setEditingId(conv.id);
+    setEditingTitle(conv.title || '');
+    setMenuOpen(null);
+  };
+
+  const submitRename = () => {
+    if (editingId && editingTitle.trim()) {
+      onRename(editingId, editingTitle.trim());
+    }
+    setEditingId(null);
+    setEditingTitle('');
+  };
+
+  const cancelRename = () => {
+    setEditingId(null);
+    setEditingTitle('');
   };
 
   if (isLoading) {
@@ -85,38 +117,66 @@ export function ConversationSidebar({
                   : 'hover:bg-slate-700/50'
               }`}
             >
-              <button
-                onClick={() => onSelect(conv.id)}
-                className="w-full text-left p-3"
-              >
-                <div className="flex items-start gap-2">
-                  <span className="text-sm mt-0.5">{getModeIcon(conv.mode)}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium truncate ${
-                      conv.id === currentConversationId ? 'text-white' : 'text-slate-300'
-                    }`}>
-                      {getConversationTitle(conv)}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      {conv.message_count} messages &middot; {formatDistanceToNow(new Date(conv.last_message_at), { addSuffix: true })}
-                    </p>
+              {editingId === conv.id ? (
+                /* Inline rename input */
+                <div className="p-3">
+                  <div className="flex items-start gap-2">
+                    <span className="text-sm mt-1.5">{getModeIcon(conv.mode)}</span>
+                    <div className="flex-1 min-w-0">
+                      <input
+                        ref={editInputRef}
+                        type="text"
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') submitRename();
+                          if (e.key === 'Escape') cancelRename();
+                        }}
+                        onBlur={submitRename}
+                        className="w-full text-sm font-medium text-white bg-slate-600 border border-slate-500 rounded px-2 py-1 outline-none focus:border-amber-500"
+                        placeholder="Conversation title..."
+                      />
+                    </div>
                   </div>
-                  {conv.is_starred && (
-                    <span className="text-amber-400 text-xs">{'\u2B50'}</span>
-                  )}
                 </div>
-              </button>
+              ) : (
+                /* Normal conversation row */
+                <button
+                  onClick={() => onSelect(conv.id)}
+                  onDoubleClick={() => startRenaming(conv)}
+                  className="w-full text-left p-3"
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="text-sm mt-0.5">{getModeIcon(conv.mode)}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-medium truncate ${
+                        conv.id === currentConversationId ? 'text-white' : 'text-slate-300'
+                      }`}>
+                        {getConversationTitle(conv)}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {conv.message_count} messages &middot; {formatDistanceToNow(new Date(conv.last_message_at), { addSuffix: true })}
+                      </p>
+                    </div>
+                    {conv.is_starred && (
+                      <span className="text-amber-400 text-xs">{'\u2B50'}</span>
+                    )}
+                  </div>
+                </button>
+              )}
 
-              {/* Menu Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMenuOpen(menuOpen === conv.id ? null : conv.id);
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 opacity-0 group-hover:opacity-100 hover:bg-slate-600 rounded transition-all"
-              >
-                <span className="text-slate-400">{'\u22EE'}</span>
-              </button>
+              {/* Menu Button (hidden during rename) */}
+              {editingId !== conv.id && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(menuOpen === conv.id ? null : conv.id);
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 opacity-0 group-hover:opacity-100 hover:bg-slate-600 rounded transition-all"
+                >
+                  <span className="text-slate-400">{'\u22EE'}</span>
+                </button>
+              )}
 
               {/* Dropdown Menu */}
               {menuOpen === conv.id && (
@@ -126,6 +186,15 @@ export function ConversationSidebar({
                     onClick={() => setMenuOpen(null)}
                   />
                   <div className="absolute right-2 top-full mt-1 z-20 bg-slate-700 rounded-lg shadow-xl border border-slate-600 py-1 min-w-[140px]">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startRenaming(conv);
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-600 transition-colors"
+                    >
+                      {'\u270F\uFE0F'} Rename
+                    </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

@@ -101,10 +101,13 @@ export const quizService = {
    * Submit a quiz attempt
    */
   async submit(submission: QuizSubmission): Promise<QuizAttempt> {
+    console.log('[quizService.submit] ENTER', submission.skillId);
     const supabase = createClient();
+    console.log('[quizService.submit] client created');
 
     // Get current user from session (getSession reads from memory, no lock contention)
     const { data: { session } } = await supabase.auth.getSession();
+    console.log('[quizService.submit] getSession returned');
     const user = session?.user;
 
     console.log('[quizService.submit] User:', user?.id);

@@ -56,10 +56,13 @@ export const progressService = {
    * Create or update progress for a skill
    */
   async upsert(skillId: string, updates: ProgressUpdate): Promise<SkillProgress> {
+    console.log('[progressService.upsert] ENTER', skillId, JSON.stringify(updates));
     const supabase = createClient();
+    console.log('[progressService.upsert] client created');
 
     // Get current user from session (getSession reads from memory, no lock contention)
     const { data: { session } } = await supabase.auth.getSession();
+    console.log('[progressService.upsert] getSession returned');
     const user = session?.user;
 
     console.log('[progressService.upsert] User:', user?.id);
@@ -138,17 +141,23 @@ export const progressService = {
    * Mark content as viewed
    */
   async markViewed(skillId: string): Promise<SkillProgress> {
-    return this.upsert(skillId, { content_viewed: true });
+    console.log('[progressService.markViewed] ENTER', skillId);
+    const result = await this.upsert(skillId, { content_viewed: true });
+    console.log('[progressService.markViewed] EXIT', result?.id);
+    return result;
   },
 
   /**
    * Mark content as completed
    */
   async markCompleted(skillId: string): Promise<SkillProgress> {
-    return this.upsert(skillId, {
+    console.log('[progressService.markCompleted] ENTER', skillId);
+    const result = await this.upsert(skillId, {
       content_viewed: true,
       content_completed: true,
     });
+    console.log('[progressService.markCompleted] EXIT', result?.id);
+    return result;
   },
 
   /**

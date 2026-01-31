@@ -40,11 +40,17 @@ export function useProgress() {
 
   // Mark skill as viewed
   const markViewed = useCallback(async (skillId: string): Promise<void> => {
-    if (!isAuthenticated) return;
+    console.log('[useProgress.markViewed] START', { skillId, isAuthenticated });
+    if (!isAuthenticated) {
+      console.log('[useProgress.markViewed] SKIP - not authenticated');
+      return;
+    }
 
     setUpdating(skillId);
     try {
+      console.log('[useProgress.markViewed] calling progressService.markViewed...');
       const updated = await progressService.markViewed(skillId);
+      console.log('[useProgress.markViewed] service returned:', updated?.id);
 
       // Optimistically update local state
       mutate(prev => {
@@ -57,18 +63,29 @@ export function useProgress() {
         }
         return [...prev, updated];
       });
+      console.log('[useProgress.markViewed] mutate done');
+    } catch (err) {
+      console.error('[useProgress.markViewed] ERROR:', err);
+      throw err;
     } finally {
       setUpdating(null);
+      console.log('[useProgress.markViewed] END');
     }
   }, [isAuthenticated, mutate]);
 
   // Mark skill as completed
   const markCompleted = useCallback(async (skillId: string): Promise<void> => {
-    if (!isAuthenticated) return;
+    console.log('[useProgress.markCompleted] START', { skillId, isAuthenticated });
+    if (!isAuthenticated) {
+      console.log('[useProgress.markCompleted] SKIP - not authenticated');
+      return;
+    }
 
     setUpdating(skillId);
     try {
+      console.log('[useProgress.markCompleted] calling progressService.markCompleted...');
       const updated = await progressService.markCompleted(skillId);
+      console.log('[useProgress.markCompleted] service returned:', updated?.id);
 
       mutate(prev => {
         if (!prev) return [updated];
@@ -80,8 +97,13 @@ export function useProgress() {
         }
         return [...prev, updated];
       });
+      console.log('[useProgress.markCompleted] mutate done');
+    } catch (err) {
+      console.error('[useProgress.markCompleted] ERROR:', err);
+      throw err;
     } finally {
       setUpdating(null);
+      console.log('[useProgress.markCompleted] END');
     }
   }, [isAuthenticated, mutate]);
 

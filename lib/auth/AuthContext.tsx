@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
 import type { AuthContextType, AuthUser, AuthResult } from '@/types/auth';
 import type { UserProfile, UserStats } from '@/types/database';
+import { useToastStore } from '@/lib/hooks/useToast';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,6 +20,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
+  const addToast = useToastStore(state => state.addToast);
 
   // Fetch user profile and stats
   const fetchUserData = useCallback(async (userId: string, email: string): Promise<AuthUser> => {
@@ -88,6 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Handle specific auth events
         if (event === 'SIGNED_IN') {
+          addToast({ type: 'success', message: 'Welcome back!' });
           router.refresh();
         } else if (event === 'SIGNED_OUT') {
           router.push('/');
@@ -101,7 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserData, router]);
+  }, [supabase, fetchUserData, router, addToast]);
 
   // Sign in with email
   const signInWithEmail = useCallback(async (
@@ -205,7 +208,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     await supabase.auth.signOut();
-  }, [supabase]);
+    addToast({ type: 'success', message: 'Signed out successfully' });
+  }, [supabase, addToast]);
 
   // Reset password
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {

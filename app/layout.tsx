@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { Navigation } from "@/components/layout/Navigation";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
               {children}
             </main>
           </div>
+          <ToastContainer />
         </AuthProvider>
       </body>
     </html>

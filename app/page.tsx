@@ -31,11 +31,11 @@ export default function DashboardPage() {
       color: 'from-purple-500 to-purple-600',
     },
     {
-      title: 'View Progress',
-      description: 'Track your journey',
-      icon: '📈',
-      href: '/progress',
-      color: 'from-amber-500 to-amber-600',
+      title: 'Poker Tools',
+      description: 'GTO charts & calculators',
+      icon: '🛠️',
+      href: '/tools',
+      color: 'from-indigo-500 to-indigo-600',
     },
   ];
 

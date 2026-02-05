@@ -30,17 +30,24 @@ const navItems = [
     href: '/assess',
     description: 'Test your knowledge'
   },
-  { 
-    id: 'coach', 
-    label: 'AI Coach', 
-    icon: '🤖', 
+  {
+    id: 'coach',
+    label: 'AI Coach',
+    icon: '🤖',
     href: '/coach',
     description: 'Get personalized help'
   },
-  { 
-    id: 'progress', 
-    label: 'Progress', 
-    icon: '📈', 
+  {
+    id: 'tools',
+    label: 'Tools',
+    icon: '🛠️',
+    href: '/tools',
+    description: 'GTO charts & calculators'
+  },
+  {
+    id: 'progress',
+    label: 'Progress',
+    icon: '📈',
     href: '/progress',
     description: 'Track your journey'
   },

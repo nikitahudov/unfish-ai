@@ -31,7 +31,7 @@ export function generateAllHands(): string[] {
 }
 
 // Helper to parse hand notation into set
-function parseRange(notation: string): Set<string> {
+export function parseRange(notation: string): Set<string> {
   const hands = new Set<string>();
   const parts = notation.split(',').map(p => p.trim()).filter(Boolean);
 

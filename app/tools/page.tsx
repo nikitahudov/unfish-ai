@@ -19,9 +19,9 @@ const featuredTools = [
   },
   {
     href: '/tools/range-viewer',
-    title: 'Range Viewer',
+    title: 'Range Builder',
     icon: '🎨',
-    description: 'Visualize and build hand ranges with an interactive 13x13 grid.',
+    description: 'Build and visualize hand ranges. Multi-color painting, presets, and compare mode.',
     color: 'from-emerald-500 to-teal-500',
   },
   {
@@ -101,11 +101,11 @@ export default function ToolsPage() {
         <ul className="space-y-2 text-sm text-slate-400">
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>
-            <span>Use GTO Charts as a baseline, then adjust for specific opponent tendencies</span>
+            <span>Use GTO Charts as a reference, then build your own ranges in Range Builder</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>
-            <span>Practice ranges with the Range Viewer before studying GTO charts</span>
+            <span>Practice calculating pot odds mentally, then verify with the calculator</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>

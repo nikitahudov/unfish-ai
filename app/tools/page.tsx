@@ -6,37 +6,43 @@ const featuredTools = [
     href: '/tools/gto-charts',
     title: 'GTO Preflop Charts',
     icon: '📊',
-    description: 'Position-based GTO ranges for every scenario. Open, 3-bet, 4-bet, and more.',
+    description: 'Position-based GTO ranges for every scenario. Open, 3-bet, 4-bet and more.',
     color: 'from-purple-500 to-indigo-500',
-    isNew: true,
+  },
+  {
+    href: '/tools/range-viewer',
+    title: 'Range Builder',
+    icon: '🎨',
+    description: 'Build and visualize hand ranges. Multi-color painting, presets, and compare mode.',
+    color: 'from-emerald-500 to-teal-500',
+  },
+  {
+    href: '/tools/ev-calculator',
+    title: 'EV Calculator',
+    icon: '💰',
+    description: 'Calculate expected value of calls, bets, and all-ins with fold equity.',
+    color: 'from-amber-500 to-orange-500',
   },
   {
     href: '/tools/pot-odds',
     title: 'Pot Odds Calculator',
     icon: '🎯',
     description: 'Calculate pot odds, required equity, and whether a call is profitable.',
-    color: 'from-amber-500 to-orange-500',
-  },
-  {
-    href: '/tools/range-viewer',
-    title: 'Range Viewer',
-    icon: '🎨',
-    description: 'Visualize and build hand ranges with an interactive 13x13 grid.',
-    color: 'from-emerald-500 to-teal-500',
+    color: 'from-rose-500 to-pink-500',
   },
   {
     href: '/tools/odds-converter',
     title: 'Odds Converter',
     icon: '🔄',
-    description: 'Convert between percentages, ratios, fractions, and outs instantly.',
+    description: 'Convert between percentages, ratios, decimals, and outs. Includes common draws.',
     color: 'from-blue-500 to-cyan-500',
   },
 ];
 
 const upcomingTools = [
   { title: 'Equity Calculator', icon: '📈', description: 'Calculate hand vs hand and hand vs range equity' },
-  { title: 'EV Calculator', icon: '💰', description: 'Calculate expected value of your decisions' },
   { title: 'ICM Calculator', icon: '🏆', description: 'Tournament equity and bubble calculations' },
+  { title: 'Hand History Analyzer', icon: '📝', description: 'Import and analyze your hand histories' },
 ];
 
 export default function ToolsPage() {
@@ -51,7 +57,7 @@ export default function ToolsPage() {
       </div>
 
       {/* Featured Tools */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {featuredTools.map((tool) => (
           <Link
             key={tool.href}
@@ -60,12 +66,7 @@ export default function ToolsPage() {
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-5 rounded-xl transition-opacity`} />
             <div className="relative">
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-4xl">{tool.icon}</span>
-                {tool.isNew && (
-                  <span className="px-2 py-0.5 text-xs font-medium bg-amber-500 text-white rounded">NEW</span>
-                )}
-              </div>
+              <span className="text-4xl mb-4 block">{tool.icon}</span>
               <h3 className="text-lg font-semibold text-white mb-2">{tool.title}</h3>
               <p className="text-sm text-slate-400">{tool.description}</p>
               <div className="mt-4 text-amber-400 text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
@@ -101,11 +102,15 @@ export default function ToolsPage() {
         <ul className="space-y-2 text-sm text-slate-400">
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>
-            <span>Use GTO Charts as a baseline, then adjust for specific opponent tendencies</span>
+            <span>Use GTO Charts as a reference, then build your own ranges in Range Builder</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>
-            <span>Practice ranges with the Range Viewer before studying GTO charts</span>
+            <span>Combine Pot Odds and EV Calculator to make better calling decisions</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-amber-400">&bull;</span>
+            <span>Memorize common drawing odds from the Odds Converter reference table</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-400">&bull;</span>

@@ -6,10 +6,10 @@ import { usePathname } from 'next/navigation';
 
 const toolCategories = [
   {
-    name: 'Charts',
+    name: 'Charts & Ranges',
     tools: [
       { href: '/tools/gto-charts', label: 'GTO Preflop Charts', icon: '📊', description: 'Position-based GTO ranges' },
-      { href: '/tools/range-viewer', label: 'Range Viewer', icon: '🎨', description: 'Build custom ranges' },
+      { href: '/tools/range-viewer', label: 'Range Builder', icon: '🎨', description: 'Build custom ranges' },
     ],
   },
   {
@@ -17,8 +17,8 @@ const toolCategories = [
     tools: [
       { href: '/tools/pot-odds', label: 'Pot Odds Calculator', icon: '🎯', description: 'Calculate pot odds & equity needed' },
       { href: '/tools/odds-converter', label: 'Odds Converter', icon: '🔄', description: 'Convert between formats' },
+      { href: '/tools/ev-calculator', label: 'EV Calculator', icon: '💰', description: 'Expected value calculator' },
       { href: '/tools/equity', label: 'Equity Calculator', icon: '📈', description: 'Hand vs hand equity', comingSoon: true },
-      { href: '/tools/ev', label: 'EV Calculator', icon: '💰', description: 'Expected value calculator', comingSoon: true },
     ],
   },
 ];
@@ -90,7 +90,7 @@ export function ToolsSidebar() {
       {/* Quick tip */}
       <div className="mt-6 pt-4 border-t border-slate-700">
         <p className="text-xs text-slate-500">
-          These tools are free to use. No login required!
+          All tools are free to use. No login required!
         </p>
       </div>
     </div>

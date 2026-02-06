@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         sender_type: 'admin',
         sender_id: user.id,
         sender_name: senderName,
-        sender_email: user.email,
+        sender_email: user.email ?? '',
         message: message.trim(),
         attachments: [],
       })

@@ -64,6 +64,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       skill_progress: {
         Row: {
@@ -120,6 +121,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       quiz_attempts: {
         Row: {
@@ -161,6 +163,7 @@ export type Database = {
           attempted_at?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
       coach_conversations: {
         Row: {
@@ -205,6 +208,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       user_stats: {
         Row: {
@@ -252,6 +256,7 @@ export type Database = {
           coach_messages_sent?: number;
           updated_at?: string;
         };
+        Relationships: [];
       };
       activity_log: {
         Row: {
@@ -278,6 +283,7 @@ export type Database = {
           metadata?: Json;
           created_at?: string;
         };
+        Relationships: [];
       };
       support_tickets: {
         Row: {
@@ -337,6 +343,7 @@ export type Database = {
           updated_at?: string;
           resolved_at?: string | null;
         };
+        Relationships: [];
       };
       ticket_replies: {
         Row: {
@@ -372,6 +379,7 @@ export type Database = {
           attachments?: Json;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
     Views: {};

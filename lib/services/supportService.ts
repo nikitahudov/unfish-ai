@@ -1,10 +1,12 @@
 import { createClient } from '@/lib/supabase/client';
+import type { Json } from '@/types/database';
 import {
   SupportTicket,
   TicketReply,
   CreateTicketInput,
   CreateReplyInput,
   Attachment,
+  TicketCategory,
   TicketStatus,
   TicketPriority
 } from '@/types/support';
@@ -35,11 +37,11 @@ export async function createTicket(
         category: input.category,
         subject: input.subject,
         message: input.message,
-        attachments: input.attachments || [],
+        attachments: (input.attachments || []) as unknown as Json,
         user_agent: options.userAgent || null,
         page_url: options.pageUrl || null,
-        status: 'open',
-        priority: 'normal',
+        status: 'open' as const,
+        priority: 'normal' as const,
       })
       .select()
       .single();
@@ -49,7 +51,7 @@ export async function createTicket(
       return { ticket: null, error: error.message };
     }
 
-    return { ticket: data as SupportTicket, error: null };
+    return { ticket: data as unknown as SupportTicket, error: null };
   } catch (err) {
     console.error('Error creating ticket:', err);
     return { ticket: null, error: 'Failed to create ticket' };
@@ -71,7 +73,7 @@ export async function getTicketById(
       return { ticket: null, error: error.message };
     }
 
-    return { ticket: data as SupportTicket, error: null };
+    return { ticket: data as unknown as SupportTicket, error: null };
   } catch (err) {
     console.error('Error fetching ticket:', err);
     return { ticket: null, error: 'Failed to fetch ticket' };
@@ -93,7 +95,7 @@ export async function getTicketByNumber(
       return { ticket: null, error: error.message };
     }
 
-    return { ticket: data as SupportTicket, error: null };
+    return { ticket: data as unknown as SupportTicket, error: null };
   } catch (err) {
     console.error('Error fetching ticket:', err);
     return { ticket: null, error: 'Failed to fetch ticket' };
@@ -125,7 +127,7 @@ export async function getUserTickets(
       return { tickets: [], error: error.message };
     }
 
-    return { tickets: data as SupportTicket[], error: null };
+    return { tickets: data as unknown as SupportTicket[], error: null };
   } catch (err) {
     console.error('Error fetching user tickets:', err);
     return { tickets: [], error: 'Failed to fetch tickets' };
@@ -136,7 +138,7 @@ export async function getAllTickets(
   filters?: {
     status?: TicketStatus;
     priority?: TicketPriority;
-    category?: string;
+    category?: TicketCategory;
   }
 ): Promise<{ tickets: SupportTicket[]; error: string | null }> {
   try {
@@ -162,7 +164,7 @@ export async function getAllTickets(
       return { tickets: [], error: error.message };
     }
 
-    return { tickets: data as SupportTicket[], error: null };
+    return { tickets: data as unknown as SupportTicket[], error: null };
   } catch (err) {
     console.error('Error fetching tickets:', err);
     return { tickets: [], error: 'Failed to fetch tickets' };
@@ -174,7 +176,7 @@ export async function updateTicketStatus(
   status: TicketStatus
 ): Promise<{ success: boolean; error: string | null }> {
   try {
-    const updates: Partial<SupportTicket> = { status };
+    const updates: { status: TicketStatus; resolved_at?: string } = { status };
 
     if (status === 'resolved') {
       updates.resolved_at = new Date().toISOString();
@@ -238,7 +240,7 @@ export async function getTicketReplies(
       return { replies: [], error: error.message };
     }
 
-    return { replies: data as TicketReply[], error: null };
+    return { replies: data as unknown as TicketReply[], error: null };
   } catch (err) {
     console.error('Error fetching replies:', err);
     return { replies: [], error: 'Failed to fetch replies' };
@@ -264,7 +266,7 @@ export async function createReply(
         sender_name: sender.name,
         sender_email: sender.email,
         message: input.message,
-        attachments: input.attachments || [],
+        attachments: (input.attachments || []) as unknown as Json,
       })
       .select()
       .single();
@@ -281,7 +283,7 @@ export async function createReply(
       .eq('id', input.ticket_id)
       .eq('status', 'open');
 
-    return { reply: data as TicketReply, error: null };
+    return { reply: data as unknown as TicketReply, error: null };
   } catch (err) {
     console.error('Error creating reply:', err);
     return { reply: null, error: 'Failed to create reply' };

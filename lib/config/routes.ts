@@ -19,6 +19,10 @@ export const routeConfig: RouteConfig[] = [
   { pattern: '/signup', access: 'guest-only', redirectTo: '/wiki' },
   { pattern: '/reset-password', access: 'guest-only', redirectTo: '/wiki' },
 
+  // Admin routes - require authentication (admin check done in layout)
+  { pattern: '/admin', access: 'auth', redirectTo: '/login' },
+  { pattern: /^\/admin\/.*/, access: 'auth', redirectTo: '/login' },
+
   // Protected routes - require authentication
   { pattern: '/coach', access: 'auth', redirectTo: '/login' },
   { pattern: '/assess', access: 'auth', redirectTo: '/login' },

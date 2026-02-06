@@ -1,3 +1,4 @@
+import { render } from '@react-email/render';
 import { resend, EMAIL_FROM, ADMIN_EMAIL, APP_URL } from './resend';
 import {
   TicketConfirmationEmail,
@@ -48,18 +49,20 @@ export async function sendTicketConfirmation(params: SendTicketConfirmationParam
   const ticketUrl = `${APP_URL}/support/tickets/${params.ticketId}`;
 
   try {
+    const html = await render(TicketConfirmationEmail({
+      name: params.name,
+      ticketNumber: params.ticketNumber,
+      subject: params.subject,
+      category: params.category,
+      message: params.message,
+      ticketUrl,
+    }));
+
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: params.to,
       subject: `[Ticket #${params.ticketNumber}] ${params.subject}`,
-      react: TicketConfirmationEmail({
-        name: params.name,
-        ticketNumber: params.ticketNumber,
-        subject: params.subject,
-        category: params.category,
-        message: params.message,
-        ticketUrl,
-      }),
+      html,
       text: getTicketConfirmationText({
         name: params.name,
         ticketNumber: params.ticketNumber,
@@ -88,14 +91,16 @@ export async function sendNewTicketAdmin(params: SendNewTicketAdminParams) {
   const adminUrl = `${APP_URL}/admin/support/${params.ticketId}`;
 
   try {
+    const html = await render(NewTicketAdminEmail({
+      ...params,
+      adminUrl,
+    }));
+
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: ADMIN_EMAIL,
       subject: `[New Ticket #${params.ticketNumber}] ${params.subject}`,
-      react: NewTicketAdminEmail({
-        ...params,
-        adminUrl,
-      }),
+      html,
       text: getNewTicketAdminText({
         ...params,
         adminUrl,
@@ -122,19 +127,21 @@ export async function sendTicketReply(params: SendTicketReplyParams) {
     : `${APP_URL}/admin/support/${params.ticketId}`;
 
   try {
+    const html = await render(TicketReplyEmail({
+      recipientName: params.recipientName,
+      ticketNumber: params.ticketNumber,
+      subject: params.subject,
+      replyMessage: params.replyMessage,
+      senderName: params.senderName,
+      senderType: params.senderType,
+      ticketUrl,
+    }));
+
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: params.to,
       subject: `Re: [Ticket #${params.ticketNumber}] ${params.subject}`,
-      react: TicketReplyEmail({
-        recipientName: params.recipientName,
-        ticketNumber: params.ticketNumber,
-        subject: params.subject,
-        replyMessage: params.replyMessage,
-        senderName: params.senderName,
-        senderType: params.senderType,
-        ticketUrl,
-      }),
+      html,
       text: getTicketReplyText({
         recipientName: params.recipientName,
         ticketNumber: params.ticketNumber,

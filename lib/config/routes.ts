@@ -11,6 +11,8 @@ export const routeConfig: RouteConfig[] = [
   { pattern: '/', access: 'public' },
   { pattern: '/wiki', access: 'public' },
   { pattern: /^\/wiki\/.*/, access: 'public' },
+  { pattern: '/support', access: 'public' },
+  { pattern: /^\/support\/.*/, access: 'public' },
 
   // Auth routes - only for non-authenticated users
   { pattern: '/login', access: 'guest-only', redirectTo: '/wiki' },

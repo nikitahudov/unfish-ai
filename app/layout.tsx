@@ -3,6 +3,8 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { Navigation } from "@/components/layout/Navigation";
+import { Footer } from "@/components/layout/Footer";
+import { FloatingHelpButton } from "@/components/support/FloatingHelpButton";
 import { ToastContainer } from "@/components/ui/ToastContainer";
 
 const inter = Inter({
@@ -33,10 +35,14 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex min-h-screen">
             <Navigation />
-            <main className="flex-1 ml-0 md:ml-64">
-              {children}
-            </main>
+            <div className="flex-1 ml-0 md:ml-64 flex flex-col min-h-screen">
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
           </div>
+          <FloatingHelpButton />
           <ToastContainer />
         </AuthProvider>
       </body>

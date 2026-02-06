@@ -9,24 +9,24 @@ import { useStats } from '@/lib/hooks/useStats';
 
 // Navigation items configuration
 const navItems = [
-  { 
-    id: 'dashboard', 
-    label: 'Dashboard', 
-    icon: '🏠', 
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: '🏠',
     href: '/',
     description: 'Overview and quick actions'
   },
-  { 
-    id: 'wiki', 
-    label: 'Curriculum', 
-    icon: '📚', 
+  {
+    id: 'wiki',
+    label: 'Curriculum',
+    icon: '📚',
     href: '/wiki',
     description: 'Learn poker concepts'
   },
-  { 
-    id: 'assess', 
-    label: 'Assessments', 
-    icon: '✅', 
+  {
+    id: 'assess',
+    label: 'Assessments',
+    icon: '✅',
     href: '/assess',
     description: 'Test your knowledge'
   },
@@ -51,12 +51,31 @@ const navItems = [
     href: '/progress',
     description: 'Track your journey'
   },
+];
+
+// Support section items
+const supportItems = [
   {
     id: 'support',
-    label: 'Support',
+    label: 'Contact Support',
     icon: '🎧',
     href: '/support',
-    description: 'Get help from our team'
+    description: 'Submit a ticket',
+  },
+  {
+    id: 'my-tickets',
+    label: 'My Tickets',
+    icon: '🎫',
+    href: '/support/my-tickets',
+    description: 'View your requests',
+    authOnly: true,
+  },
+  {
+    id: 'faq',
+    label: 'FAQ',
+    icon: '❓',
+    href: '/faq',
+    description: 'Common questions',
   },
 ];
 
@@ -161,6 +180,38 @@ export const Navigation = () => {
               </Link>
             );
           })}
+
+          {/* Help & Support Section */}
+          <div className="mt-4 pt-4 border-t border-slate-800">
+            <h3 className="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Help & Support
+            </h3>
+            {supportItems
+              .filter((item) => !item.authOnly || isAuthenticated)
+              .map((item) => {
+                const isActive = pathname === item.href;
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all
+                      ${isActive
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      }
+                    `}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <div>
+                      <div className="font-medium text-sm">{item.label}</div>
+                    </div>
+                  </Link>
+                );
+              })}
+          </div>
         </nav>
 
         {/* Progress Summary */}

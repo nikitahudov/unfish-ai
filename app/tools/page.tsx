@@ -37,10 +37,17 @@ const featuredTools = [
     description: 'Convert between percentages, ratios, decimals, and outs. Includes common draws.',
     color: 'from-blue-500 to-cyan-500',
   },
+  {
+    href: '/tools/equity',
+    title: 'Equity Calculator',
+    icon: '📈',
+    description: 'Calculate hand vs hand and hand vs range equity with Monte Carlo simulation.',
+    color: 'from-rose-500 to-pink-500',
+    isNew: true,
+  },
 ];
 
 const upcomingTools = [
-  { title: 'Equity Calculator', icon: '📈', description: 'Calculate hand vs hand and hand vs range equity' },
   { title: 'ICM Calculator', icon: '🏆', description: 'Tournament equity and bubble calculations' },
   { title: 'Hand History Analyzer', icon: '📝', description: 'Import and analyze your hand histories' },
 ];

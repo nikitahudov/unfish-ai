@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { sendTicketReply } from '@/lib/email/send';
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
+    const adminDb = createAdminClient();
 
-    // Get current user
+    // Get current user (session client for auth only)
     const { data: { user } } = await supabase.auth.getUser();
 
     const body = await request.json();
@@ -19,8 +21,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch ticket to verify access and get details
-    const { data: ticket, error: ticketError } = await supabase
+    // Fetch ticket using admin client (bypasses RLS)
+    const { data: ticket, error: ticketError } = await adminDb
       .from('support_tickets')
       .select('*')
       .eq('id', ticketId)
@@ -50,8 +52,8 @@ export async function POST(request: NextRequest) {
     const senderName = user?.user_metadata?.display_name || ticket.name;
     const senderEmail = userEmail || ticket.email;
 
-    // Create reply
-    const { data: reply, error: replyError } = await supabase
+    // Create reply using admin client (bypasses RLS)
+    const { data: reply, error: replyError } = await adminDb
       .from('ticket_replies')
       .insert({
         ticket_id: ticketId,
@@ -75,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     // Update ticket status if it was resolved/closed
     if (ticket.status === 'resolved' || ticket.status === 'closed') {
-      await supabase
+      await adminDb
         .from('support_tickets')
         .update({ status: 'open' })
         .eq('id', ticketId);

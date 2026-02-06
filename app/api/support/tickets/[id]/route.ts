@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient();
+    const adminDb = createAdminClient();
     const { id: ticketId } = await params;
 
-    // Fetch ticket
-    const { data: ticket, error: ticketError } = await supabase
+    // Fetch ticket using admin client (bypasses RLS)
+    const { data: ticket, error: ticketError } = await adminDb
       .from('support_tickets')
       .select('*')
       .eq('id', ticketId)
@@ -24,8 +24,8 @@ export async function GET(
       );
     }
 
-    // Fetch replies
-    const { data: replies, error: repliesError } = await supabase
+    // Fetch replies using admin client (bypasses RLS)
+    const { data: replies, error: repliesError } = await adminDb
       .from('ticket_replies')
       .select('*')
       .eq('ticket_id', ticketId)

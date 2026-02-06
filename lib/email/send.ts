@@ -58,6 +58,11 @@ export async function sendTicketConfirmation(params: SendTicketConfirmationParam
       ticketUrl,
     }));
 
+    if (!resend) {
+      console.warn('Resend not configured, skipping ticket confirmation email');
+      return { success: false, error: 'Email service not configured' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: params.to,
@@ -95,6 +100,11 @@ export async function sendNewTicketAdmin(params: SendNewTicketAdminParams) {
       ...params,
       adminUrl,
     }));
+
+    if (!resend) {
+      console.warn('Resend not configured, skipping admin notification email');
+      return { success: false, error: 'Email service not configured' };
+    }
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
@@ -136,6 +146,11 @@ export async function sendTicketReply(params: SendTicketReplyParams) {
       senderType: params.senderType,
       ticketUrl,
     }));
+
+    if (!resend) {
+      console.warn('Resend not configured, skipping reply notification email');
+      return { success: false, error: 'Email service not configured' };
+    }
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,

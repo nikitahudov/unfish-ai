@@ -1,10 +1,11 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { serialize } from 'next-mdx-remote/serialize';
+import { compileMDX } from 'next-mdx-remote/rsc';
 import { getSkillById, getCategoryBySkillId, getAllSkills } from '@/data/skills';
 import { getSkillContent } from '@/lib/content';
 import { hasQuiz } from '@/data/quizRegistry';
 import { SkillContentClient } from './SkillContentClient';
+import { mdxComponents } from '@/components/content/mdxComponents';
 
 interface PageProps {
   params: Promise<{ skillId: string }>;
@@ -21,11 +22,15 @@ export default async function SkillContentPage({ params }: PageProps) {
   const categoryName = getCategoryBySkillId(skillId) || null;
   const contentData = await getSkillContent(skillId);
 
-  let mdxSource = null;
+  let mdxContent: React.ReactElement | null = null;
   let frontmatter = null;
 
   if (contentData) {
-    mdxSource = await serialize(contentData.content);
+    const result = await compileMDX({
+      source: contentData.content,
+      components: mdxComponents,
+    });
+    mdxContent = result.content;
     frontmatter = contentData.frontmatter;
   }
 
@@ -33,10 +38,15 @@ export default async function SkillContentPage({ params }: PageProps) {
     <SkillContentClient
       skill={skill}
       categoryName={categoryName}
-      mdxSource={mdxSource}
       frontmatter={frontmatter}
       hasQuizAvailable={hasQuiz(skillId)}
-    />
+    >
+      {mdxContent && (
+        <div className="prose prose-invert max-w-none">
+          {mdxContent}
+        </div>
+      )}
+    </SkillContentClient>
   );
 }
 

@@ -6,10 +6,10 @@ import { usePathname } from 'next/navigation';
 
 const toolCategories = [
   {
-    name: 'Charts',
+    name: 'Charts & Ranges',
     tools: [
       { href: '/tools/gto-charts', label: 'GTO Preflop Charts', icon: '📊', description: 'Position-based GTO ranges' },
-      { href: '/tools/range-viewer', label: 'Range Viewer', icon: '🎨', description: 'Build custom ranges' },
+      { href: '/tools/range-viewer', label: 'Range Builder', icon: '🎨', description: 'Build custom ranges' },
     ],
   },
   {

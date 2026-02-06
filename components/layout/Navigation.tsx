@@ -51,6 +51,13 @@ const navItems = [
     href: '/progress',
     description: 'Track your journey'
   },
+  {
+    id: 'support',
+    label: 'Support',
+    icon: '🎧',
+    href: '/support',
+    description: 'Get help from our team'
+  },
 ];
 
 export const Navigation = () => {

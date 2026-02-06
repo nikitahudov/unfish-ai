@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { updateSession } from '@/lib/supabase/middleware';
+import { updateSession } from '@/lib/supabase/proxy';
 import { getRouteAccess } from '@/lib/config/routes';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request);
 
   // If updateSession already returned a redirect (e.g. code exchange), pass it through

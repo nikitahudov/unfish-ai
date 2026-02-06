@@ -266,3 +266,230 @@ DROP TRIGGER IF EXISTS update_coach_conversations_updated_at ON coach_conversati
 CREATE TRIGGER update_coach_conversations_updated_at
   BEFORE UPDATE ON coach_conversations
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- ================================================
+-- CUSTOMER SUPPORT SCHEMA
+-- ================================================
+
+-- Add is_admin to user_profiles (if not exists)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'user_profiles' AND column_name = 'is_admin'
+  ) THEN
+    ALTER TABLE user_profiles ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;
+  END IF;
+END $$;
+
+-- Set yourself as admin (replace with your user ID after first login)
+-- UPDATE user_profiles SET is_admin = TRUE WHERE email = 'nikitahudov@gmail.com';
+
+-- ================================================
+-- Support Tickets Table
+-- ================================================
+CREATE TABLE IF NOT EXISTS support_tickets (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ticket_number SERIAL UNIQUE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+
+  -- Contact info
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  is_authenticated BOOLEAN DEFAULT FALSE,
+
+  -- Ticket content
+  category TEXT NOT NULL CHECK (category IN ('general', 'technical', 'billing', 'feature', 'bug')),
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+
+  -- Attachments stored as JSON array: [{name, url, size, type}]
+  attachments JSONB DEFAULT '[]'::jsonb,
+
+  -- Status tracking
+  status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
+  priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+
+  -- Metadata
+  user_agent TEXT,
+  page_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  resolved_at TIMESTAMPTZ
+);
+
+-- ================================================
+-- Ticket Replies Table
+-- ================================================
+CREATE TABLE IF NOT EXISTS ticket_replies (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ticket_id UUID NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+
+  sender_type TEXT NOT NULL CHECK (sender_type IN ('user', 'admin')),
+  sender_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  sender_name TEXT NOT NULL,
+  sender_email TEXT NOT NULL,
+  message TEXT NOT NULL,
+
+  -- Attachments
+  attachments JSONB DEFAULT '[]'::jsonb,
+
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ================================================
+-- Support Indexes
+-- ================================================
+CREATE INDEX IF NOT EXISTS idx_tickets_status ON support_tickets(status);
+CREATE INDEX IF NOT EXISTS idx_tickets_user_id ON support_tickets(user_id);
+CREATE INDEX IF NOT EXISTS idx_tickets_email ON support_tickets(email);
+CREATE INDEX IF NOT EXISTS idx_tickets_created_at ON support_tickets(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_replies_ticket_id ON ticket_replies(ticket_id);
+
+-- ================================================
+-- Support Updated_at Trigger
+-- ================================================
+CREATE OR REPLACE FUNCTION update_support_ticket_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_support_ticket_timestamp ON support_tickets;
+CREATE TRIGGER update_support_ticket_timestamp
+  BEFORE UPDATE ON support_tickets
+  FOR EACH ROW
+  EXECUTE FUNCTION update_support_ticket_timestamp();
+
+-- ================================================
+-- Support Row Level Security
+-- ================================================
+
+ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ticket_replies ENABLE ROW LEVEL SECURITY;
+
+-- Support Tickets Policies
+
+-- Anyone can create a ticket
+CREATE POLICY "Anyone can create tickets"
+  ON support_tickets FOR INSERT
+  WITH CHECK (true);
+
+-- Users can view their own tickets (by user_id or email)
+CREATE POLICY "Users can view own tickets"
+  ON support_tickets FOR SELECT
+  USING (
+    auth.uid() = user_id
+    OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    OR EXISTS (
+      SELECT 1 FROM user_profiles
+      WHERE user_profiles.id = auth.uid()
+      AND user_profiles.is_admin = TRUE
+    )
+  );
+
+-- Users can update their own open tickets
+CREATE POLICY "Users can update own open tickets"
+  ON support_tickets FOR UPDATE
+  USING (
+    (auth.uid() = user_id AND status = 'open')
+    OR EXISTS (
+      SELECT 1 FROM user_profiles
+      WHERE user_profiles.id = auth.uid()
+      AND user_profiles.is_admin = TRUE
+    )
+  );
+
+-- Only admins can delete tickets
+CREATE POLICY "Admins can delete tickets"
+  ON support_tickets FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles
+      WHERE user_profiles.id = auth.uid()
+      AND user_profiles.is_admin = TRUE
+    )
+  );
+
+-- Ticket Replies Policies
+
+-- Users can view replies on their tickets
+CREATE POLICY "Users can view replies on own tickets"
+  ON ticket_replies FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM support_tickets
+      WHERE support_tickets.id = ticket_replies.ticket_id
+      AND (
+        support_tickets.user_id = auth.uid()
+        OR support_tickets.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        OR EXISTS (
+          SELECT 1 FROM user_profiles
+          WHERE user_profiles.id = auth.uid()
+          AND user_profiles.is_admin = TRUE
+        )
+      )
+    )
+  );
+
+-- Users can add replies to their own tickets
+CREATE POLICY "Users can reply to own tickets"
+  ON ticket_replies FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM support_tickets
+      WHERE support_tickets.id = ticket_replies.ticket_id
+      AND (
+        support_tickets.user_id = auth.uid()
+        OR support_tickets.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        OR EXISTS (
+          SELECT 1 FROM user_profiles
+          WHERE user_profiles.id = auth.uid()
+          AND user_profiles.is_admin = TRUE
+        )
+      )
+    )
+  );
+
+-- ================================================
+-- Support Attachments Storage Bucket
+-- ================================================
+
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'support-attachments',
+  'support-attachments',
+  FALSE,
+  5242880, -- 5MB limit
+  ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage policies
+
+-- Anyone can upload (for guest tickets)
+CREATE POLICY "Anyone can upload support attachments"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'support-attachments');
+
+-- Authenticated users can view support attachments (handled via signed URLs)
+CREATE POLICY "Authenticated users can view support attachments"
+  ON storage.objects FOR SELECT
+  USING (
+    bucket_id = 'support-attachments'
+    AND auth.role() = 'authenticated'
+  );
+
+-- Admins can delete attachments
+CREATE POLICY "Admins can delete support attachments"
+  ON storage.objects FOR DELETE
+  USING (
+    bucket_id = 'support-attachments'
+    AND EXISTS (
+      SELECT 1 FROM user_profiles
+      WHERE user_profiles.id = auth.uid()
+      AND user_profiles.is_admin = TRUE
+    )
+  );

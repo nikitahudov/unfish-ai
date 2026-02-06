@@ -22,6 +22,7 @@ export type Database = {
           stripe_customer_id: string | null;
           current_phase: 'fundamental' | 'intermediate' | 'advanced';
           onboarding_completed: boolean;
+          is_admin: boolean;
           preferences: Json;
           timezone: string;
           created_at: string;
@@ -39,6 +40,7 @@ export type Database = {
           stripe_customer_id?: string | null;
           current_phase?: 'fundamental' | 'intermediate' | 'advanced';
           onboarding_completed?: boolean;
+          is_admin?: boolean;
           preferences?: Json;
           timezone?: string;
           created_at?: string;
@@ -56,6 +58,7 @@ export type Database = {
           stripe_customer_id?: string | null;
           current_phase?: 'fundamental' | 'intermediate' | 'advanced';
           onboarding_completed?: boolean;
+          is_admin?: boolean;
           preferences?: Json;
           timezone?: string;
           created_at?: string;
@@ -273,6 +276,100 @@ export type Database = {
           activity_type?: 'content_viewed' | 'content_completed' | 'quiz_attempted' | 'quiz_passed' | 'coach_message' | 'login';
           reference_id?: string | null;
           metadata?: Json;
+          created_at?: string;
+        };
+      };
+      support_tickets: {
+        Row: {
+          id: string;
+          ticket_number: number;
+          user_id: string | null;
+          name: string;
+          email: string;
+          is_authenticated: boolean;
+          category: 'general' | 'technical' | 'billing' | 'feature' | 'bug';
+          subject: string;
+          message: string;
+          attachments: Json;
+          status: 'open' | 'in_progress' | 'resolved' | 'closed';
+          priority: 'low' | 'normal' | 'high' | 'urgent';
+          user_agent: string | null;
+          page_url: string | null;
+          created_at: string;
+          updated_at: string;
+          resolved_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          ticket_number?: number;
+          user_id?: string | null;
+          name: string;
+          email: string;
+          is_authenticated?: boolean;
+          category: 'general' | 'technical' | 'billing' | 'feature' | 'bug';
+          subject: string;
+          message: string;
+          attachments?: Json;
+          status?: 'open' | 'in_progress' | 'resolved' | 'closed';
+          priority?: 'low' | 'normal' | 'high' | 'urgent';
+          user_agent?: string | null;
+          page_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          ticket_number?: number;
+          user_id?: string | null;
+          name?: string;
+          email?: string;
+          is_authenticated?: boolean;
+          category?: 'general' | 'technical' | 'billing' | 'feature' | 'bug';
+          subject?: string;
+          message?: string;
+          attachments?: Json;
+          status?: 'open' | 'in_progress' | 'resolved' | 'closed';
+          priority?: 'low' | 'normal' | 'high' | 'urgent';
+          user_agent?: string | null;
+          page_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+        };
+      };
+      ticket_replies: {
+        Row: {
+          id: string;
+          ticket_id: string;
+          sender_type: 'user' | 'admin';
+          sender_id: string | null;
+          sender_name: string;
+          sender_email: string;
+          message: string;
+          attachments: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          ticket_id: string;
+          sender_type: 'user' | 'admin';
+          sender_id?: string | null;
+          sender_name: string;
+          sender_email: string;
+          message: string;
+          attachments?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          ticket_id?: string;
+          sender_type?: 'user' | 'admin';
+          sender_id?: string | null;
+          sender_name?: string;
+          sender_email?: string;
+          message?: string;
+          attachments?: Json;
           created_at?: string;
         };
       };

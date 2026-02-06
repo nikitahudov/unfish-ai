@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { sendTicketConfirmation, sendNewTicketAdmin } from '@/lib/email/send';
 import { TicketCategory, Attachment } from '@/types/support';
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
+    const adminDb = createAdminClient();
 
     // Get current user (if logged in)
     const { data: { user } } = await supabase.auth.getUser();
@@ -29,19 +31,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Upload attachments
+    // Upload attachments using admin client (bypasses storage RLS)
     const attachments: Attachment[] = [];
     const fileKeys = Array.from(formData.keys()).filter(key => key.startsWith('file-'));
 
     for (const key of fileKeys) {
       const file = formData.get(key) as File;
       if (file && file.size > 0) {
-        // Generate unique filename
         const fileExt = file.name.split('.').pop();
         const fileName = `pending/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        // Upload to Supabase storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { data: uploadData, error: uploadError } = await adminDb.storage
           .from('support-attachments')
           .upload(fileName, file, {
             cacheControl: '3600',
@@ -50,13 +50,12 @@ export async function POST(request: NextRequest) {
 
         if (uploadError) {
           console.error('Error uploading attachment:', uploadError);
-          continue; // Skip this file but continue with others
+          continue;
         }
 
-        // Get signed URL
-        const { data: urlData } = await supabase.storage
+        const { data: urlData } = await adminDb.storage
           .from('support-attachments')
-          .createSignedUrl(uploadData.path, 60 * 60 * 24 * 30); // 30 days
+          .createSignedUrl(uploadData.path, 60 * 60 * 24 * 30);
 
         attachments.push({
           name: file.name,
@@ -67,8 +66,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create ticket in database
-    const { data: ticket, error: ticketError } = await supabase
+    // Create ticket using admin client (bypasses RLS)
+    const { data: ticket, error: ticketError } = await adminDb
       .from('support_tickets')
       .insert({
         user_id: user?.id || null,

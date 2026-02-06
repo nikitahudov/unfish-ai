@@ -17,7 +17,7 @@ const toolCategories = [
     tools: [
       { href: '/tools/pot-odds', label: 'Pot Odds Calculator', icon: '🎯', description: 'Calculate pot odds & equity needed' },
       { href: '/tools/odds-converter', label: 'Odds Converter', icon: '🔄', description: 'Convert between formats' },
-      { href: '/tools/equity', label: 'Equity Calculator', icon: '📈', description: 'Hand vs hand equity', comingSoon: true },
+      { href: '/tools/equity', label: 'Equity Calculator', icon: '📈', description: 'Hand vs hand equity' },
       { href: '/tools/ev', label: 'EV Calculator', icon: '💰', description: 'Expected value calculator', comingSoon: true },
     ],
   },

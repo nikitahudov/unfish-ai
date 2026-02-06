@@ -31,10 +31,17 @@ const featuredTools = [
     description: 'Convert between percentages, ratios, fractions, and outs instantly.',
     color: 'from-blue-500 to-cyan-500',
   },
+  {
+    href: '/tools/equity',
+    title: 'Equity Calculator',
+    icon: '📈',
+    description: 'Calculate hand vs hand and hand vs range equity with Monte Carlo simulation.',
+    color: 'from-rose-500 to-pink-500',
+    isNew: true,
+  },
 ];
 
 const upcomingTools = [
-  { title: 'Equity Calculator', icon: '📈', description: 'Calculate hand vs hand and hand vs range equity' },
   { title: 'EV Calculator', icon: '💰', description: 'Calculate expected value of your decisions' },
   { title: 'ICM Calculator', icon: '🏆', description: 'Tournament equity and bubble calculations' },
 ];

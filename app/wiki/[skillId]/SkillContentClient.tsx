@@ -2,9 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { ContentProvider } from '@/components/content/ContentContext';
-import { MDXContent } from '@/components/content/MDXContent';
 import { KeyConcept } from '@/components/content/KeyConcept';
 import { QuizLink } from '@/components/content/QuizLink';
 import { ProgressTracker } from '@/components/content/ProgressTracker';
@@ -15,17 +13,17 @@ import type { ContentFrontmatter } from '@/lib/content';
 interface SkillContentClientProps {
   skill: Skill;
   categoryName: string | null;
-  mdxSource: MDXRemoteSerializeResult | null;
   frontmatter: ContentFrontmatter | null;
   hasQuizAvailable: boolean;
+  children?: React.ReactNode;
 }
 
 export function SkillContentClient({
   skill,
   categoryName,
-  mdxSource,
   frontmatter,
   hasQuizAvailable,
+  children,
 }: SkillContentClientProps) {
   const exercisesTotal = frontmatter?.exercisesTotal || 0;
   const scenariosTotal = frontmatter?.scenariosTotal || 0;
@@ -73,8 +71,8 @@ export function SkillContentClient({
           </header>
 
           {/* Content */}
-          {mdxSource ? (
-            <MDXContent source={mdxSource} />
+          {children ? (
+            children
           ) : (
             <div className="space-y-6">
               <KeyConcept title="Content Coming Soon">

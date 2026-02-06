@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
-import type { ActivityLog } from '@/types/database';
+import type { ActivityLog, Json } from '@/types/database';
 
 export type ActivityType =
   | 'content_viewed'
@@ -15,7 +15,7 @@ export interface ActivityMetadata {
   score?: number;
   quizId?: string;
   conversationId?: string;
-  [key: string]: unknown;
+  [key: string]: Json | undefined;
 }
 
 export const activityService = {
@@ -40,8 +40,8 @@ export const activityService = {
     const insertData = {
       user_id: uid,
       activity_type: type,
-      reference_id: referenceId,
-      metadata: metadata || {},
+      reference_id: referenceId ?? null,
+      metadata: (metadata || {}) as Json,
     };
 
     const { data, error } = await supabase

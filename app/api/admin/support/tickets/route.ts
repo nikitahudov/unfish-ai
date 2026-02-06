@@ -36,9 +36,9 @@ export async function GET(request: NextRequest) {
       .from('support_tickets')
       .select('*');
 
-    if (status) query = query.eq('status', status);
-    if (priority) query = query.eq('priority', priority);
-    if (category) query = query.eq('category', category);
+    if (status) query = query.eq('status', status as 'open' | 'in_progress' | 'resolved' | 'closed');
+    if (priority) query = query.eq('priority', priority as 'low' | 'normal' | 'high' | 'urgent');
+    if (category) query = query.eq('category', category as 'general' | 'technical' | 'billing' | 'feature' | 'bug');
 
     // Apply sorting
     const ascending = order === 'asc';

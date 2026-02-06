@@ -32,6 +32,7 @@ export interface BaseQuestion {
 
 export interface MultipleChoiceQuestion extends BaseQuestion {
   type: 'multiple-choice';
+  scenario?: string;
   options: string[];
   correctAnswer: number;
 }

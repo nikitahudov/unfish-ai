@@ -164,7 +164,7 @@ export default function MyTicketsPage() {
           <p>
             Need immediate help?{' '}
             <a
-              href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@example.com'}`}
+              href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@unfish.ai'}`}
               className="text-amber-400 hover:text-amber-300"
             >
               Email us directly

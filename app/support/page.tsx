@@ -117,10 +117,10 @@ export default function SupportPage() {
           <p>
             You can also reach us directly at{' '}
             <a
-              href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@example.com'}`}
+              href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@unfish.ai'}`}
               className="text-amber-400 hover:text-amber-300"
             >
-              {process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@example.com'}
+              {process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@unfish.ai'}
             </a>
           </p>
         </div>

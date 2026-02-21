@@ -9,8 +9,8 @@ export const resend = process.env.RESEND_API_KEY
   : null;
 
 // Email sender config
-// Using Resend's test domain initially - change to your domain later
-export const EMAIL_FROM = 'Support <onboarding@resend.dev>';
+export const EMAIL_FROM = 'UnFish.ai <noreply@unfish.ai>';
+export const REPLY_TO = 'support@unfish.ai';
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'nikitahudov@gmail.com';
 export const APP_NAME = 'UnFish.ai';
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';

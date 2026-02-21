@@ -1,5 +1,5 @@
 import { render } from '@react-email/render';
-import { resend, EMAIL_FROM, ADMIN_EMAIL, APP_URL } from './resend';
+import { resend, EMAIL_FROM, REPLY_TO, ADMIN_EMAIL, APP_URL } from './resend';
 import {
   TicketConfirmationEmail,
   getTicketConfirmationText,
@@ -65,6 +65,7 @@ export async function sendTicketConfirmation(params: SendTicketConfirmationParam
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
+      replyTo: REPLY_TO,
       to: params.to,
       subject: `[Ticket #${params.ticketNumber}] ${params.subject}`,
       html,
@@ -108,6 +109,7 @@ export async function sendNewTicketAdmin(params: SendNewTicketAdminParams) {
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
+      replyTo: REPLY_TO,
       to: ADMIN_EMAIL,
       subject: `[New Ticket #${params.ticketNumber}] ${params.subject}`,
       html,
@@ -154,6 +156,7 @@ export async function sendTicketReply(params: SendTicketReplyParams) {
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
+      replyTo: REPLY_TO,
       to: params.to,
       subject: `Re: [Ticket #${params.ticketNumber}] ${params.subject}`,
       html,

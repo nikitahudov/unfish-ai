@@ -10,7 +10,7 @@ const faqs = [
         a: 'Click the "Sign In" button in the sidebar, then select "Create Account". You can sign up with your email or use Google authentication.',
       },
       {
-        q: 'Is 24P Academy free to use?',
+        q: 'Is UnFish.ai free to use?',
         a: 'We offer a free tier with access to basic features. Premium features like advanced AI coaching and detailed hand analysis require a subscription.',
       },
       {
@@ -82,7 +82,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-slate-400">
-            Find answers to common questions about 24P Academy
+            Find answers to common questions about UnFish.ai
           </p>
         </div>
 

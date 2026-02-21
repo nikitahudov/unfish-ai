@@ -51,10 +51,10 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-          Welcome to 24P Academy 🎰
+          Welcome to UnFish.ai 🦈
         </h1>
         <p className="text-slate-400 text-lg">
-          Your journey to poker mastery starts here
+          Your journey from fish to shark starts here
         </p>
       </div>
 

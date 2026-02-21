@@ -30,7 +30,7 @@ export function NewTicketAdminEmail({
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.logo}>24P Academy</h1>
+        <h1 style={styles.logo}>UnFish.ai</h1>
         <p style={styles.subtitle}>New Support Ticket</p>
       </div>
 
@@ -127,7 +127,7 @@ export function NewTicketAdminEmail({
 
       <div style={styles.footer}>
         <p style={styles.footerText}>
-          This is an automated notification from 24P Academy Support System.
+          This is an automated notification from UnFish.ai Support System.
         </p>
       </div>
     </div>

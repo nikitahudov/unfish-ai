@@ -35,11 +35,11 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">🎯</span>
-              <span className="text-xl font-bold text-white">24P Academy</span>
+              <img src="/logo.png" alt="UnFish.ai" className="w-8 h-8" />
+              <span className="text-xl font-bold text-white">UnFish.ai</span>
             </Link>
             <p className="text-sm text-slate-400 mb-4">
-              Transform your poker game with structured learning, AI coaching, and professional tools.
+              UnFish.ai — From Fish to Shark 🦈
             </p>
             <div className="flex gap-3">
               <a
@@ -146,7 +146,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-700 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-slate-500">
-            © {currentYear} 24P Academy. All rights reserved.
+            © {currentYear} UnFish.ai. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             {footerLinks.legal.map((link) => (

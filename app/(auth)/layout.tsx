@@ -22,10 +22,8 @@ export default function AuthLayout({
           {/* Logo */}
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
-                <span className="text-xl">🎰</span>
-              </div>
-              <span className="text-2xl font-bold text-white">24P Academy</span>
+              <img src="/logo.png" alt="UnFish.ai" className="w-10 h-10 rounded-xl" />
+              <span className="text-2xl font-bold text-white">UnFish.ai</span>
             </Link>
           </div>
 
@@ -35,7 +33,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <footer className="p-4 text-center text-sm text-slate-500">
-        <p>&copy; 2025 24P Academy. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} UnFish.ai. All rights reserved.</p>
       </footer>
     </div>
   );

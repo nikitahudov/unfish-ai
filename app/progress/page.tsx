@@ -165,7 +165,7 @@ export default function ProgressPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
           Your Progress
         </h1>
-        <p className="text-slate-400 text-lg">Track your journey to poker mastery</p>
+        <p className="text-slate-400 text-lg">Track your journey from fish to shark</p>
       </div>
 
       {/* Supabase-backed Stats Card for authenticated users */}

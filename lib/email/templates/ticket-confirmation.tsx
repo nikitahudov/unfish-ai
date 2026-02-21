@@ -20,7 +20,7 @@ export function TicketConfirmationEmail({
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.logo}>24P Academy</h1>
+        <h1 style={styles.logo}>UnFish.ai</h1>
         <p style={styles.subtitle}>Support Ticket Confirmation</p>
       </div>
 
@@ -63,13 +63,13 @@ export function TicketConfirmationEmail({
 
         <p style={styles.signature}>
           Best regards,<br />
-          The 24P Academy Team
+          The UnFish.ai Team
         </p>
       </div>
 
       <div style={styles.footer}>
         <p style={styles.footerText}>
-          This email was sent because you submitted a support request at 24P Academy.
+          This email was sent because you submitted a support request at UnFish.ai.
         </p>
       </div>
     </div>
@@ -224,6 +224,6 @@ ${message}
 We typically respond within 24-48 hours. If your issue is urgent, please reply to this email with additional details.
 
 Best regards,
-The 24P Academy Team
+The UnFish.ai Team
   `.trim();
 }

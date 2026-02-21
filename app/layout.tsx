@@ -12,8 +12,19 @@ const fontSans = GeistSans;
 const fontMono = GeistMono;
 
 export const metadata: Metadata = {
-  title: "24P Academy | Poker Mastery Platform",
-  description: "Master poker through structured curriculum, assessments, and AI coaching",
+  title: "UnFish.ai — Transform from Fish to Shark",
+  description: "AI-powered poker coaching platform. Master 96 poker skills with structured curriculum and AI coaching.",
+  metadataBase: new URL('https://unfish.ai'),
+  openGraph: {
+    url: 'https://unfish.ai',
+    siteName: 'UnFish.ai',
+    title: 'UnFish.ai — Transform from Fish to Shark',
+    description: 'AI-powered poker coaching platform. Master 96 poker skills with structured curriculum and AI coaching.',
+  },
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

@@ -50,7 +50,7 @@ export async function updateSession(request: NextRequest) {
     if (!error) {
       // Build redirect using the public app URL, not the request origin
       // (which may be 0.0.0.0 when the server binds to all interfaces).
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unfish.ai';
       const destination = request.nextUrl.pathname === '/' ? '/wiki' : request.nextUrl.pathname;
       const redirectUrl = new URL(destination, baseUrl);
 

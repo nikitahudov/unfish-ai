@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 // Use the public app URL for redirects instead of the request origin,
 // which can be 0.0.0.0 when the server binds to all interfaces.
 function getBaseUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  return process.env.NEXT_PUBLIC_APP_URL || 'https://unfish.ai';
 }
 
 export async function GET(request: NextRequest) {

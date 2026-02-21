@@ -60,7 +60,7 @@ ${difficultyInstructions[preferences.quizDifficulty]}`;
 export function buildSystemPrompt(context: CoachContextData, mode: CoachMode): string {
   const personalityPrompt = buildPersonalityPrompt(context.preferences);
 
-  const basePrompt = `You are an expert poker coach for the 24P Academy platform. You're helping a student learn poker through a structured curriculum.
+  const basePrompt = `You are an expert poker coach for the UnFish.ai platform. You're helping a student learn poker through a structured curriculum.
 
 ${personalityPrompt}
 

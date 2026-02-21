@@ -26,8 +26,8 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">🎓</span>
-            <span className="font-bold text-white hidden sm:block">24P Academy</span>
+            <img src="/logo.png" alt="UnFish.ai" className="w-8 h-8" />
+            <span className="font-bold text-white hidden sm:block">UnFish.ai</span>
           </Link>
 
           {/* Navigation */}

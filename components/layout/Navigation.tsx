@@ -140,12 +140,10 @@ export const Navigation = () => {
         {/* Logo */}
         <div className="p-6 border-b border-slate-800">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
-              <span className="text-xl">🎰</span>
-            </div>
+            <img src="/logo.png" alt="UnFish.ai" className="w-10 h-10 rounded-xl" />
             <div>
-              <h1 className="font-bold text-white text-lg">24P Academy</h1>
-              <p className="text-xs text-slate-500">Poker Mastery</p>
+              <h1 className="font-bold text-white text-lg">UnFish.ai</h1>
+              <p className="text-xs text-slate-500">From Fish to Shark</p>
             </div>
           </Link>
         </div>

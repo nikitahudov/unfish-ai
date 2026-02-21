@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ============================================
-# POKER MASTERY PLATFORM - DEPLOYMENT SCRIPT
+# UNFISH.AI - DEPLOYMENT SCRIPT
 # Run this on your DigitalOcean server
 # ============================================
 
 set -e  # Exit on error
 
-echo "🎰 Poker Mastery Platform - Deployment Script"
+echo "🦈 UnFish.ai - Deployment Script"
 echo "=============================================="
 echo ""
 
@@ -15,7 +15,7 @@ echo ""
 if [ ! -f "package.json" ]; then
     echo "❌ Error: package.json not found!"
     echo "   Please run this script from your Next.js project directory:"
-    echo "   cd ~/projects/poker-mastery-platform"
+    echo "   cd ~/projects/unfish-ai"
     exit 1
 fi
 

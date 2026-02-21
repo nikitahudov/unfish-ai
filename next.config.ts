@@ -12,6 +12,14 @@ const withMDX = createMDX({
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   allowedDevOrigins: ['134.122.102.100'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'unfish.ai',
+      },
+    ],
+  },
 };
 
 export default withMDX(nextConfig);

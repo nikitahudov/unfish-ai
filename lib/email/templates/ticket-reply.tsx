@@ -24,7 +24,7 @@ export function TicketReplyEmail({
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.logo}>24P Academy</h1>
+        <h1 style={styles.logo}>UnFish.ai</h1>
         <p style={styles.subtitle}>
           {isFromAdmin ? 'Support Response' : 'New Reply on Ticket'}
         </p>
@@ -73,7 +73,7 @@ export function TicketReplyEmail({
 
         <p style={styles.signature}>
           Best regards,<br />
-          The 24P Academy Team
+          The UnFish.ai Team
         </p>
       </div>
 
@@ -225,6 +225,6 @@ ${replyMessage}
 ${ticketUrl ? `View the full conversation: ${ticketUrl}` : ''}
 
 Best regards,
-The 24P Academy Team
+The UnFish.ai Team
   `.trim();
 }

@@ -40,7 +40,7 @@ export function AdminSidebar() {
           <span className="text-2xl">⚙️</span>
           <div>
             <h1 className="text-lg font-bold text-white">Admin Panel</h1>
-            <p className="text-xs text-slate-500">24P Academy</p>
+            <p className="text-xs text-slate-500">UnFish.ai</p>
           </div>
         </Link>
       </div>

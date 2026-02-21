@@ -1,11 +1,11 @@
-# 🎰 Poker Mastery Platform - Migration Files
+# 🦈 UnFish.ai - Migration Files
 
 This directory contains all the files to migrate to your Next.js project on DigitalOcean.
 
 ## 📁 File Structure
 
 ```
-poker-mastery/
+unfish-ai/
 ├── app/
 │   ├── globals.css          # Tailwind + custom styles
 │   ├── layout.tsx           # Root layout with navigation
@@ -40,7 +40,7 @@ From your LOCAL machine (not the server), run these commands:
 # First, download the files from this output (or copy from Claude's response)
 # Then upload to your server:
 
-scp -r ./poker-mastery/* developer@YOUR_DROPLET_IP:~/projects/poker-mastery-platform/
+scp -r ./unfish-ai/* developer@YOUR_DROPLET_IP:~/projects/unfish-ai/
 ```
 
 ### Option 2: Copy-Paste via SSH
@@ -52,7 +52,7 @@ scp -r ./poker-mastery/* developer@YOUR_DROPLET_IP:~/projects/poker-mastery-plat
 
 2. Navigate to your project:
    ```bash
-   cd ~/projects/poker-mastery-platform
+   cd ~/projects/unfish-ai
    ```
 
 3. Create each file manually using `nano` or `cat`:
@@ -67,7 +67,7 @@ scp -r ./poker-mastery/* developer@YOUR_DROPLET_IP:~/projects/poker-mastery-plat
 
 If these files are in a repository:
 ```bash
-cd ~/projects/poker-mastery-platform
+cd ~/projects/unfish-ai
 git pull origin main
 ```
 

@@ -29,6 +29,9 @@ export default async function SkillContentPage({ params }: PageProps) {
     const result = await compileMDX({
       source: contentData.content,
       components: mdxComponents,
+      options: {
+        blockJS: false,
+      },
     });
     mdxContent = result.content;
     frontmatter = contentData.frontmatter;

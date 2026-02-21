@@ -2,6 +2,16 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/proxy';
 import { getRouteAccess } from '@/lib/config/routes';
 
+// Copy session cookies from the supabaseResponse onto a new redirect response.
+// Without this, refreshed auth tokens from updateSession() are lost.
+function redirectWithCookies(url: URL, supabaseResponse: NextResponse): NextResponse {
+  const redirectResponse = NextResponse.redirect(url);
+  supabaseResponse.cookies.getAll().forEach((cookie) => {
+    redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+  });
+  return redirectResponse;
+}
+
 export async function proxy(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request);
 
@@ -17,13 +27,13 @@ export async function proxy(request: NextRequest) {
   if (routeConfig?.access === 'auth' && !user) {
     const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('returnUrl', pathname);
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithCookies(redirectUrl, supabaseResponse);
   }
 
   // Handle guest-only routes - redirect authenticated users away
   if (routeConfig?.access === 'guest-only' && user) {
     const returnUrl = request.nextUrl.searchParams.get('returnUrl') || '/wiki';
-    return NextResponse.redirect(new URL(returnUrl, request.url));
+    return redirectWithCookies(new URL(returnUrl, request.url), supabaseResponse);
   }
 
   return supabaseResponse;

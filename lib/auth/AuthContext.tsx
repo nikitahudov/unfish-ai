@@ -103,12 +103,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         setIsLoading(false);
 
-        // Handle specific auth events
+        // Handle specific auth events.
+        // IMPORTANT: Only use router.refresh() here — never router.push().
+        // router.push() races with subsequent sign-in events and can cause
+        // infinite navigation loops when switching accounts.
         if (event === 'SIGNED_IN') {
           addToast({ type: 'success', message: 'Welcome back!' });
           router.refresh();
         } else if (event === 'SIGNED_OUT') {
-          router.push('/');
           router.refresh();
         } else if (event === 'PASSWORD_RECOVERY') {
           router.push('/reset-password');
@@ -222,9 +224,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try { localStorage.removeItem(key); } catch {}
     });
 
+    // 1. Server-side sign-out: revokes the session and explicitly clears
+    //    ALL sb-* cookies (including stale chunked fragments from a
+    //    previous session that the client SDK might not know about).
+    try {
+      await fetch('/auth/signout', { method: 'POST' });
+    } catch (e) {
+      console.error('Server signout failed, falling back to client-only:', e);
+    }
+
+    // 2. Client-side sign-out: clears in-memory state and local storage.
     await supabase.auth.signOut();
+
     addToast({ type: 'success', message: 'Signed out successfully' });
-  }, [supabase, addToast]);
+
+    // 3. Navigate to home. We do this here (not in onAuthStateChange)
+    //    to avoid racing with a subsequent SIGNED_IN event.
+    router.push('/');
+  }, [supabase, addToast, router]);
 
   // Reset password
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {

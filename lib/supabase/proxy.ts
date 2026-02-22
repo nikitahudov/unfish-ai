@@ -44,7 +44,16 @@ export async function updateSession(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const isCallbackRoute = request.nextUrl.pathname === '/auth/callback';
 
-  if (code && !isCallbackRoute) {
+  // Skip ALL auth processing for the callback route — the route handler
+  // at app/(auth)/auth/callback/route.ts owns the code exchange.
+  // Calling getUser() here would mutate request.cookies (via setAll) and
+  // can wipe the PKCE code verifier cookie before the handler reads it.
+  if (isCallbackRoute) {
+    console.log('=== PROXY: SKIPPING callback route (handled by route handler) ===');
+    return { supabaseResponse, user: null };
+  }
+
+  if (code) {
     console.log('=== PROXY: CODE EXCHANGE (non-callback route) ===', {
       pathname: request.nextUrl.pathname,
       codeLength: code.length,

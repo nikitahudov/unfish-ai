@@ -98,37 +98,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     initializeAuth();
 
-    // Listen for auth changes
+    // Listen for auth changes.
+    // CRITICAL: Do NOT call router.refresh() or router.push() here.
+    // router.refresh() triggers a server request → middleware getUser() →
+    // token refresh → new cookies → browser fires SIGNED_IN again → loop.
+    // Server components already get fresh data on the initial page load
+    // because middleware refreshes the session on every navigation.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, currentSession: Session | null) => {
         console.log('Auth state changed:', event);
 
-        if (currentSession?.user) {
-          const userData = await fetchUserDataRef.current(
-            currentSession.user.id,
-            currentSession.user.email || ''
-          );
-          setUser(userData);
-          setSession(currentSession);
-        } else {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (currentSession?.user) {
+            const userData = await fetchUserDataRef.current(
+              currentSession.user.id,
+              currentSession.user.email || ''
+            );
+            setUser(userData);
+            setSession(currentSession);
+          }
+          if (event === 'SIGNED_IN') {
+            addToastRef.current({ type: 'success', message: 'Welcome back!' });
+          }
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setSession(null);
-        }
-
-        setIsLoading(false);
-
-        // Handle specific auth events.
-        // IMPORTANT: Only use router.refresh() here — never router.push().
-        // router.push() races with subsequent sign-in events and can cause
-        // infinite navigation loops when switching accounts.
-        if (event === 'SIGNED_IN') {
-          addToastRef.current({ type: 'success', message: 'Welcome back!' });
-          routerRef.current.refresh();
-        } else if (event === 'SIGNED_OUT') {
-          routerRef.current.refresh();
         } else if (event === 'PASSWORD_RECOVERY') {
           routerRef.current.push('/reset-password');
         }
+
+        setIsLoading(false);
       }
     );
 

@@ -10,6 +10,21 @@ import { useToastStore } from '@/lib/hooks/useToast';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Returns the base app URL for OAuth redirects.
+ * Uses NEXT_PUBLIC_APP_URL to ensure redirects always go to the production
+ * domain, not a Vercel preview deployment URL.
+ */
+function getAppUrl(): string {
+  let url =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    'http://localhost:3000';
+  url = url.startsWith('http') ? url : `https://${url}`;
+  url = url.endsWith('/') ? url : `${url}/`;
+  return url;
+}
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
@@ -137,7 +152,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${getAppUrl()}auth/callback`,
         },
       });
 
@@ -178,7 +193,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${getAppUrl()}auth/callback`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -215,7 +230,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+        redirectTo: `${getAppUrl()}auth/callback?type=recovery`,
       });
 
       if (error) {

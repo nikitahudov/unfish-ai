@@ -32,8 +32,11 @@ export async function proxy(request: NextRequest) {
 
   // Handle guest-only routes - redirect authenticated users away
   if (routeConfig?.access === 'guest-only' && user) {
-    const returnUrl = request.nextUrl.searchParams.get('returnUrl') || '/wiki';
-    return redirectWithCookies(new URL(returnUrl, request.url), supabaseResponse);
+    const rawReturnUrl = request.nextUrl.searchParams.get('returnUrl') || '/wiki';
+    // Sanitize returnUrl: never redirect back to a guest-only route to avoid loops
+    const returnConfig = getRouteAccess(rawReturnUrl);
+    const safeReturnUrl = returnConfig?.access === 'guest-only' ? '/wiki' : rawReturnUrl;
+    return redirectWithCookies(new URL(safeReturnUrl, request.url), supabaseResponse);
   }
 
   return supabaseResponse;

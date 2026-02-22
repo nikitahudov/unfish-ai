@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
@@ -34,8 +34,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
+  // Stable client reference — createBrowserClient is a singleton but calling
+  // createClient() on every render produced a new wrapper reference which
+  // cascaded through useCallback/useEffect deps and caused an infinite loop.
+  const supabase = useMemo(() => createClient(), []);
   const addToast = useToastStore(state => state.addToast);
+
+  // Keep refs to values used inside the auth effect so we can avoid
+  // including them in the dependency array (the effect must run exactly once).
+  const routerRef = useRef(router);
+  routerRef.current = router;
+  const addToastRef = useRef(addToast);
+  addToastRef.current = addToast;
 
   // Fetch user profile and stats
   const fetchUserData = useCallback(async (userId: string, email: string): Promise<AuthUser> => {
@@ -60,7 +70,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, [supabase]);
 
-  // Initialize auth state
+  const fetchUserDataRef = useRef(fetchUserData);
+  fetchUserDataRef.current = fetchUserData;
+
+  // Initialize auth state — runs ONCE on mount.
+  // All mutable helpers are accessed via refs so this effect never re-runs.
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -68,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
 
         if (initialSession?.user) {
-          const userData = await fetchUserData(
+          const userData = await fetchUserDataRef.current(
             initialSession.user.id,
             initialSession.user.email || ''
           );
@@ -90,7 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('Auth state changed:', event);
 
         if (currentSession?.user) {
-          const userData = await fetchUserData(
+          const userData = await fetchUserDataRef.current(
             currentSession.user.id,
             currentSession.user.email || ''
           );
@@ -108,12 +122,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // router.push() races with subsequent sign-in events and can cause
         // infinite navigation loops when switching accounts.
         if (event === 'SIGNED_IN') {
-          addToast({ type: 'success', message: 'Welcome back!' });
-          router.refresh();
+          addToastRef.current({ type: 'success', message: 'Welcome back!' });
+          routerRef.current.refresh();
         } else if (event === 'SIGNED_OUT') {
-          router.refresh();
+          routerRef.current.refresh();
         } else if (event === 'PASSWORD_RECOVERY') {
-          router.push('/reset-password');
+          routerRef.current.push('/reset-password');
         }
       }
     );
@@ -121,7 +135,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserData, router, addToast]);
+  }, [supabase]);
 
   // Sign in with email
   const signInWithEmail = useCallback(async (

@@ -14,10 +14,7 @@ export default function LoginPage() {
   const { signInWithEmail, signInWithGoogle, isAuthenticated } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawReturnUrl = searchParams.get('returnUrl') || '/wiki';
-  // Never redirect back to login/signup/reset-password to avoid loops
-  const guestOnlyRoutes = ['/login', '/signup', '/reset-password'];
-  const returnUrl = guestOnlyRoutes.includes(rawReturnUrl) ? '/wiki' : rawReturnUrl;
+  const returnUrl = searchParams.get('returnUrl') || '/wiki';
 
   // Redirect if already authenticated
   useEffect(() => {

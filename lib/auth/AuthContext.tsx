@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
@@ -19,7 +19,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const supabase = useMemo(() => createClient(), []);
+  const supabase = createClient();
   const addToast = useToastStore(state => state.addToast);
 
   // Fetch user profile and stats
@@ -49,16 +49,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Use getUser() to validate the session with the server.
-        // getSession() only reads from local storage and can return
-        // stale/expired tokens, causing redirect loops.
-        const { data: { user: authUser } } = await supabase.auth.getUser();
+        // Get initial session
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
 
-        if (authUser) {
-          const { data: { session: initialSession } } = await supabase.auth.getSession();
+        if (initialSession?.user) {
           const userData = await fetchUserData(
-            authUser.id,
-            authUser.email || ''
+            initialSession.user.id,
+            initialSession.user.email || ''
           );
           setUser(userData);
           setSession(initialSession);

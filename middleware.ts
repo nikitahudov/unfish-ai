@@ -57,7 +57,10 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public files (public folder)
      * - api routes
+     * - auth/callback (code exchange handled by its own route handler)
+     * - auth/signout (server-side sign-out route)
+     * - auth/confirm (email confirmation route)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api|auth/callback|auth/signout|auth/confirm).*)',
   ],
 };

@@ -94,7 +94,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Handle specific auth events
         if (event === 'SIGNED_IN') {
           addToast({ type: 'success', message: 'Welcome back!' });
-          router.refresh();
+          // Navigate away from guest-only pages after sign-in
+          const guestOnlyRoutes = ['/login', '/signup', '/reset-password'];
+          if (guestOnlyRoutes.includes(window.location.pathname)) {
+            const params = new URLSearchParams(window.location.search);
+            const returnUrl = params.get('returnUrl') || '/wiki';
+            // Prevent redirect loop: never redirect back to a guest-only route
+            const safeUrl = guestOnlyRoutes.includes(returnUrl) ? '/wiki' : returnUrl;
+            router.push(safeUrl);
+          } else {
+            router.refresh();
+          }
         } else if (event === 'SIGNED_OUT') {
           router.push('/');
           router.refresh();

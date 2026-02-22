@@ -45,7 +45,16 @@ export async function updateSession(request: NextRequest) {
   const isCallbackRoute = request.nextUrl.pathname === '/auth/callback';
 
   if (code && !isCallbackRoute) {
+    console.log('=== PROXY: CODE EXCHANGE (non-callback route) ===', {
+      pathname: request.nextUrl.pathname,
+      codeLength: code.length,
+    });
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    console.log('=== PROXY: CODE EXCHANGE RESULT ===', {
+      error: error?.message,
+      cookieCount: supabaseResponse.cookies.getAll().length,
+    });
 
     if (!error) {
       // Build redirect using the public app URL, not the request origin

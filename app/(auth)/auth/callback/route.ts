@@ -13,6 +13,16 @@ export async function GET(request: NextRequest) {
   const type = requestUrl.searchParams.get('type');
   const next = requestUrl.searchParams.get('next') || '/wiki';
 
+  console.log('=== AUTH CALLBACK HIT ===', {
+    url: request.url,
+    hasCode: !!code,
+    codeLength: code?.length,
+    hasTokenHash: !!tokenHash,
+    type,
+    next,
+    cookies: request.cookies.getAll().map(c => c.name),
+  });
+
   const baseUrl = getBaseUrl();
 
   // Track cookies set by Supabase so we can forward them onto the redirect
@@ -45,8 +55,16 @@ export async function GET(request: NextRequest) {
   // Helper: create a redirect that carries session cookies set by Supabase.
   function redirectWithCookies(destination: string): NextResponse {
     const response = NextResponse.redirect(new URL(destination, baseUrl));
-    supabaseResponse.cookies.getAll().forEach((cookie) => {
+    const cookiesToCopy = supabaseResponse.cookies.getAll();
+    cookiesToCopy.forEach((cookie) => {
       response.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    const finalCookies = response.cookies.getAll();
+    console.log('=== REDIRECT WITH COOKIES ===', {
+      destination,
+      redirectUrl: new URL(destination, baseUrl).toString(),
+      copiedCookies: cookiesToCopy.map(c => c.name),
+      finalCookies: finalCookies.map(c => ({ name: c.name, path: c.path, sameSite: c.sameSite, secure: c.secure })),
     });
     return response;
   }
@@ -59,6 +77,13 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
       type: type as 'signup' | 'email' | 'recovery' | 'invite',
+    });
+
+    const cookiesAfterVerify = supabaseResponse.cookies.getAll();
+    console.log('=== VERIFY OTP RESULT ===', {
+      error: error?.message,
+      cookieCount: cookiesAfterVerify.length,
+      cookieNames: cookiesAfterVerify.map(c => c.name),
     });
 
     if (error) {
@@ -78,6 +103,13 @@ export async function GET(request: NextRequest) {
   // Handle code exchange (OAuth and PKCE flows)
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    const cookiesAfterExchange = supabaseResponse.cookies.getAll();
+    console.log('=== CODE EXCHANGE RESULT ===', {
+      error: error?.message,
+      cookieCount: cookiesAfterExchange.length,
+      cookieNames: cookiesAfterExchange.map(c => c.name),
+    });
 
     if (error) {
       console.error('Auth callback error:', error);

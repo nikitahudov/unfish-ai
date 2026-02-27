@@ -139,7 +139,7 @@ export const Navigation = () => {
       >
         {/* Logo */}
         <div className="p-6 border-b border-slate-800">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" prefetch={false} className="flex items-center gap-3">
             <img src="/logo.png" alt="UnFish.ai" className="w-10 h-10 rounded-xl" />
             <div>
               <h1 className="font-bold text-white text-lg">UnFish.ai</h1>
@@ -161,6 +161,7 @@ export const Navigation = () => {
               <Link
                 key={item.id}
                 href={item.href}
+                prefetch={false}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all
@@ -193,6 +194,7 @@ export const Navigation = () => {
                   <Link
                     key={item.id}
                     href={item.href}
+                    prefetch={false}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`
                       flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all

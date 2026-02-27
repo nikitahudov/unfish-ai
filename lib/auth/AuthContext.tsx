@@ -128,11 +128,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           }
 
           if (currentSession?.user) {
+            // Set userIdRef BEFORE the async call so concurrent SIGNED_IN
+            // events are rejected by the guard above
+            userIdRef.current = currentSession.user.id;
             const userData = await fetchUserDataRef.current(
               currentSession.user.id,
               currentSession.user.email || ''
             );
-            userIdRef.current = currentSession.user.id;
             setUser(userData);
             setSession(currentSession);
           }

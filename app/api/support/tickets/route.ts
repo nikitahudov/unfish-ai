@@ -11,7 +11,8 @@ export async function POST(request: NextRequest) {
     const adminDb = createAdminClient();
 
     // Get current user (if logged in)
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
 
     // Parse form data
     const formData = await request.formData();

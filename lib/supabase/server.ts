@@ -12,16 +12,12 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have proxy refreshing
-            // user sessions.
-          }
+        setAll() {
+          // Intentionally empty. The proxy (proxy.ts) handles session
+          // refresh and cookie writes. Writing cookies from Server
+          // Components or Route Handlers adds Set-Cookie headers to
+          // RSC responses, which triggers Next.js cache invalidation
+          // and causes infinite RSC re-fetch loops.
         },
       },
     }

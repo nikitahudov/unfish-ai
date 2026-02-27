@@ -20,9 +20,18 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          // Check if any cookie value actually differs from the original
+          // Check if any cookie value actually differs from the original.
+          // The Supabase storage adapter may include DELETE markers
+          // (value="") for cookie chunks that don't exist in the request.
+          // These are not real changes and must be ignored.
           const hasRealChanges = cookiesToSet.some(({ name, value }) => {
-            return originalCookies.get(name) !== value
+            const original = originalCookies.get(name)
+            if (original === undefined) {
+              // Cookie doesn't exist in request — only a real change
+              // if we're setting a non-empty value (new cookie)
+              return value !== ''
+            }
+            return original !== value
           })
 
           if (!hasRealChanges) {

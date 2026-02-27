@@ -14,13 +14,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Skip session refresh for RSC prefetch requests
-  // Prefetches don't need fresh auth and calling getUser() on each one
-  // triggers cookie updates → onAuthStateChange → re-render → more prefetches → loop
-  const isPrefetch = request.headers.get('RSC') === '1'
-    && request.headers.get('Next-Router-Prefetch') === '1'
+  // Skip session refresh for ALL RSC (React Server Component) requests.
+  // RSC requests are triggered by client-side navigation and re-renders.
+  // Running getUser() on these updates cookies, which triggers
+  // onAuthStateChange → re-render → more RSC requests → infinite loop.
+  // Session only needs refreshing on full document (HTML) requests.
+  const isRSC = request.headers.get('RSC') === '1'
 
-  if (isPrefetch) {
+  if (isRSC) {
     return NextResponse.next()
   }
 

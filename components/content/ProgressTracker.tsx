@@ -16,13 +16,19 @@ export function ProgressTracker({ skillId, skillName, children }: ProgressTracke
   const startTimeRef = useRef<number>(Date.now());
   const [hasRecordedView, setHasRecordedView] = useState(false);
 
+  // Keep refs to avoid re-running effects when callback identities change
+  const recordContentViewRef = useRef(recordContentView);
+  recordContentViewRef.current = recordContentView;
+  const addStudyTimeRef = useRef(addStudyTime);
+  addStudyTimeRef.current = addStudyTime;
+
   // Record view on mount (only once per session)
   useEffect(() => {
     if (isAuthenticated && !hasRecordedView) {
-      recordContentView(skillId, skillName);
+      recordContentViewRef.current(skillId, skillName);
       setHasRecordedView(true);
     }
-  }, [isAuthenticated, skillId, skillName, hasRecordedView, recordContentView]);
+  }, [isAuthenticated, skillId, skillName, hasRecordedView]);
 
   // Track time spent on unmount or tab change
   useEffect(() => {
@@ -32,7 +38,7 @@ export function ProgressTracker({ skillId, skillName, children }: ProgressTracke
       if (document.hidden) {
         const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
         if (timeSpent > 5) { // Only record if > 5 seconds
-          addStudyTime(skillId, timeSpent);
+          addStudyTimeRef.current(skillId, timeSpent);
         }
         startTimeRef.current = Date.now();
       }
@@ -59,10 +65,10 @@ export function ProgressTracker({ skillId, skillName, children }: ProgressTracke
       // Record time on unmount
       const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
       if (timeSpent > 5) {
-        addStudyTime(skillId, timeSpent);
+        addStudyTimeRef.current(skillId, timeSpent);
       }
     };
-  }, [isAuthenticated, skillId, addStudyTime]);
+  }, [isAuthenticated, skillId]);
 
   return <>{children}</>;
 }

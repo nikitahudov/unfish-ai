@@ -40,12 +40,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const supabase = useMemo(() => createClient(), []);
   const addToast = useToastStore(state => state.addToast);
 
-  // Keep refs to values used inside the auth effect so we can avoid
-  // including them in the dependency array (the effect must run exactly once).
+  // Keep refs to values used inside callbacks / effects so we can avoid
+  // including them in dependency arrays and keep function references stable.
   const routerRef = useRef(router);
   routerRef.current = router;
   const addToastRef = useRef(addToast);
   addToastRef.current = addToast;
+  const sessionRef = useRef(session);
+  sessionRef.current = session;
+  const userRef = useRef(user);
+  userRef.current = user;
 
   // Fetch user profile and stats
   const fetchUserData = useCallback(async (userId: string, email: string): Promise<AuthUser> => {
@@ -242,7 +246,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [supabase]);
 
-  // Sign out
+  // Sign out — uses refs for addToast/router to keep reference stable.
   const signOut = useCallback(async (): Promise<void> => {
     // Clear app localStorage data to prevent stale data on next login
     const appKeys = [
@@ -265,12 +269,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // 2. Client-side sign-out: clears in-memory state and local storage.
     await supabase.auth.signOut();
 
-    addToast({ type: 'success', message: 'Signed out successfully' });
+    addToastRef.current({ type: 'success', message: 'Signed out successfully' });
 
     // 3. Navigate to home. We do this here (not in onAuthStateChange)
     //    to avoid racing with a subsequent SIGNED_IN event.
-    router.push('/');
-  }, [supabase, addToast, router]);
+    routerRef.current.push('/');
+  }, [supabase]);
 
   // Reset password
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
@@ -306,22 +310,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [supabase]);
 
-  // Refresh profile data
+  // Refresh profile data — uses refs to keep reference stable.
   const refreshProfile = useCallback(async (): Promise<void> => {
-    if (!session?.user) return;
+    if (!sessionRef.current?.user) return;
 
-    const userData = await fetchUserData(
-      session.user.id,
-      session.user.email || ''
+    const userData = await fetchUserDataRef.current(
+      sessionRef.current.user.id,
+      sessionRef.current.user.email || ''
     );
     setUser(userData);
-  }, [session, fetchUserData]);
+  }, []);
 
-  // Update profile
+  // Update profile — uses refs to keep reference stable.
   const updateProfile = useCallback(async (
     updates: Partial<UserProfile>
   ): Promise<AuthResult> => {
-    if (!user?.id) {
+    if (!userRef.current?.id) {
       return { success: false, error: 'Not authenticated' };
     }
 
@@ -329,7 +333,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { error } = await supabase
         .from('user_profiles')
         .update(updates)
-        .eq('id', user.id);
+        .eq('id', userRef.current.id);
 
       if (error) {
         return { success: false, error: error.message };
@@ -342,13 +346,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch {
       return { success: false, error: 'An unexpected error occurred' };
     }
-  }, [user, supabase, refreshProfile]);
+  }, [supabase, refreshProfile]);
 
-  const value: AuthContextType = {
+  const isAuthenticated = !!user && !!session;
+
+  const value: AuthContextType = useMemo(() => ({
     user,
     session,
     isLoading,
-    isAuthenticated: !!user && !!session,
+    isAuthenticated,
     signInWithEmail,
     signUpWithEmail,
     signInWithGoogle,
@@ -357,7 +363,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     updatePassword,
     refreshProfile,
     updateProfile,
-  };
+  }), [
+    user,
+    session,
+    isLoading,
+    isAuthenticated,
+    signInWithEmail,
+    signUpWithEmail,
+    signInWithGoogle,
+    signOut,
+    resetPassword,
+    updatePassword,
+    refreshProfile,
+    updateProfile,
+  ]);
 
   return (
     <AuthContext.Provider value={value}>

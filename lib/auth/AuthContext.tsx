@@ -73,6 +73,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const fetchUserDataRef = useRef(fetchUserData);
   fetchUserDataRef.current = fetchUserData;
 
+  // Track the current user ID so onAuthStateChange can skip redundant updates.
+  const userIdRef = useRef<string | null>(null);
+
   // Initialize auth state — runs ONCE on mount.
   // All mutable helpers are accessed via refs so this effect never re-runs.
   useEffect(() => {
@@ -86,6 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             initialSession.user.id,
             initialSession.user.email || ''
           );
+          userIdRef.current = initialSession.user.id;
           setUser(userData);
           setSession(initialSession);
         }
@@ -109,11 +113,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('Auth state changed:', event);
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          const newUserId = currentSession?.user?.id ?? null;
+
+          // Only update state if the user actually changed (login/logout).
+          // TOKEN_REFRESHED and INITIAL_SESSION fire with the same user —
+          // calling setUser/setSession would create new object references,
+          // trigger React re-renders, re-fire RSC fetches, and loop.
+          if (newUserId === userIdRef.current) {
+            return; // Same user, skip — no re-render needed
+          }
+
           if (currentSession?.user) {
             const userData = await fetchUserDataRef.current(
               currentSession.user.id,
               currentSession.user.email || ''
             );
+            userIdRef.current = currentSession.user.id;
             setUser(userData);
             setSession(currentSession);
           }
@@ -121,13 +136,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
             addToastRef.current({ type: 'success', message: 'Welcome back!' });
           }
         } else if (event === 'SIGNED_OUT') {
+          userIdRef.current = null;
           setUser(null);
           setSession(null);
         } else if (event === 'PASSWORD_RECOVERY') {
           routerRef.current.push('/reset-password');
         }
 
-        setIsLoading(false);
+        setIsLoading(prev => prev ? false : prev);
       }
     );
 

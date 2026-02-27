@@ -1,94 +1,80 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
-import type { Database } from '@/types/database';
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
-  });
+  })
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return { supabaseResponse, user: null };
-  }
-
-  const supabase = createServerClient<Database>(
-    supabaseUrl,
-    supabaseAnonKey,
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
-          );
+          )
           supabaseResponse = NextResponse.next({
             request,
-          });
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
-          );
+          )
         },
       },
     }
-  );
+  )
 
-  // Handle auth code exchange on any route.
-  // Supabase may redirect the code to the site root instead of /auth/callback
-  // if the redirect URL isn't in the allowed list. This catches that case
-  // so Google OAuth and email confirmation work regardless.
-  const code = request.nextUrl.searchParams.get('code');
-  const isCallbackRoute = request.nextUrl.pathname === '/auth/callback';
+  // IMPORTANT: Do NOT add any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very
+  // hard to debug issues with users being randomly logged out.
 
-  // Skip ALL auth processing for the callback route — the route handler
-  // at app/(auth)/auth/callback/route.ts owns the code exchange.
-  // Calling getUser() here would mutate request.cookies (via setAll) and
-  // can wipe the PKCE code verifier cookie before the handler reads it.
-  if (isCallbackRoute) {
-    console.log('=== PROXY: SKIPPING callback route (handled by route handler) ===');
-    return { supabaseResponse, user: null };
-  }
-
-  if (code) {
-    console.log('=== PROXY: CODE EXCHANGE (non-callback route) ===', {
-      pathname: request.nextUrl.pathname,
-      codeLength: code.length,
-    });
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    console.log('=== PROXY: CODE EXCHANGE RESULT ===', {
-      error: error?.message,
-      cookieCount: supabaseResponse.cookies.getAll().length,
-    });
-
-    if (!error) {
-      // Build redirect using the public app URL, not the request origin
-      // (which may be 0.0.0.0 when the server binds to all interfaces).
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unfish.ai';
-      const destination = request.nextUrl.pathname === '/' ? '/wiki' : request.nextUrl.pathname;
-      const redirectUrl = new URL(destination, baseUrl);
-
-      const redirectResponse = NextResponse.redirect(redirectUrl);
-
-      // Copy session cookies from the exchange onto the redirect response.
-      // Without this the browser never receives the session tokens.
-      supabaseResponse.cookies.getAll().forEach((cookie) => {
-        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
-      });
-
-      return { supabaseResponse: redirectResponse, user: null };
-    }
-  }
-
-  // IMPORTANT: Do not remove this line
-  // This refreshes the session if expired - required for Server Components
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
-  return { supabaseResponse, user };
+  // --- Route Protection ---
+  // Redirect unauthenticated users away from protected routes
+  const protectedRoutes = ['/tools', '/coach', '/assess', '/wiki', '/progress', '/settings', '/admin']
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from auth pages
+  const authRoutes = ['/login', '/signup']
+  const isAuthRoute = authRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  if (isAuthRoute && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/tools'
+    return NextResponse.redirect(url)
+  }
+
+  // IMPORTANT: You *must* return the supabaseResponse object as it is.
+  // If you're creating a new response object with NextResponse.next()
+  // make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid
+  //    changing the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to
+  // go out of sync and terminate the user's session prematurely!
+
+  return supabaseResponse
 }

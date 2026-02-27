@@ -1,66 +1,53 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { updateSession } from '@/lib/supabase/proxy';
-import { getRouteAccess } from '@/lib/config/routes';
-
-// Copy session cookies from the supabaseResponse onto a new redirect response.
-// Without this, refreshed auth tokens from updateSession() are lost.
-function redirectWithCookies(url: URL, supabaseResponse: NextResponse): NextResponse {
-  const redirectResponse = NextResponse.redirect(url);
-  supabaseResponse.cookies.getAll().forEach((cookie) => {
-    redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
-  });
-  return redirectResponse;
-}
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const { supabaseResponse, user } = await updateSession(request);
-
-  console.log('=== MIDDLEWARE ===', {
-    pathname: request.nextUrl.pathname,
-    hasUser: !!user,
-    isRedirect: !!supabaseResponse.headers.get('location'),
-    cookieCount: supabaseResponse.cookies.getAll().length,
-  });
-
-  // If updateSession already returned a redirect (e.g. code exchange), pass it through
-  if (supabaseResponse.headers.get('location')) {
-    return supabaseResponse;
+  // Skip middleware for static assets and auth routes
+  const { pathname } = request.nextUrl
+  if (
+    pathname.startsWith('/auth/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/api/') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next()
   }
 
-  const pathname = request.nextUrl.pathname;
-  const routeConfig = getRouteAccess(pathname);
+  let supabaseResponse = NextResponse.next({ request })
 
-  // Handle protected routes - redirect unauthenticated users to login
-  if (routeConfig?.access === 'auth' && !user) {
-    const redirectUrl = new URL('/login', request.url);
-    redirectUrl.searchParams.set('returnUrl', pathname);
-    console.log('=== MIDDLEWARE REDIRECT (unauth) ===', { pathname, redirectTo: '/login' });
-    return redirectWithCookies(redirectUrl, supabaseResponse);
-  }
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
 
-  // Handle guest-only routes - redirect authenticated users away
-  if (routeConfig?.access === 'guest-only' && user) {
-    const returnUrl = request.nextUrl.searchParams.get('returnUrl') || '/wiki';
-    console.log('=== MIDDLEWARE REDIRECT (guest-only) ===', { pathname, redirectTo: returnUrl });
-    return redirectWithCookies(new URL(returnUrl, request.url), supabaseResponse);
-  }
+  // Just refresh the session, do NOT redirect anywhere
+  await supabase.auth.getUser()
 
-  return supabaseResponse;
+  // NO redirects. NO route protection. Just refresh cookies and pass through.
+  // Route protection will be added back after confirming the loop is fixed.
+
+  return supabaseResponse
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files (public folder)
-     * - api routes
-     * - auth/callback (code exchange handled by its own route handler)
-     * - auth/signout (server-side sign-out route)
-     * - auth/confirm (email confirmation route)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api|auth/callback|auth/signout|auth/confirm).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-};
+}

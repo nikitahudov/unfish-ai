@@ -9,7 +9,8 @@ export async function POST(request: NextRequest) {
     const adminDb = createAdminClient();
 
     // Get current user (session client for auth only)
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
 
     const body = await request.json();
     const { ticketId, message } = body;

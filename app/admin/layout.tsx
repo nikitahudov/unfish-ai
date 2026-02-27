@@ -13,8 +13,11 @@ export default async function AdminLayout({
   const supabase = await createClient();
   const adminDb = createAdminClient();
 
-  // Check if user is authenticated
-  const { data: { user } } = await supabase.auth.getUser();
+  // Check if user is authenticated — use getSession() to read the JWT
+  // locally without making an API call to Supabase. getUser() triggers
+  // a token refresh which is unnecessary here (middleware already did it).
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
   if (!user) {
     redirect('/login?redirect=/admin');

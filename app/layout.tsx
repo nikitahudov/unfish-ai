@@ -32,6 +32,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('[ROOT LAYOUT RENDER]', new Date().toISOString())
   return (
     <html lang="en" className="dark">
       <body

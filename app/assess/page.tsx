@@ -10,6 +10,7 @@ import { useQuizzes } from '@/lib/hooks/useQuizzes';
 import { useStats } from '@/lib/hooks/useStats';
 
 export default function AssessPage() {
+  console.log('[PAGE RENDER: assess]', new Date().toISOString())
   return (
     <RequireAuth feature="Quizzes">
       <AssessContent />

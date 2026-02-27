@@ -20,6 +20,16 @@ export function useData() {
   const stats = useStats();
   const activity = useActivity();
 
+  // Extract stable refetch references — the full hook return objects are
+  // recreated every render, but refetch (from useAsyncData's useCallback)
+  // is stable.  Using the objects as deps caused every callback below to
+  // get a new identity on every render, which cascaded into infinite
+  // re-render loops via DataProvider's useEffect.
+  const progressRefetch = progress.refetch;
+  const quizzesRefetch = quizzes.refetch;
+  const statsRefetch = stats.refetch;
+  const activityRefetch = activity.refetch;
+
   // Record content view (coordinates progress, stats, activity)
   const recordContentView = useCallback(async (skillId: string, skillName?: string) => {
     if (!isAuthenticated || !user?.id) return;
@@ -29,15 +39,15 @@ export function useData() {
 
       // Refresh relevant data
       await Promise.all([
-        progress.refetch(),
-        stats.refetch(),
-        activity.refetch(),
+        progressRefetch(),
+        statsRefetch(),
+        activityRefetch(),
       ]);
     } catch (error) {
       console.error('Error recording content view:', error);
       throw error;
     }
-  }, [isAuthenticated, user?.id, progress, stats, activity]);
+  }, [isAuthenticated, user?.id, progressRefetch, statsRefetch, activityRefetch]);
 
   // Record content completion
   const recordContentCompletion = useCallback(async (skillId: string, skillName?: string) => {
@@ -47,15 +57,15 @@ export function useData() {
       await dataService.recordContentCompletion(skillId, skillName, user.id);
 
       await Promise.all([
-        progress.refetch(),
-        stats.refetch(),
-        activity.refetch(),
+        progressRefetch(),
+        statsRefetch(),
+        activityRefetch(),
       ]);
     } catch (error) {
       console.error('Error recording content completion:', error);
       throw error;
     }
-  }, [isAuthenticated, user?.id, progress, stats, activity]);
+  }, [isAuthenticated, user?.id, progressRefetch, statsRefetch, activityRefetch]);
 
   // Submit quiz (coordinates quiz, stats, activity)
   const submitQuiz = useCallback(async (submission: QuizSubmission, skillName?: string) => {
@@ -65,9 +75,9 @@ export function useData() {
       const result = await dataService.submitQuiz(submission, skillName, user.id);
 
       await Promise.all([
-        quizzes.refetch(),
-        stats.refetch(),
-        activity.refetch(),
+        quizzesRefetch(),
+        statsRefetch(),
+        activityRefetch(),
       ]);
 
       return result;
@@ -75,7 +85,7 @@ export function useData() {
       console.error('Error submitting quiz:', error);
       throw error;
     }
-  }, [isAuthenticated, user?.id, quizzes, stats, activity]);
+  }, [isAuthenticated, user?.id, quizzesRefetch, statsRefetch, activityRefetch]);
 
   // Add study time
   const addStudyTime = useCallback(async (skillId: string, seconds: number) => {
@@ -85,14 +95,14 @@ export function useData() {
       await dataService.addStudyTime(skillId, seconds, user.id);
 
       await Promise.all([
-        progress.refetch(),
-        stats.refetch(),
+        progressRefetch(),
+        statsRefetch(),
       ]);
     } catch (error) {
       console.error('Error adding study time:', error);
       throw error;
     }
-  }, [isAuthenticated, user?.id, progress, stats]);
+  }, [isAuthenticated, user?.id, progressRefetch, statsRefetch]);
 
   // Record login
   const recordLogin = useCallback(async () => {
@@ -100,22 +110,22 @@ export function useData() {
 
     try {
       await dataService.recordLogin(user.id);
-      await stats.refetch();
+      await statsRefetch();
     } catch (error) {
       // Don't throw - login recording shouldn't break the app
       console.error('Error recording login:', error);
     }
-  }, [isAuthenticated, user?.id, stats]);
+  }, [isAuthenticated, user?.id, statsRefetch]);
 
   // Refresh all data
   const refreshAll = useCallback(async () => {
     await Promise.all([
-      progress.refetch(),
-      quizzes.refetch(),
-      stats.refetch(),
-      activity.refetch(),
+      progressRefetch(),
+      quizzesRefetch(),
+      statsRefetch(),
+      activityRefetch(),
     ]);
-  }, [progress, quizzes, stats, activity]);
+  }, [progressRefetch, quizzesRefetch, statsRefetch, activityRefetch]);
 
   return {
     // Individual hook data

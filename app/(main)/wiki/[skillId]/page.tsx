@@ -7,6 +7,10 @@ import { hasQuiz } from '@/data/quizRegistry';
 import { SkillContentClient } from './SkillContentClient';
 import { mdxComponents } from '@/components/content/mdxComponents';
 
+// Force dynamic rendering — static prerendering under a client layout
+// triggers an invariant error in Next.js 16 (workUnitAsyncStorage bug).
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ skillId: string }>;
 }
@@ -51,12 +55,4 @@ export default async function SkillContentPage({ params }: PageProps) {
       )}
     </SkillContentClient>
   );
-}
-
-// Generate static params for all skills (optional optimization)
-export async function generateStaticParams() {
-  const skills = getAllSkills();
-  return skills.map((skill) => ({
-    skillId: skill.id,
-  }));
 }

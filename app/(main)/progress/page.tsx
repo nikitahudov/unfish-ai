@@ -12,7 +12,6 @@ import { UserStatsCard } from '@/components/stats/UserStatsCard';
 import { RecentActivity } from '@/components/stats/RecentActivity';
 
 export default function ProgressPage() {
-  console.log('[PAGE RENDER: progress]', new Date().toISOString())
   const [mounted, setMounted] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useAuth();
 

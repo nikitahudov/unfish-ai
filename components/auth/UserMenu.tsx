@@ -33,12 +33,14 @@ export function UserMenu() {
       <div className="flex items-center gap-2">
         <Link
           href="/login"
+          prefetch={false}
           className="px-4 py-2 text-sm text-slate-300 hover:text-white transition-colors"
         >
           Sign In
         </Link>
         <Link
           href="/signup"
+          prefetch={false}
           className="px-4 py-2 text-sm bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors"
         >
           Sign Up
@@ -102,6 +104,7 @@ export function UserMenu() {
           <div className="py-2">
             <Link
               href="/progress"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >
@@ -110,6 +113,7 @@ export function UserMenu() {
             </Link>
             <Link
               href="/coach"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >
@@ -118,6 +122,7 @@ export function UserMenu() {
             </Link>
             <Link
               href="/settings"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >

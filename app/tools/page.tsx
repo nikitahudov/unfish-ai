@@ -53,6 +53,7 @@ const upcomingTools = [
 ];
 
 export default function ToolsPage() {
+  console.log('[PAGE RENDER: tools]', new Date().toISOString())
   return (
     <div className="space-y-8">
       {/* Header */}

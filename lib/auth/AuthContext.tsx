@@ -52,21 +52,47 @@ export function AuthProvider({ children }: AuthProviderProps) {
   userRef.current = user;
 
   // DEBUG: Intercept RSC fetches to capture stack traces for loop diagnosis
+  // Next.js 16 uses an "RSC: 1" header (NOT _rsc in the URL) for RSC requests.
   useEffect(() => {
     const originalFetch = window.fetch
-    let fetchCount = 0
+    let rscCount = 0
+    let allCount = 0
     window.fetch = function(...args: Parameters<typeof fetch>) {
       const url = typeof args[0] === 'string' ? args[0] : (args[0] as Request)?.url || ''
-      if (url.includes('_rsc')) {
-        fetchCount++
-        console.trace(`[RSC FETCH #${fetchCount}]`, url.substring(0, 100))
-        if (fetchCount > 30) {
-          console.error('[LOOP BREAKER] Blocked RSC fetch #' + fetchCount)
+      // Detect RSC via headers (Next.js 15+/16) or URL fallback
+      const init = args[1] as RequestInit | undefined
+      const headers = init?.headers
+      let isRSC = url.includes('_rsc')
+      if (!isRSC && headers) {
+        if (headers instanceof Headers) {
+          isRSC = headers.get('RSC') === '1' || headers.get('Next-Router-State-Tree') !== null
+        } else if (Array.isArray(headers)) {
+          isRSC = headers.some(([k, v]) => (k === 'RSC' && v === '1') || k === 'Next-Router-State-Tree')
+        } else {
+          isRSC = (headers as Record<string, string>)['RSC'] === '1' || 'Next-Router-State-Tree' in (headers as Record<string, string>)
+        }
+      }
+      // Also detect RSC via Request object headers
+      if (!isRSC && args[0] instanceof Request) {
+        const req = args[0] as Request
+        isRSC = req.headers.get('RSC') === '1' || req.headers.get('Next-Router-State-Tree') !== null
+      }
+
+      allCount++
+      if (isRSC) {
+        rscCount++
+        console.trace(`[RSC FETCH #${rscCount}] (total fetches: ${allCount})`, url.substring(0, 100))
+        if (rscCount > 30) {
+          console.error('[LOOP BREAKER] Blocked RSC fetch #' + rscCount)
           return Promise.resolve(new Response('{}', { status: 200 }))
         }
+      } else if (allCount <= 5) {
+        // Log first few non-RSC fetches to confirm interceptor is active
+        console.log(`[FETCH #${allCount}] (non-RSC)`, url.substring(0, 100))
       }
       return originalFetch.apply(this, args as any)
     }
+    console.log('[RSC DEBUG] Fetch interceptor installed')
     return () => { window.fetch = originalFetch }
   }, [])
 

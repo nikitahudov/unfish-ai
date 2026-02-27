@@ -33,8 +33,9 @@ export default function LoginPage() {
     if (!result.success) {
       setError(result.error || 'Failed to sign in');
       setIsLoading(false);
+    } else {
+      router.push(returnUrl);
     }
-    // If successful, the auth state change will redirect
   };
 
   const handleGoogleLogin = async () => {

@@ -6,6 +6,11 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  // Snapshot the original cookies to detect actual changes
+  const originalCookies = new Map(
+    request.cookies.getAll().map(c => [c.name, c.value])
+  )
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -15,6 +20,17 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          // Check if any cookie value actually differs from the original
+          const hasRealChanges = cookiesToSet.some(({ name, value }) => {
+            return originalCookies.get(name) !== value
+          })
+
+          if (!hasRealChanges) {
+            // Cookies unchanged — skip writing to avoid triggering
+            // Next.js RSC cache invalidation
+            return
+          }
+
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )

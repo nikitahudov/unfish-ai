@@ -51,6 +51,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const userRef = useRef(user);
   userRef.current = user;
 
+  // DEBUG: Intercept RSC fetches to capture stack traces for loop diagnosis
+  useEffect(() => {
+    const originalFetch = window.fetch
+    let fetchCount = 0
+    window.fetch = function(...args: Parameters<typeof fetch>) {
+      const url = typeof args[0] === 'string' ? args[0] : (args[0] as Request)?.url || ''
+      if (url.includes('_rsc')) {
+        fetchCount++
+        console.trace(`[RSC FETCH #${fetchCount}]`, url.substring(0, 100))
+        if (fetchCount > 30) {
+          console.error('[LOOP BREAKER] Blocked RSC fetch #' + fetchCount)
+          return Promise.resolve(new Response('{}', { status: 200 }))
+        }
+      }
+      return originalFetch.apply(this, args as any)
+    }
+    return () => { window.fetch = originalFetch }
+  }, [])
+
   // Fetch user profile and stats
   const fetchUserData = useCallback(async (userId: string, email: string): Promise<AuthUser> => {
     const [profileResult, statsResult] = await Promise.all([

@@ -102,30 +102,33 @@ export function UserMenu() {
 
           {/* Menu Items */}
           <div className="py-2">
-            <a
+            <Link
               href="/progress"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >
               <span>📊</span>
               My Progress
-            </a>
-            <a
+            </Link>
+            <Link
               href="/coach"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >
               <span>🎓</span>
               AI Coach
-            </a>
-            <a
+            </Link>
+            <Link
               href="/settings"
+              prefetch={false}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
             >
               <span>⚙️</span>
               Settings
-            </a>
+            </Link>
           </div>
 
           {/* Sign Out */}

@@ -53,13 +53,14 @@ export function UserMenuSidebar() {
 
       {/* Quick Links */}
       <div className="space-y-1 mb-3">
-        <a
+        <Link
           href="/settings"
+          prefetch={false}
           className="flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
         >
           <span>⚙️</span>
           Settings
-        </a>
+        </Link>
       </div>
 
       {/* Sign Out */}

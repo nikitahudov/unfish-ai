@@ -67,12 +67,12 @@ export function GuestPrompt({
         </div>
 
         {/* Back Link */}
-        <a
+        <Link
           href="/wiki"
           className="inline-block mt-4 text-sm text-slate-500 hover:text-slate-300 transition-colors"
         >
-          &larr; Back to Curriculum
-        </a>
+          ← Back to Curriculum
+        </Link>
       </div>
     </div>
   );

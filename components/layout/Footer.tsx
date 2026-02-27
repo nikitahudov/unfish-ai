@@ -86,12 +86,13 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.learn.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
+                    prefetch={false}
                     className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -105,12 +106,13 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.tools.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
+                    prefetch={false}
                     className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

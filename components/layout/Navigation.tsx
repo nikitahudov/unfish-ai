@@ -156,32 +156,27 @@ export const Navigation = () => {
           {navItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
-            const className = `
-              flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-              ${isActive
-                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-              }
-            `;
-            const content = (
-              <>
+
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                prefetch={false}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                  ${isActive
+                    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }
+                `}
+              >
                 <span className="text-xl">{item.icon}</span>
                 <div>
                   <div className="font-medium">{item.label}</div>
                   <div className="text-xs opacity-70">{item.description}</div>
                 </div>
-              </>
-            );
-
-            // Use plain <a> for authenticated routes to prevent RSC cache management
-            return item.href === '/' ? (
-              <Link key={item.id} href={item.href} prefetch={false} onClick={() => setIsMobileMenuOpen(false)} className={className}>
-                {content}
               </Link>
-            ) : (
-              <a key={item.id} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={className}>
-                {content}
-              </a>
             );
           })}
 
@@ -194,29 +189,25 @@ export const Navigation = () => {
               .filter((item) => !item.authOnly || isAuthenticated)
               .map((item) => {
                 const isActive = pathname === item.href;
-                const className = `
-                  flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all
-                  ${isActive
-                    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                  }
-                `;
-                const content = (
-                  <>
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    prefetch={false}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`
+                      flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all
+                      ${isActive
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      }
+                    `}
+                  >
                     <span className="text-lg">{item.icon}</span>
                     <div>
                       <div className="font-medium text-sm">{item.label}</div>
                     </div>
-                  </>
-                );
-
-                return item.authOnly ? (
-                  <a key={item.id} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={className}>
-                    {content}
-                  </a>
-                ) : (
-                  <Link key={item.id} href={item.href} prefetch={false} onClick={() => setIsMobileMenuOpen(false)} className={className}>
-                    {content}
                   </Link>
                 );
               })}

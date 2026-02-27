@@ -35,9 +35,10 @@ export function Header() {
             {navItems.map((item) => {
               const isActive = pathname.startsWith(item.href);
               return (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-slate-800 text-white'
@@ -45,7 +46,7 @@ export function Header() {
                   }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -60,9 +61,10 @@ export function Header() {
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
-            <a
+            <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                 isActive
                   ? 'bg-slate-800 text-white'
@@ -70,7 +72,7 @@ export function Header() {
               }`}
             >
               {item.label}
-            </a>
+            </Link>
           );
         })}
       </nav>

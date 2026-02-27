@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function SignupPage() {
@@ -13,17 +13,9 @@ export default function SignupPage() {
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { signUpWithEmail, signInWithGoogle, isAuthenticated } = useAuth();
-  const router = useRouter();
+  const { signUpWithEmail, signInWithGoogle } = useAuth();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl') || '/wiki';
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push(returnUrl);
-    }
-  }, [isAuthenticated, router, returnUrl]);
 
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();

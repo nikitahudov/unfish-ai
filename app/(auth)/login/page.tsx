@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function LoginPage() {
@@ -11,17 +11,9 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { signInWithEmail, signInWithGoogle, isAuthenticated } = useAuth();
-  const router = useRouter();
+  const { signInWithEmail, signInWithGoogle } = useAuth();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl') || '/wiki';
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push(returnUrl);
-    }
-  }, [isAuthenticated, router, returnUrl]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +26,10 @@ export default function LoginPage() {
       setError(result.error || 'Failed to sign in');
       setIsLoading(false);
     } else {
-      router.push(returnUrl);
+      // Full page navigation ensures the browser sends the new auth cookies
+      // to the server. Soft navigation (router.push) can race with cookie
+      // writes and the proxy may not see the authenticated session yet.
+      window.location.href = returnUrl;
     }
   };
 

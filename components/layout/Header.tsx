@@ -25,7 +25,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" prefetch={false} className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="UnFish.ai" className="w-8 h-8" />
             <span className="font-bold text-white hidden sm:block">UnFish.ai</span>
           </Link>
@@ -38,8 +38,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  prefetch={false}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-slate-800 text-white'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -64,8 +63,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              prefetch={false}
-              className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                           className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                 isActive
                   ? 'bg-slate-800 text-white'
                   : 'text-slate-400 hover:text-white'

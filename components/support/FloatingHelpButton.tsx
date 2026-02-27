@@ -28,7 +28,7 @@ export function FloatingHelpButton() {
             <div className="p-2">
               <Link
                 href="/support"
-                prefetch={false}
+               
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
               >
@@ -42,7 +42,7 @@ export function FloatingHelpButton() {
               {user && (
                 <Link
                   href="/support/my-tickets"
-                  prefetch={false}
+                 
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
                 >
@@ -56,7 +56,7 @@ export function FloatingHelpButton() {
 
               <Link
                 href="/faq"
-                prefetch={false}
+               
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
               >
@@ -69,7 +69,7 @@ export function FloatingHelpButton() {
 
               <Link
                 href="/wiki"
-                prefetch={false}
+               
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors"
               >

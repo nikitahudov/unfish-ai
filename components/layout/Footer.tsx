@@ -34,7 +34,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <Link href="/" prefetch={false} className="flex items-center gap-2 mb-4">
+            <Link href="/" className="flex items-center gap-2 mb-4">
               <img src="/logo.png" alt="UnFish.ai" className="w-8 h-8" />
               <span className="text-xl font-bold text-white">UnFish.ai</span>
             </Link>
@@ -88,8 +88,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    prefetch={false}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                                       className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -108,8 +107,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    prefetch={false}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                                       className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -134,8 +132,7 @@ export function Footer() {
                   ) : (
                     <Link
                       href={link.href}
-                      prefetch={false}
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                                           className="text-sm text-slate-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -156,8 +153,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                prefetch={false}
-                className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
+                               className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
               >
                 {link.label}
               </Link>

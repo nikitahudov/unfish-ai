@@ -10,20 +10,9 @@ export function createClient() {
     // This allows the app to render public pages without Supabase credentials.
     return createBrowserClient<Database>(
       'http://localhost:54321',
-      'dummy-key-for-development',
-      {
-        auth: {
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-      }
+      'dummy-key-for-development'
     );
   }
 
-  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-    },
-  });
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 }

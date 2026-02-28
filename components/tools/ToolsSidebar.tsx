@@ -70,7 +70,7 @@ export function ToolsSidebar() {
                   <li key={tool.href}>
                     <Link
                       href={tool.href}
-                     
+                      prefetch={false}
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                         isActive
                           ? 'bg-amber-500/20 text-amber-400'

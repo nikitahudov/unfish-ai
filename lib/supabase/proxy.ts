@@ -1,94 +1,84 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
-import type { Database } from '@/types/database';
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
-  });
+  })
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return { supabaseResponse, user: null };
+  // Snapshot the original cookies BEFORE Supabase touches them
+  const originalCookies = new Map<string, string>()
+  for (const cookie of request.cookies.getAll()) {
+    originalCookies.set(cookie.name, cookie.value)
   }
 
-  const supabase = createServerClient<Database>(
-    supabaseUrl,
-    supabaseAnonKey,
+  // Track what Supabase wants to set
+  let pendingCookies: Array<{ name: string; value: string; options: any }> = []
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          pendingCookies = cookiesToSet
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          )
         },
       },
     }
-  );
+  )
 
-  // Handle auth code exchange on any route.
-  // Supabase may redirect the code to the site root instead of /auth/callback
-  // if the redirect URL isn't in the allowed list. This catches that case
-  // so Google OAuth and email confirmation work regardless.
-  const code = request.nextUrl.searchParams.get('code');
-  const isCallbackRoute = request.nextUrl.pathname === '/auth/callback';
+  // IMPORTANT: Do NOT add any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very
+  // hard to debug issues with users being randomly logged out.
 
-  // Skip ALL auth processing for the callback route — the route handler
-  // at app/(auth)/auth/callback/route.ts owns the code exchange.
-  // Calling getUser() here would mutate request.cookies (via setAll) and
-  // can wipe the PKCE code verifier cookie before the handler reads it.
-  if (isCallbackRoute) {
-    console.log('=== PROXY: SKIPPING callback route (handled by route handler) ===');
-    return { supabaseResponse, user: null };
-  }
-
-  if (code) {
-    console.log('=== PROXY: CODE EXCHANGE (non-callback route) ===', {
-      pathname: request.nextUrl.pathname,
-      codeLength: code.length,
-    });
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    console.log('=== PROXY: CODE EXCHANGE RESULT ===', {
-      error: error?.message,
-      cookieCount: supabaseResponse.cookies.getAll().length,
-    });
-
-    if (!error) {
-      // Build redirect using the public app URL, not the request origin
-      // (which may be 0.0.0.0 when the server binds to all interfaces).
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unfish.ai';
-      const destination = request.nextUrl.pathname === '/' ? '/wiki' : request.nextUrl.pathname;
-      const redirectUrl = new URL(destination, baseUrl);
-
-      const redirectResponse = NextResponse.redirect(redirectUrl);
-
-      // Copy session cookies from the exchange onto the redirect response.
-      // Without this the browser never receives the session tokens.
-      supabaseResponse.cookies.getAll().forEach((cookie) => {
-        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
-      });
-
-      return { supabaseResponse: redirectResponse, user: null };
-    }
-  }
-
-  // IMPORTANT: Do not remove this line
-  // This refreshes the session if expired - required for Server Components
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
-  return { supabaseResponse, user };
+  // Only write Set-Cookie if values ACTUALLY changed from the incoming request.
+  // This prevents unnecessary cookie writes that trigger Next.js RSC cache
+  // invalidation and cause the infinite fetch loop.
+  const hasRealChanges = pendingCookies.some(({ name, value }) => {
+    const original = originalCookies.get(name)
+    if (original === undefined && value === '') return false
+    return original !== value
+  })
+
+  if (hasRealChanges && pendingCookies.length > 0) {
+    supabaseResponse = NextResponse.next({ request })
+    pendingCookies.forEach(({ name, value, options }) =>
+      supabaseResponse.cookies.set(name, value, options)
+    )
+  }
+
+  // --- Route Protection ---
+  const protectedRoutes = ['/tools', '/coach', '/assess', '/wiki', '/progress', '/settings', '/admin']
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  const authRoutes = ['/login', '/signup']
+  const isAuthRoute = authRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  if (isAuthRoute && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/tools'
+    return NextResponse.redirect(url)
+  }
+
+  return supabaseResponse
 }

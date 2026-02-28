@@ -54,18 +54,13 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Use getSession() instead of getUser() to avoid the RSC infinite
-  // fetch loop. getUser() makes an API call to Supabase on every
-  // request, which internally triggers setAll() even when the session
-  // hasn't changed — adding Set-Cookie headers that invalidate the
-  // Next.js RSC cache and cause a re-fetch loop. getSession() reads
-  // the JWT locally and only refreshes when the token is actually
-  // expired, preventing unnecessary cookie writes.
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // IMPORTANT: Do NOT add any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very
+  // hard to debug issues with users being randomly logged out.
 
-  const user = session?.user ?? null
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   // --- Route Protection ---
   // Redirect unauthenticated users away from protected routes

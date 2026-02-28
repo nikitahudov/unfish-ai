@@ -21,14 +21,14 @@ export function UserMenuSidebar() {
       <div className="p-4 border-b border-slate-700 space-y-2">
         <Link
           href="/login"
-
+          prefetch={false}
           className="block w-full py-2 px-4 text-center text-sm bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors"
         >
           Sign In
         </Link>
         <Link
           href="/signup"
-
+          prefetch={false}
           className="block w-full py-2 px-4 text-center text-sm bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors"
         >
           Create Account
@@ -55,7 +55,7 @@ export function UserMenuSidebar() {
       <div className="space-y-1 mb-3">
         <Link
           href="/settings"
-
+          prefetch={false}
           className="flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
         >
           <span>⚙️</span>
